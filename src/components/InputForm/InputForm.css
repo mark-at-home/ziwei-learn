@@ -1,0 +1,224 @@
+.input-form-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  padding-top: calc(2.5rem + 1.5rem);
+}
+
+.app-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 2.4rem;
+  color: #c9a84c;
+  letter-spacing: 0.2em;
+  margin: 0 0 0.4rem;
+  text-align: center;
+}
+
+.app-subtitle {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.9rem;
+  color: #8a7a60;
+  margin: 0 0 2.4rem;
+  text-align: center;
+  letter-spacing: 0.1em;
+}
+
+.input-form {
+  width: 100%;
+  max-width: 420px;
+  background: #161616;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.form-label {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.85rem;
+  color: #8a7a60;
+  width: 56px;
+  flex-shrink: 0;
+  letter-spacing: 0.05em;
+}
+
+.required {
+  color: #8b1a1a;
+}
+
+/* 历法/性别切换按钮组 */
+.toggle-group {
+  display: flex;
+  gap: 0;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.toggle-btn {
+  background: transparent;
+  border: none;
+  color: #8a7a60;
+  padding: 0.4rem 1rem;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.toggle-btn:hover {
+  background: #1e1e1e;
+  color: #e8dcc8;
+}
+
+.toggle-btn.active {
+  background: #c9a84c20;
+  color: #c9a84c;
+  border-color: #c9a84c;
+}
+
+/* 日期输入 */
+.date-inputs {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.date-input {
+  flex: 1;
+  background: #0d0d0d;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  color: #e8dcc8;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.5rem;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.15s;
+  -moz-appearance: textfield;
+}
+
+.date-input::-webkit-outer-spin-button,
+.date-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.date-input:focus {
+  border-color: #c9a84c60;
+}
+
+/* 下拉选择 */
+.select-input {
+  flex: 1;
+  background: #0d0d0d;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  color: #e8dcc8;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.5rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.select-input:focus {
+  border-color: #c9a84c60;
+}
+
+/* 闰月复选框 */
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #e8dcc8;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.checkbox-label input[type='checkbox'] {
+  accent-color: #c9a84c;
+  width: 14px;
+  height: 14px;
+}
+
+/* 错误提示 */
+.form-error {
+  color: #8b1a1a;
+  font-size: 0.82rem;
+  font-family: 'Noto Sans SC', sans-serif;
+  margin: 0;
+  padding: 0.4rem 0.6rem;
+  background: #1a0a0a;
+  border-left: 2px solid #8b1a1a;
+  border-radius: 2px;
+}
+
+/* 操作按钮 */
+.form-actions {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 0.4rem;
+}
+
+.btn-primary {
+  flex: 1;
+  background: #c9a84c;
+  border: none;
+  border-radius: 3px;
+  color: #0d0d0d;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 0.65rem 0;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-primary:hover {
+  background: #d4b45a;
+}
+
+.btn-secondary {
+  flex: 1;
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  color: #8a7a60;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  padding: 0.65rem 0;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.btn-secondary:hover {
+  border-color: #c9a84c60;
+  color: #c9a84c;
+}
+
+@media (max-width: 480px) {
+  .input-form {
+    padding: 1.4rem 1rem;
+    gap: 1rem;
+  }
+  .app-title { font-size: 1.8rem; }
+  .app-subtitle { font-size: 0.8rem; margin-bottom: 1.6rem; }
+  .form-label { font-size: 0.78rem; width: 48px; }
+  .date-input, .select-input { font-size: 0.82rem; }
+  .toggle-btn { padding: 0.4rem 0.7rem; font-size: 0.78rem; }
+}

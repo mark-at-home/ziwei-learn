@@ -1,0 +1,211 @@
+.analysis-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.analysis-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1rem 0.6rem;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.analysis-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1rem;
+  color: #c9a84c;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+}
+
+.back-btn {
+  background: transparent;
+  border: none;
+  color: #8a7a60;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 0.2rem 0;
+  transition: color 0.15s;
+}
+
+.back-btn:hover { color: #c9a84c; }
+
+.analysis-content {
+  flex: 1;
+  padding: 1.2rem 1rem;
+  max-width: 680px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+/* 分析区块 */
+.analysis-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.section-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  color: #c9a84c;
+  font-family: 'Noto Sans SC', sans-serif;
+  letter-spacing: 0.15em;
+  border-left: 2px solid #c9a84c;
+  padding-left: 0.5rem;
+  text-transform: uppercase;
+}
+
+.event-tag {
+  color: #4a8c5c;
+  border-color: #4a8c5c;
+}
+
+.analysis-summary {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.95rem;
+  color: #e8dcc8;
+  line-height: 1.8;
+}
+
+.analysis-text {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.88rem;
+  color: #c8b898;
+  line-height: 1.8;
+}
+
+/* 宫位分析卡片 */
+.palace-analysis-card {
+  background: #111;
+  border: 1px solid #1e1e1e;
+  border-radius: 3px;
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.palace-analysis-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.palace-analysis-name {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.9rem;
+  color: #c9a84c;
+}
+
+.palace-analysis-stars {
+  font-size: 0.75rem;
+  color: #5a4a30;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.palace-analysis-text {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.86rem;
+  color: #c8b898;
+  line-height: 1.75;
+}
+
+/* 推理依据 */
+.reasoning-block {
+  background: #0d0d0d;
+  border-left: 2px solid #2a2a2a;
+  padding: 0.5rem 0.8rem;
+  border-radius: 0 2px 2px 0;
+}
+
+.reasoning-label {
+  font-size: 0.62rem;
+  color: #3a3a3a;
+  font-family: 'Noto Sans SC', sans-serif;
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.reasoning-text {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.8rem;
+  color: #6a6a6a;
+  line-height: 1.7;
+}
+
+/* 核心特征列表 */
+.key-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.key-feature-item {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.85rem;
+  color: #c8b898;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.key-feature-item::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: #c9a84c;
+}
+
+/* 底部按钮 */
+.analysis-footer {
+  display: flex;
+  gap: 0.8rem;
+  padding: 1rem;
+  border-top: 1px solid #1a1a1a;
+  max-width: 680px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.btn-primary {
+  flex: 2;
+  background: #c9a84c;
+  border: none;
+  border-radius: 3px;
+  color: #0d0d0d;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 0.65rem 0;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-primary:hover { background: #d4b45a; }
+
+.btn-secondary {
+  flex: 1;
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  color: #8a7a60;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.85rem;
+  padding: 0.65rem 0;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.btn-secondary:hover {
+  border-color: #c9a84c60;
+  color: #c9a84c;
+}

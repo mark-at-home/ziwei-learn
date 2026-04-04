@@ -1,0 +1,139 @@
+.picker-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.picker-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1rem 0.6rem;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.picker-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1rem;
+  color: #c9a84c;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+}
+
+.back-btn {
+  background: transparent;
+  border: none;
+  color: #8a7a60;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 0.2rem 0;
+  transition: color 0.15s;
+}
+
+.back-btn:hover { color: #c9a84c; }
+
+.picker-content {
+  flex: 1;
+  padding: 1.4rem 1rem;
+  max-width: 520px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.picker-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.group-label {
+  font-size: 0.7rem;
+  color: #4a4a4a;
+  font-family: 'Noto Sans SC', sans-serif;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-left: 2px solid #2a2a2a;
+  padding-left: 0.5rem;
+}
+
+.dim-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.dim-btn {
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  color: #8a7a60;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.85rem;
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  letter-spacing: 0.05em;
+}
+
+.dim-btn:hover {
+  border-color: #c9a84c60;
+  color: #c9a84c;
+}
+
+.dim-btn--selected {
+  border-color: #c9a84c;
+  color: #c9a84c;
+  background: #c9a84c15;
+}
+
+.picker-footer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-top: 1px solid #1a1a1a;
+  max-width: 520px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.btn-text {
+  background: transparent;
+  border: none;
+  color: #5a5a5a;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.82rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+
+.btn-text:hover { color: #8a7a60; }
+
+.btn-primary {
+  flex: 1;
+  background: #c9a84c;
+  border: none;
+  border-radius: 3px;
+  color: #0d0d0d;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 0.65rem 0;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.btn-primary:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.btn-primary:not(:disabled):hover { background: #d4b45a; }

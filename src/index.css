@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  background: #0d0d0d;
+  color: #e8dcc8;
+  font-family: 'Noto Sans SC', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100%;
+}
+
+button {
+  cursor: pointer;
+}
+
+input, select {
+  color: #e8dcc8;
+}
+
+::selection {
+  background: #c9a84c30;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── 全局顶栏 ─────────────────────────────── */
+.global-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding: 0.45rem 1rem;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(4px);
+  border-bottom: 1px solid #1a1a1a;
+  min-height: 2.5rem;
+}
+
+.global-model-select {
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  color: #8a7a60;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.4rem;
+  cursor: pointer;
+  max-width: 150px;
+}
+
+.global-nav-btn {
+  background: transparent;
+  border: none;
+  color: #4a4a4a;
+  font-size: 0.75rem;
+  cursor: pointer;
+  font-family: 'Noto Sans SC', sans-serif;
+  padding: 0.2rem 0.4rem;
+  white-space: nowrap;
+}
+
+.global-nav-btn:hover { color: #8a7a60; }
+
+@media (max-width: 480px) {
+  .global-bar {
+    gap: 0.25rem;
+    padding: 0.35rem 0.5rem;
+  }
+  .global-model-select {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.25rem;
+    max-width: 100px;
+  }
+  .global-nav-btn {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.2rem;
+  }
+}

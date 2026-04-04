@@ -1,0 +1,445 @@
+.quiz-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.quiz-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid #1a1a1a;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.back-btn {
+  background: transparent;
+  border: none;
+  color: #8a7a60;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 0.2rem 0;
+  transition: color 0.15s;
+}
+
+.back-btn:hover { color: #c9a84c; }
+
+.quiz-info {
+  flex: 1;
+  text-align: center;
+}
+
+.quiz-chart-label {
+  font-size: 0.78rem;
+  color: #5a5a5a;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.add-dim-btn {
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  color: #8a7a60;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.78rem;
+  padding: 0.25rem 0.6rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.add-dim-btn:hover {
+  border-color: #c9a84c60;
+  color: #c9a84c;
+}
+
+/* 添加维度面板 */
+.add-dim-panel {
+  background: #111;
+  border-bottom: 1px solid #1e1e1e;
+  padding: 0.8rem 1rem;
+}
+
+.add-dim-title {
+  font-size: 0.72rem;
+  color: #4a4a4a;
+  font-family: 'Noto Sans SC', sans-serif;
+  margin-bottom: 0.5rem;
+}
+
+.dim-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.dim-chip {
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  color: #8a7a60;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.78rem;
+  padding: 0.25rem 0.6rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.dim-chip:hover {
+  border-color: #c9a84c;
+  color: #c9a84c;
+}
+
+/* 维度进度条 */
+.quiz-dim-progress {
+  display: flex;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #1a1a1a;
+  overflow-x: auto;
+}
+
+.dim-progress-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+}
+
+.dim-progress-label {
+  font-size: 0.72rem;
+  color: #5a5a5a;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.dim-progress-count {
+  font-size: 0.72rem;
+  color: #c9a84c;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+/* 题目卡片 */
+.quiz-content {
+  flex: 1;
+  padding: 1rem;
+  max-width: 620px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.question-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* 进度条 */
+.question-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 2px;
+  background: #1e1e1e;
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #c9a84c;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 0.72rem;
+  color: #4a4a4a;
+  font-family: 'Noto Sans SC', sans-serif;
+  white-space: nowrap;
+}
+
+/* 题目元信息 */
+.question-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.question-topic {
+  font-size: 0.72rem;
+  color: #c9a84c;
+  font-family: 'Noto Sans SC', sans-serif;
+  border: 1px solid #c9a84c40;
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+}
+
+.question-difficulty {
+  font-size: 0.7rem;
+  color: #3a3a3a;
+}
+
+/* 题目文字 */
+.question-text {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.95rem;
+  color: #e8dcc8;
+  line-height: 1.8;
+}
+
+/* 选项 */
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.option-btn {
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  color: #c8b898;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.88rem;
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  transition: border-color 0.15s, background 0.15s;
+  line-height: 1.6;
+}
+
+.option-btn:hover:not(:disabled) {
+  border-color: #c9a84c60;
+  background: #161208;
+}
+
+.option-btn--selected {
+  border-color: #c9a84c;
+  background: #161208;
+}
+
+.option-btn--correct {
+  border-color: #4a8c5c !important;
+  background: #0a1a0f !important;
+  color: #4a8c5c !important;
+}
+
+.option-btn--wrong {
+  border-color: #8b1a1a !important;
+  background: #1a0808 !important;
+  color: #8b1a1a !important;
+}
+
+.option-letter {
+  font-weight: 700;
+  color: #c9a84c;
+  min-width: 1rem;
+  flex-shrink: 0;
+}
+
+.option-btn--correct .option-letter,
+.option-btn--wrong   .option-letter {
+  color: inherit;
+}
+
+/* 文字输入框 */
+.text-answer {
+  width: 100%;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  color: #e8dcc8;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  padding: 0.7rem 0.8rem;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.text-answer:focus {
+  border-color: #c9a84c60;
+}
+
+.text-answer:disabled {
+  opacity: 0.6;
+}
+
+/* 提交按钮 */
+.btn-submit {
+  background: #c9a84c;
+  border: none;
+  border-radius: 3px;
+  color: #0d0d0d;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 0.65rem;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.btn-submit:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.btn-submit:not(:disabled):hover {
+  background: #d4b45a;
+}
+
+/* 参考答案区 */
+.answer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  background: #0d0d0d;
+  border: 1px solid #1e1e1e;
+  border-radius: 3px;
+  padding: 1rem;
+}
+
+.answer-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.answer-label {
+  font-size: 0.68rem;
+  color: #4a8c5c;
+  font-family: 'Noto Sans SC', sans-serif;
+  letter-spacing: 0.1em;
+  border-left: 2px solid #4a8c5c;
+  padding-left: 0.4rem;
+}
+
+.reference-answer {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.88rem;
+  color: #c8b898;
+  line-height: 1.75;
+}
+
+/* 推理路径 */
+.reasoning-toggle {
+  background: transparent;
+  border: none;
+  color: #4a6e8c;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-align: left;
+}
+
+.reasoning-path {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding-left: 0;
+}
+
+.reasoning-step {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.8rem;
+  color: #6a6a6a;
+  line-height: 1.6;
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+.reasoning-step::before {
+  content: counter(list-item) '.';
+  counter-increment: list-item;
+  position: absolute;
+  left: 0;
+  color: #4a4a4a;
+}
+
+.reasoning-path { counter-reset: list-item; }
+
+/* 自评 */
+.self-eval-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-top: 1px solid #1e1e1e;
+  padding-top: 0.7rem;
+}
+
+.self-eval-label {
+  font-size: 0.7rem;
+  color: #4a4a4a;
+  font-family: 'Noto Sans SC', sans-serif;
+  letter-spacing: 0.05em;
+}
+
+.self-eval-btns {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.self-eval-btn {
+  flex: 1;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--eval-color) 40%, transparent);
+  border-radius: 3px;
+  color: var(--eval-color);
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.82rem;
+  padding: 0.4rem 0;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.self-eval-btn:hover {
+  background: color-mix(in srgb, var(--eval-color) 15%, transparent);
+}
+
+.self-eval-result {
+  font-size: 0.78rem;
+  color: #4a4a4a;
+  font-family: 'Noto Sans SC', sans-serif;
+  border-top: 1px solid #1e1e1e;
+  padding-top: 0.5rem;
+}
+
+/* 分析参考折叠 */
+.analysis-reference {
+  border-top: 1px solid #1a1a1a;
+  padding: 0.7rem 1rem;
+  max-width: 620px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.analysis-reference summary {
+  font-size: 0.78rem;
+  color: #4a4a4a;
+  font-family: 'Noto Sans SC', sans-serif;
+  cursor: pointer;
+  user-select: none;
+  letter-spacing: 0.05em;
+}
+
+.analysis-ref-summary {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.82rem;
+  color: #6a6a6a;
+  line-height: 1.7;
+  margin-top: 0.6rem;
+}

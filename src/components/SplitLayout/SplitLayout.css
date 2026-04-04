@@ -1,0 +1,92 @@
+.split-layout {
+  display: flex;
+  min-height: 100vh;
+  padding-top: 2.5rem;
+}
+
+/* ── 命盘侧边栏 ─────────────────────────── */
+.split-chart {
+  flex-shrink: 0;
+  position: sticky;
+  top: 2.5rem;
+  height: calc(100vh - 2.5rem);
+  overflow-y: auto;
+  border-right: 1px solid #1a1a1a;
+}
+
+/* 拖动分隔条 */
+.split-resize-handle {
+  width: 5px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  background: transparent;
+  border-right: 1px solid #1a1a1a;
+  transition: background 0.15s;
+  position: sticky;
+  top: 2.5rem;
+  height: calc(100vh - 2.5rem);
+}
+
+.split-resize-handle:hover {
+  background: #c9a84c30;
+}
+
+/* ── 主内容区 ───────────────────────────── */
+.split-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/* 移动端折叠按钮（桌面端隐藏） */
+.chart-toggle-btn {
+  display: none;
+  background: #111;
+  border: none;
+  border-bottom: 1px solid #1a1a1a;
+  color: #5a5a5a;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.75rem;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+  text-align: left;
+  letter-spacing: 0.05em;
+}
+
+/* ── 响应式：平板/手机 ─────────────────── */
+@media (max-width: 900px) {
+  .split-layout {
+    flex-direction: column;
+  }
+
+  .split-chart {
+    width: 100% !important;
+    height: auto;
+    max-height: 100vw;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid #1a1a1a;
+    overflow: hidden;
+  }
+
+  .split-chart--hidden {
+    max-height: 0;
+    border-bottom: none;
+  }
+
+  .split-resize-handle {
+    display: none;
+  }
+
+  .chart-toggle-btn {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .split-chart {
+    max-height: 100vw;
+  }
+}

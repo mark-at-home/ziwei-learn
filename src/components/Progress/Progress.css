@@ -1,0 +1,164 @@
+.progress-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-top: 2.5rem;
+}
+
+.progress-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.progress-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1rem;
+  color: #c9a84c;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+}
+
+.back-btn {
+  background: transparent;
+  border: none;
+  color: #8a7a60;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 0.2rem 0;
+  transition: color 0.15s;
+}
+
+.back-btn:hover { color: #c9a84c; }
+
+.progress-content {
+  flex: 1;
+  padding: 1.2rem 1rem;
+  max-width: 560px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.progress-empty {
+  text-align: center;
+  padding: 3rem 0;
+  color: #3a3a3a;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.9rem;
+}
+
+.progress-empty-sub {
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  color: #2a2a2a;
+}
+
+.progress-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.section-tag {
+  font-size: 0.68rem;
+  color: #c9a84c;
+  font-family: 'Noto Sans SC', sans-serif;
+  letter-spacing: 0.15em;
+  border-left: 2px solid #c9a84c;
+  padding-left: 0.5rem;
+}
+
+/* 维度进度条 */
+.dim-bar {
+  background: #111;
+  border: 1px solid #1e1e1e;
+  border-radius: 3px;
+  padding: 0.7rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.dim-bar--weak {
+  border-color: #8b1a1a50;
+  background: #140808;
+}
+
+.dim-bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dim-bar-label {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.85rem;
+  color: #c8b898;
+}
+
+.weak-icon {
+  color: #8b1a1a;
+  font-size: 0.72rem;
+}
+
+.dim-bar-pct {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.85rem;
+  color: #8a7a60;
+}
+
+.dim-bar-track {
+  height: 3px;
+  background: #1e1e1e;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.dim-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+.dim-bar-sub {
+  font-size: 0.68rem;
+  color: #3a3a3a;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+/* 历史记录 */
+.history-card {
+  background: #111;
+  border: 1px solid #1e1e1e;
+  border-radius: 3px;
+  padding: 0.7rem 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.history-label {
+  flex: 1;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.88rem;
+  color: #c8b898;
+}
+
+.history-date {
+  font-size: 0.72rem;
+  color: #4a4a4a;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.history-count {
+  font-size: 0.72rem;
+  color: #c9a84c;
+  font-family: 'Noto Sans SC', sans-serif;
+  white-space: nowrap;
+}
