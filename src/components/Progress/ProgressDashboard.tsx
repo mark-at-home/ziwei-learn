@@ -1,6 +1,5 @@
 import { getDimensionStats, loadSessions } from '../../lib/storage';
 import { DIMENSION_GROUPS } from '../../types';
-import type { DimensionLevel } from '../../types';
 import './Progress.css';
 
 interface ProgressDashboardProps {
