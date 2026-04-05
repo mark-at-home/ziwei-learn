@@ -33,8 +33,6 @@ export default async function handler(req, res) {
       content = await callGemini(system, messages, max_tokens, 'gemini-3-flash-preview', false);
     } else if (model === 'gemini-3-pro') {
       content = await callGemini(system, messages, max_tokens, 'gemini-3.1-pro-preview', false);
-    } else if (model === 'deepseek') {
-      content = await callDeepSeek(system, messages, max_tokens);
     } else {
       return res.status(400).json({ error: `不支持的模型：${model}` });
     }
@@ -90,18 +88,3 @@ async function callGemini(system, messages, maxTokens, modelId, thinking) {
   return answerPart?.text ?? result.response.text();
 }
 
-async function callDeepSeek(system, messages, maxTokens) {
-  const { default: OpenAI } = await import('openai');
-  const client = new OpenAI({
-    apiKey: process.env.DEEPSEEK_API_KEY,
-    baseURL: 'https://api.deepseek.com',
-  });
-
-  const resp = await client.chat.completions.create({
-    model: 'deepseek-chat',
-    max_tokens: maxTokens,
-    messages: [{ role: 'system', content: system }, ...messages],
-  });
-
-  return resp.choices[0]?.message?.content ?? '';
-}
