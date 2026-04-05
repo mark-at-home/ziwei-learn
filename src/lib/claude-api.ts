@@ -73,7 +73,7 @@ export async function generateAnalysis(
 ): Promise<ChartAnalysis> {
   const chartText  = chartToPromptText(chart);
   const userPrompt = buildAnalysisPrompt(chartText, selectedDimensions);
-  const raw        = await callLLM(ANALYSIS_SYSTEM, userPrompt, model);
+  const raw        = await callLLM(ANALYSIS_SYSTEM, userPrompt, model, 8192);
 
   const fallback: ChartAnalysis = {
     summary: '分析生成失败，请重试。',
