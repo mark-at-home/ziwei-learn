@@ -62,6 +62,6 @@ export function getChartId(chart: Astrolabe): string {
  * 生成命盘简短标签（用于历史记录显示）
  */
 export function getChartLabel(chart: Astrolabe): string {
-  const genderLabel = chart.gender === 'male' ? '男命' : '女命';
+  const genderLabel = (chart.gender === 'male' || chart.gender === '男') ? '男命' : '女命';
   return `${chart.solarDate} ${chart.time} ${genderLabel}`;
 }

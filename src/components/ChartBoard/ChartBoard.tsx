@@ -111,7 +111,8 @@ export default function ChartBoard({ chart, embedded = false, onBack, onProceed 
         .filter(Boolean)
     : [];
 
-  const genderLabel = chart.gender === 'male' ? '男命' : '女命';
+  // chart.gender 是 iztro 本地化后的中文值 '男'/'女'，也可能是英文 key 'male'/'female'
+  const genderLabel = (chart.gender === 'male' || chart.gender === '男') ? '男命' : '女命';
 
   const gridClass = embedded ? 'chartboard-grid chartboard-grid--embedded' : 'chartboard-grid';
 
