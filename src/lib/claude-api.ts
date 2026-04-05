@@ -6,7 +6,7 @@ import {
   QUIZ_SYSTEM, buildQuizPrompt,
 } from './prompts';
 
-export type LLMModel = 'claude' | 'gemini' | 'gemini-thinking' | 'gemini-3-flash' | 'gemini-3-pro' | 'deepseek';
+export type LLMModel = 'claude' | 'claude-4-6' | 'gemini' | 'gemini-pro' | 'gemini-thinking' | 'gemini-3-flash' | 'gemini-3-pro' | 'deepseek';
 
 // 本地开发时走 Vite proxy（见 vite.config.ts），线上走 Vercel Serverless Function
 const PROXY_URL = '/api/chat';

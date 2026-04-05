@@ -19,10 +19,14 @@ export default async function handler(req, res) {
   try {
     let content = '';
 
-    if (model === 'claude') {
-      content = await callClaude(system, messages, max_tokens);
+    if (model === 'claude' || model === 'claude-4-5') {
+      content = await callClaude(system, messages, max_tokens, 'claude-sonnet-4-5');
+    } else if (model === 'claude-4-6') {
+      content = await callClaude(system, messages, max_tokens, 'claude-sonnet-4-6');
     } else if (model === 'gemini') {
       content = await callGemini(system, messages, max_tokens, 'gemini-2.5-flash', false);
+    } else if (model === 'gemini-pro') {
+      content = await callGemini(system, messages, max_tokens, 'gemini-2.5-pro', false);
     } else if (model === 'gemini-thinking') {
       content = await callGemini(system, messages, max_tokens, 'gemini-2.5-flash', true);
     } else if (model === 'gemini-3-flash') {
@@ -42,12 +46,12 @@ export default async function handler(req, res) {
   }
 }
 
-async function callClaude(system, messages, maxTokens) {
+async function callClaude(system, messages, maxTokens, modelId = 'claude-sonnet-4-5') {
   const { default: Anthropic } = await import('@anthropic-ai/sdk');
   const client = new Anthropic({ apiKey: process.env.CLAUDE_API_KEY });
 
   const resp = await client.messages.create({
-    model: 'claude-sonnet-4-5-20251022',
+    model: modelId,
     max_tokens: maxTokens,
     system,
     messages,

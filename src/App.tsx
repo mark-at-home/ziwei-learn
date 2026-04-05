@@ -282,8 +282,10 @@ function ErrorBanner({ msg, onClose }: { msg: string; onClose: () => void }) {
 // ── ModelSelector ─────────────────────────────────────────────
 import type { LLMModel as LLMModelType } from './lib/claude-api';
 const MODEL_OPTIONS: { value: LLMModelType; label: string }[] = [
-  { value: 'claude',          label: 'Claude'              },
+  { value: 'claude',          label: 'Claude Sonnet 4.5'   },
+  { value: 'claude-4-6',      label: 'Claude Sonnet 4.6'   },
   { value: 'gemini',          label: 'Gemini 2.5 Flash'    },
+  { value: 'gemini-pro',      label: 'Gemini 2.5 Pro'      },
   { value: 'gemini-thinking', label: 'Gemini 2.5 Thinking' },
   { value: 'gemini-3-flash',  label: 'Gemini 3 Flash'      },
   { value: 'gemini-3-pro',    label: 'Gemini 3.1 Pro'      },
