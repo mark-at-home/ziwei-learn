@@ -37,9 +37,26 @@ async function callLLM(
   return data.content as string;
 }
 
+/** 将 JSON 字符串内部的原始换行符转义为 \n，避免 JSON.parse 失败 */
+function sanitizeJSONString(raw: string): string {
+  let out = '';
+  let inString = false;
+  let escaped = false;
+  for (let i = 0; i < raw.length; i++) {
+    const c = raw[i];
+    if (escaped) { out += c; escaped = false; continue; }
+    if (c === '\\') { out += c; escaped = true; continue; }
+    if (c === '"') { inString = !inString; out += c; continue; }
+    if (inString && (c === '\n' || c === '\r')) { out += '\\n'; continue; }
+    out += c;
+  }
+  return out;
+}
+
 function parseJSON<T>(raw: string, fallback: T): T {
   try {
-    const cleaned = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim();
+    const stripped = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim();
+    const cleaned  = sanitizeJSONString(stripped);
     return JSON.parse(cleaned) as T;
   } catch {
     console.error('JSON 解析失败：', raw.slice(0, 200));

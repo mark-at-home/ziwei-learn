@@ -82,9 +82,18 @@ async function callGemini(system, messages, maxTokens, modelId, thinking) {
   const chat = geminiModel.startChat({ history });
   const result = await chat.sendMessage(lastMsg);
 
+  // 检查是否被安全过滤器拦截
+  const candidate = result.response.candidates?.[0];
+  if (!candidate) {
+    const reason = result.response.promptFeedback?.blockReason ?? 'NO_CANDIDATES';
+    throw new Error(`Gemini 无候选结果 (${modelId}): ${reason}`);
+  }
+
   // 过滤掉思考过程，只返回最终答案
-  const parts = result.response.candidates?.[0]?.content?.parts ?? [];
+  const parts = candidate.content?.parts ?? [];
   const answerPart = parts.find(p => !p.thought);
-  return answerPart?.text ?? result.response.text();
+  const text = answerPart?.text ?? result.response.text();
+  if (!text) throw new Error(`Gemini 返回空内容 (${modelId})`);
+  return text;
 }
 
