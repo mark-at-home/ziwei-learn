@@ -164,6 +164,7 @@ export default function App() {
     return (
       <>
         {globalBar}
+        {error && <ErrorBanner msg={error} onClose={() => setError('')} />}
         <ChartBoard chart={chart} onBack={() => setView('input')} onProceed={handleProceed} />
       </>
     );
@@ -284,6 +285,8 @@ const MODEL_OPTIONS: { value: LLMModelType; label: string }[] = [
   { value: 'claude',          label: 'Claude'              },
   { value: 'gemini',          label: 'Gemini 2.5 Flash'    },
   { value: 'gemini-thinking', label: 'Gemini 2.5 Thinking' },
+  { value: 'gemini-3-flash',  label: 'Gemini 3 Flash'      },
+  { value: 'gemini-3-pro',    label: 'Gemini 3.1 Pro'      },
   { value: 'deepseek',        label: 'DeepSeek'            },
 ];
 

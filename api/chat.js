@@ -1,8 +1,6 @@
 // Vercel Serverless Function — 统一 AI 代理
-// 对应本地 ziwei-proxy/server.js 的 POST /api/chat
 
 export default async function handler(req, res) {
-  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -24,9 +22,13 @@ export default async function handler(req, res) {
     if (model === 'claude') {
       content = await callClaude(system, messages, max_tokens);
     } else if (model === 'gemini') {
-      content = await callGemini(system, messages, max_tokens, false);
+      content = await callGemini(system, messages, max_tokens, 'gemini-2.5-flash', false);
     } else if (model === 'gemini-thinking') {
-      content = await callGemini(system, messages, max_tokens, true);
+      content = await callGemini(system, messages, max_tokens, 'gemini-2.5-flash', true);
+    } else if (model === 'gemini-3-flash') {
+      content = await callGemini(system, messages, max_tokens, 'gemini-3-flash-preview', false);
+    } else if (model === 'gemini-3-pro') {
+      content = await callGemini(system, messages, max_tokens, 'gemini-3.1-pro-preview', false);
     } else if (model === 'deepseek') {
       content = await callDeepSeek(system, messages, max_tokens);
     } else {
@@ -45,7 +47,7 @@ async function callClaude(system, messages, maxTokens) {
   const client = new Anthropic({ apiKey: process.env.CLAUDE_API_KEY });
 
   const resp = await client.messages.create({
-    model: 'claude-sonnet-4-5',
+    model: 'claude-sonnet-4-5-20251022',
     max_tokens: maxTokens,
     system,
     messages,
@@ -54,16 +56,19 @@ async function callClaude(system, messages, maxTokens) {
   return resp.content[0]?.type === 'text' ? resp.content[0].text : '';
 }
 
-async function callGemini(system, messages, maxTokens, thinking = false) {
+async function callGemini(system, messages, maxTokens, modelId, thinking) {
   const { GoogleGenerativeAI } = await import('@google/generative-ai');
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-  const modelId = thinking ? 'gemini-2.5-flash-thinking-exp-01-21' : 'gemini-2.5-flash';
+  const generationConfig = {
+    maxOutputTokens: maxTokens,
+    ...(thinking ? { thinkingConfig: { thinkingBudget: 8192 } } : {}),
+  };
 
   const geminiModel = genAI.getGenerativeModel({
     model: modelId,
     systemInstruction: system,
-    ...(thinking ? { generationConfig: { thinkingConfig: { thinkingBudget: 8192 } } } : {}),
+    generationConfig,
   });
 
   const history = messages.slice(0, -1).map(m => ({
@@ -75,6 +80,7 @@ async function callGemini(system, messages, maxTokens, thinking = false) {
   const chat = geminiModel.startChat({ history });
   const result = await chat.sendMessage(lastMsg);
 
+  // 过滤掉思考过程，只返回最终答案
   const parts = result.response.candidates?.[0]?.content?.parts ?? [];
   const answerPart = parts.find(p => !p.thought);
   return answerPart?.text ?? result.response.text();
