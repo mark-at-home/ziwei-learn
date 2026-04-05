@@ -161,7 +161,7 @@ export default function ChartBoard({ chart, embedded = false, onBack, onProceed 
 
       {/* 命盘格 */}
       <div className={gridClass}>
-        {chart.palaces.map((palace) => {
+        {chart.palaces.map((palace: import('iztro/lib/astro/FunctionalPalace').IFunctionalPalace) => {
           const [row, col] = GRID_POS[palace.index];
           return (
             <Palace
@@ -223,7 +223,7 @@ export default function ChartBoard({ chart, embedded = false, onBack, onProceed 
             {selectedPalace.majorStars?.map((s, i) => (
               <span key={i} className="embedded-major">{s.name}</span>
             ))}
-            {[...(selectedPalace.minorStars ?? []), ...(selectedPalace.adjectiveStars ?? [])].slice(0, 6).map((s: { name: string }, i: number) => (
+            {([...(selectedPalace.minorStars ?? []), ...(selectedPalace.adjectiveStars ?? [])] as { name: string }[]).slice(0, 6).map((s, i) => (
               <span key={i} className="embedded-minor">{s.name}</span>
             ))}
           </div>

@@ -1,4 +1,4 @@
-import type { Astrolabe } from 'iztro/lib/astro/FunctionalAstrolabe';
+import type { Astrolabe } from './iztro-wrapper';
 import { PALACE_ORDER } from './iztro-wrapper';
 
 /**

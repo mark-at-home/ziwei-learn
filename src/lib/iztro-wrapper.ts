@@ -1,7 +1,7 @@
 import { astro } from 'iztro';
-import type { Astrolabe } from 'iztro/lib/astro/FunctionalAstrolabe';
+import type { IFunctionalAstrolabe } from 'iztro/lib/astro/FunctionalAstrolabe';
 
-export type { Astrolabe };
+export type Astrolabe = IFunctionalAstrolabe;
 
 export const TIME_NAMES = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
 
