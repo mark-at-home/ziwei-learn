@@ -1,19 +1,66 @@
+import { useState } from 'react';
 import type { ChartAnalysis } from '../../types';
+import { DIMENSIONS } from '../../types';
 import './AnalysisPanel.css';
 
 interface AnalysisPanelProps {
   analysis: ChartAnalysis;
+  promptText?: { system: string; user: string };
   onStartQuiz: () => void;
   onBack: () => void;
 }
 
-export default function AnalysisPanel({ analysis, onStartQuiz, onBack }: AnalysisPanelProps) {
+function dimLabel(key: string): string {
+  return DIMENSIONS.find(d => d.key === key)?.label ?? key;
+}
+
+export default function AnalysisPanel({ analysis, promptText, onStartQuiz, onBack }: AnalysisPanelProps) {
+  const [showPrompt, setShowPrompt] = useState(false);
+  const [copied, setCopied]         = useState(false);
+
+  function handleCopyPrompt() {
+    if (!promptText) return;
+    const text = `【系统提示词】\n${promptText.system}\n\n【用户提示词】\n${promptText.user}`;
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
+
   return (
     <div className="analysis-page">
       <div className="analysis-header">
         <button className="back-btn" onClick={onBack}>← 返回命盘</button>
         <h2 className="analysis-title">命理分析</h2>
+        {promptText && (
+          <button
+            className="prompt-export-btn"
+            onClick={() => setShowPrompt(v => !v)}
+          >
+            {showPrompt ? '收起提示词' : '查看提示词'}
+          </button>
+        )}
       </div>
+
+      {/* 提示词导出面板 */}
+      {showPrompt && promptText && (
+        <div className="prompt-panel">
+          <div className="prompt-panel-header">
+            <span className="prompt-panel-title">AI 提示词</span>
+            <button className="prompt-copy-btn" onClick={handleCopyPrompt}>
+              {copied ? '已复制' : '复制全部'}
+            </button>
+          </div>
+          <div className="prompt-section">
+            <div className="prompt-label">系统提示词</div>
+            <pre className="prompt-text">{promptText.system}</pre>
+          </div>
+          <div className="prompt-section">
+            <div className="prompt-label">用户提示词</div>
+            <pre className="prompt-text">{promptText.user}</pre>
+          </div>
+        </div>
+      )}
 
       <div className="analysis-content">
         {/* 总述 */}
@@ -58,10 +105,10 @@ export default function AnalysisPanel({ analysis, onStartQuiz, onBack }: Analysi
           </section>
         )}
 
-        {/* 事件性分析 */}
+        {/* 维度分析 */}
         {analysis.eventAnalysis.map((ea, i) => (
           <section key={i} className="analysis-section">
-            <div className="section-tag event-tag">{ea.dimension}</div>
+            <div className="section-tag event-tag">{dimLabel(ea.dimension)}</div>
             <p className="analysis-text">{ea.content}</p>
             <div className="reasoning-block">
               <span className="reasoning-label">推理依据</span>

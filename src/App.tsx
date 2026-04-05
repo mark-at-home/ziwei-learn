@@ -11,7 +11,7 @@ import type { Astrolabe } from './lib/iztro-wrapper';
 import { getChartId, getChartLabel, generateChart, TIME_NAMES } from './lib/iztro-wrapper';
 import type { Gender } from './lib/iztro-wrapper';
 import { chartToPromptText } from './lib/chart-to-text';
-import { generateAnalysis, generateQuiz } from './lib/claude-api';
+import { generateAnalysis, generateQuiz, getAnalysisPrompt } from './lib/claude-api';
 import type { LLMModel } from './lib/claude-api';
 import { saveSession, saveChartRecord, loadChartRecord } from './lib/storage';
 import type { ChartAnalysis, Dimension, QuizQuestion, QuizSession as QuizSessionType } from './types';
@@ -37,6 +37,7 @@ export default function App() {
   const [loadingMsg, setLoadingMsg]       = useState('');
   const [error, setError]                 = useState('');
   const [model, setModel]                 = useState<LLMModel>('gemini');
+  const [promptText, setPromptText]       = useState<{ system: string; user: string } | null>(null);
 
   // ── 排盘完成 ─────────────────────────────────────────────────
   function handleChartGenerated(c: Astrolabe) {
@@ -73,6 +74,7 @@ export default function App() {
   async function handleDimensionsConfirmed(dims: Dimension[]) {
     if (!chart) return;
     setSelected(dims);
+    setPromptText(getAnalysisPrompt(chart, dims));
     setView('loading-analysis');
     setLoadingMsg('正在生成命理分析…');
     try {
@@ -87,6 +89,7 @@ export default function App() {
 
   async function handleViewOnly() {
     if (!chart) return;
+    setPromptText(getAnalysisPrompt(chart, []));
     setView('loading-analysis');
     setLoadingMsg('正在生成命理分析…');
     try {
@@ -211,6 +214,7 @@ export default function App() {
           {error && <ErrorBanner msg={error} onClose={() => setError('')} />}
           <AnalysisPanel
             analysis={analysis}
+            promptText={promptText ?? undefined}
             onStartQuiz={selectedDimensions.length > 0 ? handleStartQuiz : () => {}}
             onBack={() => { setView(selectedDimensions.length > 0 ? 'dimension-picker' : 'chart'); setError(''); }}
           />

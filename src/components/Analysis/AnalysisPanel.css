@@ -44,6 +44,88 @@
   gap: 1.6rem;
 }
 
+/* 提示词导出按钮 */
+.prompt-export-btn {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  color: #5a5a5a;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.72rem;
+  padding: 0.2rem 0.6rem;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.prompt-export-btn:hover {
+  color: #c9a84c;
+  border-color: #c9a84c60;
+}
+
+/* 提示词面板 */
+.prompt-panel {
+  background: #0a0a0a;
+  border-bottom: 1px solid #1a1a1a;
+  padding: 0.8rem 1rem;
+  max-width: 680px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.prompt-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+
+.prompt-panel-title {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.75rem;
+  color: #c9a84c;
+  letter-spacing: 0.1em;
+}
+
+.prompt-copy-btn {
+  background: #c9a84c;
+  border: none;
+  border-radius: 3px;
+  color: #0d0d0d;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  cursor: pointer;
+}
+
+.prompt-section {
+  margin-bottom: 0.6rem;
+}
+
+.prompt-label {
+  font-size: 0.65rem;
+  color: #4a4a4a;
+  font-family: 'Noto Sans SC', sans-serif;
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.08em;
+}
+
+.prompt-text {
+  background: #111;
+  border: 1px solid #1e1e1e;
+  border-radius: 3px;
+  padding: 0.6rem 0.8rem;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.75rem;
+  color: #8a8a7a;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
 /* 分析区块 */
 .analysis-section {
   display: flex;
@@ -59,7 +141,6 @@
   letter-spacing: 0.15em;
   border-left: 2px solid #c9a84c;
   padding-left: 0.5rem;
-  text-transform: uppercase;
 }
 
 .event-tag {

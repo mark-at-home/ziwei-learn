@@ -11,7 +11,9 @@
   top: 2.5rem;
   height: calc(100vh - 2.5rem);
   overflow-y: auto;
+  overflow-x: hidden;
   border-right: 1px solid #1a1a1a;
+  padding-bottom: 1rem;
 }
 
 /* 拖动分隔条 */
@@ -64,16 +66,15 @@
   .split-chart {
     width: 100% !important;
     height: auto;
-    max-height: 100vw;
+    max-height: none;
     position: static;
     border-right: none;
     border-bottom: 1px solid #1a1a1a;
-    overflow: hidden;
+    overflow-y: auto;
   }
 
   .split-chart--hidden {
-    max-height: 0;
-    border-bottom: none;
+    display: none;
   }
 
   .split-resize-handle {
@@ -85,8 +86,3 @@
   }
 }
 
-@media (max-width: 480px) {
-  .split-chart {
-    max-height: 100vw;
-  }
-}

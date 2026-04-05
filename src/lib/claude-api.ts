@@ -64,6 +64,14 @@ function parseJSON<T>(raw: string, fallback: T): T {
   }
 }
 
+// ─── 导出提示词 ──────────────────────────────────────────────
+
+export function getAnalysisPrompt(chart: Astrolabe, selectedDimensions: Dimension[]): { system: string; user: string } {
+  const chartText  = chartToPromptText(chart);
+  const userPrompt = buildAnalysisPrompt(chartText, selectedDimensions);
+  return { system: ANALYSIS_SYSTEM, user: userPrompt };
+}
+
 // ─── 命理分析 ─────────────────────────────────────────────────
 
 export async function generateAnalysis(
