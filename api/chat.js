@@ -93,7 +93,14 @@ async function callGemini(system, messages, maxTokens, modelId, thinking) {
   const parts = candidate.content?.parts ?? [];
   const answerPart = parts.find(p => !p.thought);
   const text = answerPart?.text ?? result.response.text();
-  if (!text) throw new Error(`Gemini 返回空内容 (${modelId})`);
+  if (!text) {
+    const info = {
+      finishReason: candidate.finishReason,
+      partsCount: parts.length,
+      parts: parts.map(p => ({ thought: !!p.thought, textLen: p.text?.length ?? 0 })),
+    };
+    throw new Error(`Gemini 返回空内容 (${modelId}): ${JSON.stringify(info)}`);
+  }
   return text;
 }
 
