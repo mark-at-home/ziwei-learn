@@ -34,9 +34,9 @@ export const ANALYSIS_SYSTEM = `你是一位精通紫微斗数的命理老师，
 }`;
 
 export function buildAnalysisPrompt(chartText: string, selectedDimensions: Dimension[]): string {
-  const eventDims = selectedDimensions.filter(d => d.category === 'event');
-  const dimList   = eventDims.length > 0
-    ? `\n\n请额外分析以下事件性维度：\n${eventDims.map(d => `- ${d.key}：${d.label}`).join('\n')}`
+  const extraDims = selectedDimensions.filter(d => d.level >= 4);
+  const dimList   = extraDims.length > 0
+    ? `\n\n请额外分析以下维度：\n${extraDims.map(d => `- ${d.key}：${d.label}`).join('\n')}`
     : '';
 
   return `以下是待分析的命盘数据：
@@ -67,7 +67,7 @@ export const QUIZ_SYSTEM = `你是一位紫微斗数命理考官，负责根据�
     "type": "objective",
     "topic": "考察点简述",
     "dimension": "维度key",
-    "dimensionCategory": "structural或event",
+    "dimensionLevel": 1,
     "question": "题目内容",
     "options": ["选项A", "选项B", "选项C", "选项D"],
     "referenceAnswer": "标准答案",
@@ -82,7 +82,7 @@ export function buildQuizPrompt(
   keyFeatures: string[],
   selectedDimensions: Dimension[],
 ): string {
-  const dimDescs = selectedDimensions.map(d => `${d.key}（${d.label}，${d.category}）`).join('、');
+  const dimDescs = selectedDimensions.map(d => `${d.key}（${d.label}，L${d.level}）`).join('、');
   const features = keyFeatures.join('；');
 
   return `命盘数据：

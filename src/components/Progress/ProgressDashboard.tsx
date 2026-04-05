@@ -1,4 +1,6 @@
 import { getDimensionStats, loadSessions } from '../../lib/storage';
+import { DIMENSION_GROUPS } from '../../types';
+import type { DimensionLevel } from '../../types';
 import './Progress.css';
 
 interface ProgressDashboardProps {
@@ -9,8 +11,12 @@ export default function ProgressDashboard({ onBack }: ProgressDashboardProps) {
   const stats    = getDimensionStats().filter(s => s.total > 0);
   const sessions = loadSessions();
 
-  const structural = stats.filter(s => s.dimensionCategory === 'structural');
-  const event      = stats.filter(s => s.dimensionCategory === 'event');
+  const statsByLevel = DIMENSION_GROUPS
+    .map(g => ({
+      ...g,
+      items: stats.filter(s => s.dimensionLevel === g.level),
+    }))
+    .filter(g => g.items.length > 0);
 
   return (
     <div className="progress-page">
@@ -27,23 +33,17 @@ export default function ProgressDashboard({ onBack }: ProgressDashboardProps) {
           </div>
         ) : (
           <>
-            {structural.length > 0 && (
-              <section className="progress-section">
-                <div className="section-tag">结构性维度</div>
-                {structural.map(s => (
+            {statsByLevel.map(group => (
+              <section key={group.level} className="progress-section">
+                <div className="section-tag">
+                  L{group.level} · {group.label}
+                  <span className="section-tag-desc">{group.description}</span>
+                </div>
+                {group.items.map(s => (
                   <DimBar key={s.dimension} stat={s} />
                 ))}
               </section>
-            )}
-
-            {event.length > 0 && (
-              <section className="progress-section">
-                <div className="section-tag">事件性维度</div>
-                {event.map(s => (
-                  <DimBar key={s.dimension} stat={s} />
-                ))}
-              </section>
-            )}
+            ))}
           </>
         )}
 

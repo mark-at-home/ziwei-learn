@@ -109,9 +109,9 @@ export function getDimensionStats(): DimensionStats[] {
     const accurate = records.filter(a => a.selfEval === 'accurate').length;
     const rate     = total > 0 ? accurate / total : 0;
     return {
-      dimension:         dim.key,
-      label:             dim.label,
-      dimensionCategory: dim.category,
+      dimension:      dim.key,
+      label:          dim.label,
+      dimensionLevel: dim.level,
       total,
       accurate,
       rate,

@@ -38,9 +38,9 @@ export default function QuizSession({
   function handleAnswer(userAnswer: string, selfEval: SelfEval) {
     const q = questions[currentIndex];
     const record: AnswerRecord = {
-      questionId:        q.id,
-      dimension:         q.dimension,
-      dimensionCategory: q.dimensionCategory,
+      questionId:     q.id,
+      dimension:      q.dimension,
+      dimensionLevel: q.dimensionLevel,
       userAnswer,
       selfEval,
     };

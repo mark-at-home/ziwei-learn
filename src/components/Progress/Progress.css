@@ -72,6 +72,15 @@
   letter-spacing: 0.15em;
   border-left: 2px solid #c9a84c;
   padding-left: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.section-tag-desc {
+  color: #3a3a3a;
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
 }
 
 /* 维度进度条 */

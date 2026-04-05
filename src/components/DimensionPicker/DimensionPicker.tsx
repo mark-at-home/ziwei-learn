@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { DIMENSIONS } from '../../types';
+import { DIMENSIONS, DIMENSION_GROUPS } from '../../types';
 import type { Dimension } from '../../types';
 import './DimensionPicker.css';
 
 interface DimensionPickerProps {
   onConfirm: (selected: Dimension[]) => void;
-  onViewOnly: () => void;  // 只看分析不答题
+  onViewOnly: () => void;
   onBack: () => void;
 }
 
@@ -20,14 +20,21 @@ export default function DimensionPicker({ onConfirm, onViewOnly, onBack }: Dimen
     });
   }
 
+  function selectLevel(level: number) {
+    setSelected(prev => {
+      const next = new Set(prev);
+      const levelDims = DIMENSIONS.filter(d => d.level === level);
+      const allSelected = levelDims.every(d => next.has(d.key));
+      levelDims.forEach(d => allSelected ? next.delete(d.key) : next.add(d.key));
+      return next;
+    });
+  }
+
   function handleConfirm() {
     const dims = DIMENSIONS.filter(d => selected.has(d.key));
     if (dims.length === 0) return;
     onConfirm(dims);
   }
-
-  const structural = DIMENSIONS.filter(d => d.category === 'structural');
-  const event      = DIMENSIONS.filter(d => d.category === 'event');
 
   return (
     <div className="picker-page">
@@ -37,35 +44,38 @@ export default function DimensionPicker({ onConfirm, onViewOnly, onBack }: Dimen
       </div>
 
       <div className="picker-content">
-        <div className="picker-group">
-          <div className="group-label">结构性维度</div>
-          <div className="dim-grid">
-            {structural.map(d => (
-              <button
-                key={d.key}
-                className={`dim-btn ${selected.has(d.key) ? 'dim-btn--selected' : ''}`}
-                onClick={() => toggle(d.key)}
-              >
-                {d.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="picker-group">
-          <div className="group-label">事件性维度</div>
-          <div className="dim-grid">
-            {event.map(d => (
-              <button
-                key={d.key}
-                className={`dim-btn ${selected.has(d.key) ? 'dim-btn--selected' : ''}`}
-                onClick={() => toggle(d.key)}
-              >
-                {d.label}
-              </button>
-            ))}
-          </div>
-        </div>
+        {DIMENSION_GROUPS.map(group => {
+          const dims = DIMENSIONS.filter(d => d.level === group.level);
+          const selectedCount = dims.filter(d => selected.has(d.key)).length;
+          return (
+            <div key={group.level} className="picker-group">
+              <div className="group-header">
+                <div className="group-label">
+                  <span className="group-level">L{group.level}</span>
+                  {group.label}
+                  <span className="group-desc">{group.description}</span>
+                </div>
+                <button
+                  className="group-select-all"
+                  onClick={() => selectLevel(group.level)}
+                >
+                  {selectedCount === dims.length ? '取消全选' : '全选'}
+                </button>
+              </div>
+              <div className="dim-grid">
+                {dims.map(d => (
+                  <button
+                    key={d.key}
+                    className={`dim-btn ${selected.has(d.key) ? 'dim-btn--selected' : ''}`}
+                    onClick={() => toggle(d.key)}
+                  >
+                    {d.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       <div className="picker-footer">
