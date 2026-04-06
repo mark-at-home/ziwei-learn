@@ -3,7 +3,7 @@ import type { IFunctionalAstrolabe } from 'iztro/lib/astro/FunctionalAstrolabe';
 
 export type Astrolabe = IFunctionalAstrolabe;
 
-export const TIME_NAMES = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+export const TIME_NAMES = ['早子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥', '晚子'];
 
 // 标准宫位名称顺序（用于命盘布局）
 export const PALACE_ORDER = [

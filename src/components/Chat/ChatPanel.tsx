@@ -1,14 +1,19 @@
 import { useState, useRef, useEffect } from 'react';
 import type { ChatMessage } from '../../lib/claude-api';
+import { loadChatHistory, saveChatHistory, deleteChatHistory } from '../../lib/storage';
 import './Chat.css';
 
 interface ChatPanelProps {
+  chartId: string;
   onSend: (messages: ChatMessage[]) => Promise<string>;
   onClose: () => void;
 }
 
-export default function ChatPanel({ onSend, onClose }: ChatPanelProps) {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+export default function ChatPanel({ chartId, onSend, onClose }: ChatPanelProps) {
+  const [messages, setMessages] = useState<ChatMessage[]>(() => {
+    const saved = loadChatHistory(chartId);
+    return saved ? saved.messages : [];
+  });
   const [input, setInput]       = useState('');
   const [loading, setLoading]   = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -17,6 +22,13 @@ export default function ChatPanel({ onSend, onClose }: ChatPanelProps) {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // 当 messages 变化时自动保存
+  useEffect(() => {
+    if (messages.length > 0) {
+      saveChatHistory(chartId, messages);
+    }
+  }, [messages, chartId]);
 
   async function handleSend() {
     const text = input.trim();
@@ -42,6 +54,11 @@ export default function ChatPanel({ onSend, onClose }: ChatPanelProps) {
     }
   }
 
+  function handleClear() {
+    setMessages([]);
+    deleteChatHistory(chartId);
+  }
+
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -53,7 +70,12 @@ export default function ChatPanel({ onSend, onClose }: ChatPanelProps) {
     <div className="chat-panel">
       <div className="chat-header">
         <span className="chat-title">问命师</span>
-        <button className="chat-close" onClick={onClose}>收起</button>
+        <div className="chat-header-actions">
+          {messages.length > 0 && (
+            <button className="chat-clear" onClick={handleClear}>清空记录</button>
+          )}
+          <button className="chat-close" onClick={onClose}>收起</button>
+        </div>
       </div>
 
       <div className="chat-messages">

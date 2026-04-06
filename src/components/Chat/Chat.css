@@ -23,6 +23,29 @@
   letter-spacing: 0.1em;
 }
 
+.chat-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.chat-clear {
+  background: transparent;
+  border: 1px solid #8b1a1a40;
+  border-radius: 3px;
+  color: #8b1a1a;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.65rem;
+  padding: 0.15rem 0.4rem;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.chat-clear:hover {
+  color: #c22;
+  border-color: #c22;
+}
+
 .chat-close {
   background: transparent;
   border: 1px solid #2a2a2a;

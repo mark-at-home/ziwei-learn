@@ -7,6 +7,7 @@ import './AnalysisPanel.css';
 
 interface AnalysisPanelProps {
   analysis: ChartAnalysis;
+  chartId?: string;
   promptText?: { system: string; user: string };
   onChat?: (messages: ChatMessage[]) => Promise<string>;
   onStartQuiz: () => void;
@@ -17,7 +18,7 @@ function dimLabel(key: string): string {
   return DIMENSIONS.find(d => d.key === key)?.label ?? key;
 }
 
-export default function AnalysisPanel({ analysis, promptText, onChat, onStartQuiz, onBack }: AnalysisPanelProps) {
+export default function AnalysisPanel({ analysis, chartId, promptText, onChat, onStartQuiz, onBack }: AnalysisPanelProps) {
   const [showPrompt, setShowPrompt] = useState(false);
   const [showChat, setShowChat]     = useState(false);
   const [copied, setCopied]         = useState(false);
@@ -145,8 +146,8 @@ export default function AnalysisPanel({ analysis, promptText, onChat, onStartQui
       </div>
 
       {/* 自由问答面板 */}
-      {showChat && onChat && (
-        <ChatPanel onSend={onChat} onClose={() => setShowChat(false)} />
+      {showChat && onChat && chartId && (
+        <ChatPanel chartId={chartId} onSend={onChat} onClose={() => setShowChat(false)} />
       )}
 
       <div className="analysis-footer">

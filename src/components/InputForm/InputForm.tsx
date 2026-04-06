@@ -169,9 +169,10 @@ export default function InputForm({ onSubmit }: InputFormProps) {
             value={form.timeIndex}
             onChange={e => set('timeIndex', parseInt(e.target.value))}
           >
-            {TIME_NAMES.map((name, i) => (
-              <option key={i} value={i}>{name}时</option>
-            ))}
+            {TIME_NAMES.map((name, i) => {
+              const ranges = ['23:00-01:00', '01:00-03:00', '03:00-05:00', '05:00-07:00', '07:00-09:00', '09:00-11:00', '11:00-13:00', '13:00-15:00', '15:00-17:00', '17:00-19:00', '19:00-21:00', '21:00-23:00', '00:00-01:00'];
+              return <option key={i} value={i}>{name}时（{ranges[i]}）</option>;
+            })}
           </select>
         </div>
 

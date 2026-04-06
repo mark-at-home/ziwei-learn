@@ -57,7 +57,8 @@ export default function App() {
     if (!record) return;
     // 重新生成 Astrolabe 实例：JSON 序列化会丢失类方法（如 horoscope()），直接用原始参数重建
     const stored = record.astrolabe as Astrolabe & { time: string; gender: string };
-    const timeIndex = TIME_NAMES.indexOf((stored.time ?? '')[0]);
+    const timeStr = stored.time ?? '';
+    const timeIndex = TIME_NAMES.findIndex(t => timeStr.startsWith(t));
     // chart.gender 存储的是 iztro 中文本地化值 '男'/'女'，不是 'male'/'female'
     const gender = (stored.gender === '女' ? 'female' : 'male') as Gender;
     const freshChart = generateChart(record.solarDate, timeIndex >= 0 ? timeIndex : 0, gender);
@@ -215,6 +216,7 @@ export default function App() {
           {error && <ErrorBanner msg={error} onClose={() => setError('')} />}
           <AnalysisPanel
             analysis={analysis}
+            chartId={getChartId(chart)}
             promptText={promptText ?? undefined}
             onChat={(msgs: ChatMessage[]) => chatWithChart(chart, analysis, msgs, model)}
             onStartQuiz={selectedDimensions.length > 0 ? handleStartQuiz : () => {}}
