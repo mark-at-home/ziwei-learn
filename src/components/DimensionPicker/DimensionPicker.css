@@ -9,13 +9,13 @@
   align-items: center;
   gap: 1rem;
   padding: 0.8rem 1rem 0.6rem;
-  border-bottom: 1px solid #1a1a1a;
+  border-bottom: 1px solid #e8ddd4;
 }
 
 .picker-title {
   font-family: 'Noto Serif SC', serif;
   font-size: 1rem;
-  color: #c9a84c;
+  color: #c87d8a;
   font-weight: 400;
   letter-spacing: 0.1em;
 }
@@ -23,7 +23,7 @@
 .back-btn {
   background: transparent;
   border: none;
-  color: #8a7a60;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.82rem;
   cursor: pointer;
@@ -31,7 +31,7 @@
   transition: color 0.15s;
 }
 
-.back-btn:hover { color: #c9a84c; }
+.back-btn:hover { color: #c87d8a; }
 
 .picker-content {
   flex: 1;
@@ -59,7 +59,7 @@
 
 .group-label {
   font-size: 0.75rem;
-  color: #5a5a5a;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
   letter-spacing: 0.08em;
   display: flex;
@@ -71,26 +71,26 @@
   display: inline-block;
   font-size: 0.65rem;
   font-weight: 700;
-  color: #c9a84c;
-  background: #c9a84c18;
-  border: 1px solid #c9a84c40;
-  border-radius: 3px;
+  color: #c87d8a;
+  background: #c87d8a12;
+  border: 1px solid #c87d8a40;
+  border-radius: 6px;
   padding: 0.1rem 0.35rem;
   letter-spacing: 0;
   line-height: 1.2;
 }
 
 .group-desc {
-  color: #3a3a3a;
+  color: #b0a8a0;
   font-size: 0.68rem;
   margin-left: 0.3rem;
 }
 
 .group-select-all {
   background: transparent;
-  border: 1px solid #2a2a2a;
-  border-radius: 3px;
-  color: #5a5a5a;
+  border: 1px solid #e8ddd4;
+  border-radius: 6px;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.68rem;
   padding: 0.15rem 0.5rem;
@@ -99,8 +99,8 @@
 }
 
 .group-select-all:hover {
-  color: #c9a84c;
-  border-color: #c9a84c60;
+  color: #c87d8a;
+  border-color: #c87d8a60;
 }
 
 .dim-grid {
@@ -110,10 +110,10 @@
 }
 
 .dim-btn {
-  background: #111;
-  border: 1px solid #2a2a2a;
-  border-radius: 3px;
-  color: #8a7a60;
+  background: #ffffff;
+  border: 1px solid #e8ddd4;
+  border-radius: 8px;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.82rem;
   padding: 0.4rem 0.8rem;
@@ -123,14 +123,14 @@
 }
 
 .dim-btn:hover {
-  border-color: #c9a84c60;
-  color: #c9a84c;
+  border-color: #c87d8a60;
+  color: #c87d8a;
 }
 
 .dim-btn--selected {
-  border-color: #c9a84c;
-  color: #c9a84c;
-  background: #c9a84c15;
+  border-color: #c87d8a;
+  color: #c87d8a;
+  background: #c87d8a10;
 }
 
 .picker-footer {
@@ -138,7 +138,7 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  border-top: 1px solid #1a1a1a;
+  border-top: 1px solid #e8ddd4;
   max-width: 560px;
   width: 100%;
   margin: 0 auto;
@@ -147,7 +147,7 @@
 .btn-text {
   background: transparent;
   border: none;
-  color: #5a5a5a;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.82rem;
   cursor: pointer;
@@ -157,14 +157,14 @@
   transition: color 0.15s;
 }
 
-.btn-text:hover { color: #8a7a60; }
+.btn-text:hover { color: #c87d8a; }
 
 .btn-primary {
   flex: 1;
-  background: #c9a84c;
+  background: #c87d8a;
   border: none;
-  border-radius: 3px;
-  color: #0d0d0d;
+  border-radius: 8px;
+  color: #ffffff;
   font-family: 'Noto Serif SC', serif;
   font-size: 0.95rem;
   font-weight: 700;
@@ -179,4 +179,4 @@
   cursor: not-allowed;
 }
 
-.btn-primary:not(:disabled):hover { background: #d4b45a; }
+.btn-primary:not(:disabled):hover { background: #d48e9a; }

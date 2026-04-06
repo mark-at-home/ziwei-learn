@@ -37,6 +37,11 @@ export const ANALYSIS_SYSTEM = `你是一位拥有三十年实战经验的紫微
   "keyFeatures": ["命盘核心特征1", "特征2", "特征3", "特征4", "特征5"]
 }`;
 
+function currentDateStr(): string {
+  const d = new Date();
+  return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+}
+
 export function buildAnalysisPrompt(chartText: string, selectedDimensions: Dimension[]): string {
   const extraDims = selectedDimensions.filter(d => d.level >= 4);
   const dimList   = extraDims.length > 0
@@ -54,7 +59,9 @@ export function buildAnalysisPrompt(chartText: string, selectedDimensions: Dimen
     ? '\n- 组合技法分析：识别此命盘是否成格（紫府同宫、武贪格、杀破狼、机月同梁、府相朝垣等），分析格局的成立条件与破坏因素'
     : '';
 
-  return `以下是待分析的命盘数据：
+  return `当前日期：${currentDateStr()}（请据此判断命主当前所处的大限和流年）
+
+以下是待分析的命盘数据：
 
 ${chartText}
 
@@ -130,6 +137,8 @@ export function buildChatSystem(chartText: string, analysis: ChartAnalysis): str
     .join('\n');
 
   return `你是一位精通紫微斗数的命理老师，正在与学习者就一张具体命盘进行对话。
+
+当前日期：${currentDateStr()}（请据此判断命主当前所处的大限和流年）
 
 以下是当前命盘数据：
 ${chartText}

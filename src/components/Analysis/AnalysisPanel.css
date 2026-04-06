@@ -9,13 +9,13 @@
   align-items: center;
   gap: 1rem;
   padding: 0.8rem 1rem 0.6rem;
-  border-bottom: 1px solid #1a1a1a;
+  border-bottom: 1px solid #e8ddd4;
 }
 
 .analysis-title {
   font-family: 'Noto Serif SC', serif;
   font-size: 1rem;
-  color: #c9a84c;
+  color: #c87d8a;
   font-weight: 400;
   letter-spacing: 0.1em;
 }
@@ -23,7 +23,7 @@
 .back-btn {
   background: transparent;
   border: none;
-  color: #8a7a60;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.82rem;
   cursor: pointer;
@@ -31,7 +31,7 @@
   transition: color 0.15s;
 }
 
-.back-btn:hover { color: #c9a84c; }
+.back-btn:hover { color: #c87d8a; }
 
 .analysis-content {
   flex: 1;
@@ -54,9 +54,9 @@
 /* 提示词导出按钮 */
 .prompt-export-btn {
   background: transparent;
-  border: 1px solid #2a2a2a;
-  border-radius: 3px;
-  color: #5a5a5a;
+  border: 1px solid #e8ddd4;
+  border-radius: 8px;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.72rem;
   padding: 0.2rem 0.6rem;
@@ -65,14 +65,14 @@
 }
 
 .prompt-export-btn:hover {
-  color: #c9a84c;
-  border-color: #c9a84c60;
+  color: #c87d8a;
+  border-color: #c87d8a60;
 }
 
 /* 提示词面板 */
 .prompt-panel {
-  background: #0a0a0a;
-  border-bottom: 1px solid #1a1a1a;
+  background: #faf6f1;
+  border-bottom: 1px solid #e8ddd4;
   padding: 0.8rem 1rem;
   max-width: 680px;
   width: 100%;
@@ -89,15 +89,15 @@
 .prompt-panel-title {
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.75rem;
-  color: #c9a84c;
+  color: #c87d8a;
   letter-spacing: 0.1em;
 }
 
 .prompt-copy-btn {
-  background: #c9a84c;
+  background: #c87d8a;
   border: none;
-  border-radius: 3px;
-  color: #0d0d0d;
+  border-radius: 6px;
+  color: #ffffff;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.7rem;
   font-weight: 700;
@@ -111,20 +111,20 @@
 
 .prompt-label {
   font-size: 0.65rem;
-  color: #4a4a4a;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
   margin-bottom: 0.3rem;
   letter-spacing: 0.08em;
 }
 
 .prompt-text {
-  background: #111;
-  border: 1px solid #1e1e1e;
-  border-radius: 3px;
+  background: #ffffff;
+  border: 1px solid #e8ddd4;
+  border-radius: 8px;
   padding: 0.6rem 0.8rem;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.75rem;
-  color: #8a8a7a;
+  color: #8a7f7f;
   line-height: 1.6;
   white-space: pre-wrap;
   word-break: break-all;
@@ -135,9 +135,9 @@
 /* 问命师按钮 */
 .chat-toggle-btn-header {
   background: transparent;
-  border: 1px solid #4a8c5c60;
-  border-radius: 3px;
-  color: #4a8c5c;
+  border: 1px solid #7bba9a60;
+  border-radius: 8px;
+  color: #7bba9a;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.72rem;
   padding: 0.2rem 0.6rem;
@@ -146,14 +146,14 @@
 }
 
 .chat-toggle-btn-header:hover {
-  color: #6ab87a;
-  border-color: #6ab87a;
+  color: #5ea882;
+  border-color: #5ea882;
 }
 
 .chat-toggle-btn-header--active {
-  background: #4a8c5c20;
-  color: #6ab87a;
-  border-color: #6ab87a;
+  background: #7bba9a15;
+  color: #5ea882;
+  border-color: #5ea882;
 }
 
 /* 分析区块 */
@@ -166,41 +166,42 @@
 .section-tag {
   display: inline-block;
   font-size: 0.68rem;
-  color: #c9a84c;
+  color: #c87d8a;
   font-family: 'Noto Sans SC', sans-serif;
   letter-spacing: 0.15em;
-  border-left: 2px solid #c9a84c;
+  border-left: 2px solid #c87d8a;
   padding-left: 0.5rem;
 }
 
 .event-tag {
-  color: #4a8c5c;
-  border-color: #4a8c5c;
+  color: #7bba9a;
+  border-color: #7bba9a;
 }
 
 .analysis-summary {
   font-family: 'Noto Serif SC', serif;
   font-size: 0.95rem;
-  color: #e8dcc8;
+  color: #4a3f3f;
   line-height: 1.8;
 }
 
 .analysis-text {
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.88rem;
-  color: #c8b898;
+  color: #5a5050;
   line-height: 1.8;
 }
 
 /* 宫位分析卡片 */
 .palace-analysis-card {
-  background: #111;
-  border: 1px solid #1e1e1e;
-  border-radius: 3px;
+  background: #ffffff;
+  border: 1px solid #e8ddd4;
+  border-radius: 10px;
   padding: 0.9rem 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  box-shadow: 0 1px 6px rgba(180,160,140,0.08);
 }
 
 .palace-analysis-header {
@@ -212,33 +213,33 @@
 .palace-analysis-name {
   font-family: 'Noto Serif SC', serif;
   font-size: 0.9rem;
-  color: #c9a84c;
+  color: #c87d8a;
 }
 
 .palace-analysis-stars {
   font-size: 0.75rem;
-  color: #5a4a30;
+  color: #b0a8a0;
   font-family: 'Noto Sans SC', sans-serif;
 }
 
 .palace-analysis-text {
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.86rem;
-  color: #c8b898;
+  color: #5a5050;
   line-height: 1.75;
 }
 
 /* 推理依据 */
 .reasoning-block {
-  background: #0d0d0d;
-  border-left: 2px solid #2a2a2a;
+  background: #faf6f1;
+  border-left: 2px solid #e8ddd4;
   padding: 0.5rem 0.8rem;
-  border-radius: 0 2px 2px 0;
+  border-radius: 0 8px 8px 0;
 }
 
 .reasoning-label {
   font-size: 0.62rem;
-  color: #3a3a3a;
+  color: #b0a8a0;
   font-family: 'Noto Sans SC', sans-serif;
   letter-spacing: 0.1em;
   display: block;
@@ -248,7 +249,7 @@
 .reasoning-text {
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.8rem;
-  color: #6a6a6a;
+  color: #8a7f7f;
   line-height: 1.7;
 }
 
@@ -263,7 +264,7 @@
 .key-feature-item {
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.85rem;
-  color: #c8b898;
+  color: #5a5050;
   padding-left: 1rem;
   position: relative;
 }
@@ -272,7 +273,7 @@
   content: '·';
   position: absolute;
   left: 0;
-  color: #c9a84c;
+  color: #c87d8a;
 }
 
 /* 底部按钮 */
@@ -280,7 +281,7 @@
   display: flex;
   gap: 0.8rem;
   padding: 1rem;
-  border-top: 1px solid #1a1a1a;
+  border-top: 1px solid #e8ddd4;
   max-width: 680px;
   width: 100%;
   margin: 0 auto;
@@ -288,10 +289,10 @@
 
 .btn-primary {
   flex: 2;
-  background: #c9a84c;
+  background: #c87d8a;
   border: none;
-  border-radius: 3px;
-  color: #0d0d0d;
+  border-radius: 8px;
+  color: #ffffff;
   font-family: 'Noto Serif SC', serif;
   font-size: 0.95rem;
   font-weight: 700;
@@ -301,14 +302,14 @@
   transition: background 0.15s;
 }
 
-.btn-primary:hover { background: #d4b45a; }
+.btn-primary:hover { background: #d48e9a; }
 
 .btn-secondary {
   flex: 1;
   background: transparent;
-  border: 1px solid #2a2a2a;
-  border-radius: 3px;
-  color: #8a7a60;
+  border: 1px solid #e8ddd4;
+  border-radius: 8px;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.85rem;
   padding: 0.65rem 0;
@@ -317,6 +318,6 @@
 }
 
 .btn-secondary:hover {
-  border-color: #c9a84c60;
-  color: #c9a84c;
+  border-color: #c87d8a60;
+  color: #c87d8a;
 }

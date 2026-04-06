@@ -1,12 +1,15 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import type { ChartAnalysis } from '../../types';
 import { DIMENSIONS } from '../../types';
 import type { ChatMessage } from '../../lib/claude-api';
+import type { Astrolabe } from '../../lib/iztro-wrapper';
+import { verifyAnalysis } from '../../lib/chart-verify';
 import ChatPanel from '../Chat/ChatPanel';
 import './AnalysisPanel.css';
 
 interface AnalysisPanelProps {
   analysis: ChartAnalysis;
+  chart?: Astrolabe;
   chartId?: string;
   promptText?: { system: string; user: string };
   onChat?: (messages: ChatMessage[]) => Promise<string>;
@@ -18,10 +21,16 @@ function dimLabel(key: string): string {
   return DIMENSIONS.find(d => d.key === key)?.label ?? key;
 }
 
-export default function AnalysisPanel({ analysis, chartId, promptText, onChat, onStartQuiz, onBack }: AnalysisPanelProps) {
+export default function AnalysisPanel({ analysis, chart, chartId, promptText, onChat, onStartQuiz, onBack }: AnalysisPanelProps) {
   const [showPrompt, setShowPrompt] = useState(false);
   const [showChat, setShowChat]     = useState(false);
+  const [showVerify, setShowVerify] = useState(false);
   const [copied, setCopied]         = useState(false);
+
+  const verifyResult = useMemo(() => {
+    if (!chart) return null;
+    return verifyAnalysis(chart, analysis);
+  }, [chart, analysis]);
 
   function handleCopyPrompt() {
     if (!promptText) return;
@@ -44,6 +53,15 @@ export default function AnalysisPanel({ analysis, chartId, promptText, onChat, o
               onClick={() => setShowPrompt(v => !v)}
             >
               {showPrompt ? '收起提示词' : '查看提示词'}
+            </button>
+          )}
+          {verifyResult && (
+            <button
+              className={`prompt-export-btn${showVerify ? ' prompt-export-btn--active' : ''}`}
+              onClick={() => setShowVerify(v => !v)}
+              style={verifyResult.length > 0 ? { borderColor: '#d4707060', color: '#d47070' } : undefined}
+            >
+              {showVerify ? '收起验证' : `数据验证${verifyResult.length > 0 ? ` (${verifyResult.length})` : ''}`}
             </button>
           )}
           {onChat && (
@@ -74,6 +92,34 @@ export default function AnalysisPanel({ analysis, chartId, promptText, onChat, o
             <div className="prompt-label">用户提示词</div>
             <pre className="prompt-text">{promptText.user}</pre>
           </div>
+        </div>
+      )}
+
+      {/* 数据验证面板 */}
+      {showVerify && verifyResult && (
+        <div className="prompt-panel" style={{ borderColor: verifyResult.length > 0 ? '#d4707040' : '#7bba9a40' }}>
+          <div className="prompt-panel-header">
+            <span className="prompt-panel-title" style={{ color: verifyResult.length > 0 ? '#d47070' : '#7bba9a' }}>
+              {verifyResult.length > 0 ? `发现 ${verifyResult.length} 处数据不一致` : '数据验证通过'}
+            </span>
+          </div>
+          {verifyResult.length === 0 ? (
+            <p style={{ fontSize: '0.8rem', color: '#7bba9a', fontFamily: 'Noto Sans SC, sans-serif' }}>
+              AI 分析中引用的星曜、宫位、四化数据与命盘一致。
+            </p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+              {verifyResult.map((w, i) => (
+                <div key={i} style={{
+                  fontSize: '0.8rem', color: '#d47070', fontFamily: 'Noto Sans SC, sans-serif',
+                  padding: '0.3rem 0.5rem', background: '#d4707008', borderRadius: '6px',
+                  borderLeft: '2px solid #d47070',
+                }}>
+                  {w.message}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

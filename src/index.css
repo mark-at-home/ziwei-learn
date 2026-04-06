@@ -11,8 +11,8 @@ html, body, #root {
 }
 
 body {
-  background: #0d0d0d;
-  color: #e8dcc8;
+  background: #faf6f1;
+  color: #4a3f3f;
   font-family: 'Noto Sans SC', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
@@ -26,11 +26,11 @@ button {
 }
 
 input, select {
-  color: #e8dcc8;
+  color: #4a3f3f;
 }
 
 ::selection {
-  background: #c9a84c30;
+  background: #c87d8a30;
 }
 
 @keyframes spin {
@@ -47,17 +47,17 @@ input, select {
   justify-content: flex-end;
   gap: 0.6rem;
   padding: 0.45rem 1rem;
-  background: rgba(10, 10, 10, 0.95);
-  backdrop-filter: blur(4px);
-  border-bottom: 1px solid #1a1a1a;
+  background: rgba(250, 246, 241, 0.95);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 4px rgba(180,160,140,0.1);
   min-height: 2.5rem;
 }
 
 .global-model-select {
-  background: #111;
-  border: 1px solid #2a2a2a;
-  border-radius: 3px;
-  color: #8a7a60;
+  background: #ffffff;
+  border: 1px solid #e8ddd4;
+  border-radius: 8px;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.75rem;
   padding: 0.25rem 0.4rem;
@@ -68,7 +68,7 @@ input, select {
 .global-nav-btn {
   background: transparent;
   border: none;
-  color: #4a4a4a;
+  color: #b0a8a0;
   font-size: 0.75rem;
   cursor: pointer;
   font-family: 'Noto Sans SC', sans-serif;
@@ -76,7 +76,7 @@ input, select {
   white-space: nowrap;
 }
 
-.global-nav-btn:hover { color: #8a7a60; }
+.global-nav-btn:hover { color: #8a7f7f; }
 
 @media (max-width: 480px) {
   .global-bar {

@@ -10,6 +10,13 @@ interface InputFormProps {
 
 type CalendarType = 'solar' | 'lunar';
 
+const LUNAR_MONTHS = ['正月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '冬月', '腊月'];
+const LUNAR_DAYS = [
+  '初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十',
+  '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
+  '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十',
+];
+
 interface FormState {
   calendarType: CalendarType;
   year: string;
@@ -125,24 +132,51 @@ export default function InputForm({ onSubmit }: InputFormProps) {
               value={form.year}
               onChange={e => set('year', e.target.value)}
             />
-            <input
-              className="date-input"
-              type="number"
-              placeholder="月"
-              min={1}
-              max={12}
-              value={form.month}
-              onChange={e => set('month', e.target.value)}
-            />
-            <input
-              className="date-input"
-              type="number"
-              placeholder="日"
-              min={1}
-              max={30}
-              value={form.day}
-              onChange={e => set('day', e.target.value)}
-            />
+            {form.calendarType === 'lunar' ? (
+              <>
+                <select
+                  className="select-input"
+                  value={form.month}
+                  onChange={e => set('month', e.target.value)}
+                >
+                  <option value="">月</option>
+                  {LUNAR_MONTHS.map((name, i) => (
+                    <option key={i} value={String(i + 1)}>{name}</option>
+                  ))}
+                </select>
+                <select
+                  className="select-input"
+                  value={form.day}
+                  onChange={e => set('day', e.target.value)}
+                >
+                  <option value="">日</option>
+                  {LUNAR_DAYS.map((name, i) => (
+                    <option key={i} value={String(i + 1)}>{name}</option>
+                  ))}
+                </select>
+              </>
+            ) : (
+              <>
+                <input
+                  className="date-input"
+                  type="number"
+                  placeholder="月"
+                  min={1}
+                  max={12}
+                  value={form.month}
+                  onChange={e => set('month', e.target.value)}
+                />
+                <input
+                  className="date-input"
+                  type="number"
+                  placeholder="日"
+                  min={1}
+                  max={31}
+                  value={form.day}
+                  onChange={e => set('day', e.target.value)}
+                />
+              </>
+            )}
           </div>
         </div>
 

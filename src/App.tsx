@@ -199,7 +199,7 @@ export default function App() {
           <div style={loadingStyle}>
             <div style={spinnerStyle} />
             <p style={loadingTextStyle}>{loadingMsg}</p>
-            <p style={{ ...loadingTextStyle, fontSize: '0.72rem', marginTop: '-0.5rem', color: '#3a3a3a' }}>
+            <p style={{ ...loadingTextStyle, fontSize: '0.72rem', marginTop: '-0.5rem', color: '#b0a8a0' }}>
               模型：{model}
             </p>
           </div>
@@ -216,6 +216,7 @@ export default function App() {
           {error && <ErrorBanner msg={error} onClose={() => setError('')} />}
           <AnalysisPanel
             analysis={analysis}
+            chart={chart}
             chartId={getChartId(chart)}
             promptText={promptText ?? undefined}
             onChat={(msgs: ChatMessage[]) => chatWithChart(chart, analysis, msgs, model)}
@@ -314,13 +315,13 @@ const loadingStyle: React.CSSProperties = {
 
 const spinnerStyle: React.CSSProperties = {
   width: 32, height: 32,
-  border: '2px solid #2a2a2a', borderTopColor: '#c9a84c',
+  border: '2px solid #e8ddd4', borderTopColor: '#c87d8a',
   borderRadius: '50%', animation: 'spin 0.8s linear infinite',
 };
 
 const loadingTextStyle: React.CSSProperties = {
   fontFamily: 'Noto Sans SC, sans-serif',
-  fontSize: '0.85rem', color: '#5a5a5a', letterSpacing: '0.05em',
+  fontSize: '0.85rem', color: '#8a7f7f', letterSpacing: '0.05em',
 };
 
 const completeStyle: React.CSSProperties = {
@@ -331,34 +332,34 @@ const completeStyle: React.CSSProperties = {
 
 const completeTitleStyle: React.CSSProperties = {
   fontFamily: 'Noto Serif SC, serif', fontSize: '1.4rem',
-  color: '#c9a84c', letterSpacing: '0.15em',
+  color: '#c87d8a', letterSpacing: '0.15em',
 };
 
 const completeSubStyle: React.CSSProperties = {
   fontFamily: 'Noto Sans SC, sans-serif', fontSize: '0.85rem',
-  color: '#5a5a5a', marginTop: '0.5rem',
+  color: '#8a7f7f', marginTop: '0.5rem',
 };
 
 const btnPriStyle: React.CSSProperties = {
-  background: '#c9a84c', border: 'none', borderRadius: 3,
-  color: '#0d0d0d', fontFamily: 'Noto Serif SC, serif',
+  background: '#c87d8a', border: 'none', borderRadius: 8,
+  color: '#ffffff', fontFamily: 'Noto Serif SC, serif',
   fontSize: '0.9rem', fontWeight: 700, padding: '0.6rem 1.2rem', cursor: 'pointer',
 };
 
 const btnSecStyle: React.CSSProperties = {
-  background: 'transparent', border: '1px solid #2a2a2a', borderRadius: 3,
-  color: '#8a7a60', fontFamily: 'Noto Sans SC, sans-serif',
+  background: 'transparent', border: '1px solid #e8ddd4', borderRadius: 8,
+  color: '#8a7f7f', fontFamily: 'Noto Sans SC, sans-serif',
   fontSize: '0.85rem', padding: '0.6rem 1.2rem', cursor: 'pointer',
 };
 
 const errorBannerStyle: React.CSSProperties = {
   position: 'fixed', top: '2.5rem', left: 0, right: 0, zIndex: 200,
-  background: '#1a0808', borderBottom: '1px solid #8b1a1a',
-  color: '#8b1a1a', fontFamily: 'Noto Sans SC, sans-serif',
+  background: '#fef2f2', borderBottom: '1px solid #d47070',
+  color: '#d47070', fontFamily: 'Noto Sans SC, sans-serif',
   fontSize: '0.82rem', padding: '0.4rem 1rem',
   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
 };
 
 const closeBtnStyle: React.CSSProperties = {
-  background: 'transparent', border: 'none', color: '#8b1a1a', cursor: 'pointer',
+  background: 'transparent', border: 'none', color: '#d47070', cursor: 'pointer',
 };

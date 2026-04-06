@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0.8rem 1rem;
-  border-bottom: 1px solid #1a1a1a;
+  border-bottom: 1px solid #e8ddd4;
   gap: 0.5rem;
   flex-wrap: wrap;
 }
@@ -17,7 +17,7 @@
 .back-btn {
   background: transparent;
   border: none;
-  color: #8a7a60;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.82rem;
   cursor: pointer;
@@ -25,7 +25,7 @@
   transition: color 0.15s;
 }
 
-.back-btn:hover { color: #c9a84c; }
+.back-btn:hover { color: #c87d8a; }
 
 .quiz-info {
   flex: 1;
@@ -34,15 +34,15 @@
 
 .quiz-chart-label {
   font-size: 0.78rem;
-  color: #5a5a5a;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
 }
 
 .add-dim-btn {
   background: transparent;
-  border: 1px solid #2a2a2a;
-  border-radius: 3px;
-  color: #8a7a60;
+  border: 1px solid #e8ddd4;
+  border-radius: 8px;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.78rem;
   padding: 0.25rem 0.6rem;
@@ -51,20 +51,20 @@
 }
 
 .add-dim-btn:hover {
-  border-color: #c9a84c60;
-  color: #c9a84c;
+  border-color: #c87d8a60;
+  color: #c87d8a;
 }
 
 /* 添加维度面板 */
 .add-dim-panel {
-  background: #111;
-  border-bottom: 1px solid #1e1e1e;
+  background: #ffffff;
+  border-bottom: 1px solid #e8ddd4;
   padding: 0.8rem 1rem;
 }
 
 .add-dim-title {
   font-size: 0.72rem;
-  color: #4a4a4a;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
   margin-bottom: 0.5rem;
 }
@@ -77,9 +77,9 @@
 
 .dim-chip {
   background: transparent;
-  border: 1px solid #2a2a2a;
-  border-radius: 3px;
-  color: #8a7a60;
+  border: 1px solid #e8ddd4;
+  border-radius: 8px;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.78rem;
   padding: 0.25rem 0.6rem;
@@ -88,8 +88,8 @@
 }
 
 .dim-chip:hover {
-  border-color: #c9a84c;
-  color: #c9a84c;
+  border-color: #c87d8a;
+  color: #c87d8a;
 }
 
 /* 维度进度条 */
@@ -97,7 +97,7 @@
   display: flex;
   gap: 1rem;
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid #1a1a1a;
+  border-bottom: 1px solid #e8ddd4;
   overflow-x: auto;
 }
 
@@ -110,13 +110,13 @@
 
 .dim-progress-label {
   font-size: 0.72rem;
-  color: #5a5a5a;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
 }
 
 .dim-progress-count {
   font-size: 0.72rem;
-  color: #c9a84c;
+  color: #c87d8a;
   font-family: 'Noto Sans SC', sans-serif;
 }
 
@@ -144,21 +144,21 @@
 
 .progress-bar {
   flex: 1;
-  height: 2px;
-  background: #1e1e1e;
-  border-radius: 1px;
+  height: 3px;
+  background: #e8ddd4;
+  border-radius: 2px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: #c9a84c;
+  background: #c87d8a;
   transition: width 0.3s ease;
 }
 
 .progress-text {
   font-size: 0.72rem;
-  color: #4a4a4a;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
   white-space: nowrap;
 }
@@ -172,23 +172,23 @@
 
 .question-topic {
   font-size: 0.72rem;
-  color: #c9a84c;
+  color: #c87d8a;
   font-family: 'Noto Sans SC', sans-serif;
-  border: 1px solid #c9a84c40;
+  border: 1px solid #c87d8a40;
   padding: 0.15rem 0.5rem;
-  border-radius: 2px;
+  border-radius: 6px;
 }
 
 .question-difficulty {
   font-size: 0.7rem;
-  color: #3a3a3a;
+  color: #b0a8a0;
 }
 
 /* 题目文字 */
 .question-text {
   font-family: 'Noto Serif SC', serif;
   font-size: 0.95rem;
-  color: #e8dcc8;
+  color: #4a3f3f;
   line-height: 1.8;
 }
 
@@ -200,10 +200,10 @@
 }
 
 .option-btn {
-  background: #111;
-  border: 1px solid #2a2a2a;
-  border-radius: 3px;
-  color: #c8b898;
+  background: #ffffff;
+  border: 1px solid #e8ddd4;
+  border-radius: 8px;
+  color: #5a5050;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.88rem;
   padding: 0.6rem 0.8rem;
@@ -217,30 +217,30 @@
 }
 
 .option-btn:hover:not(:disabled) {
-  border-color: #c9a84c60;
-  background: #161208;
+  border-color: #c87d8a60;
+  background: #c87d8a08;
 }
 
 .option-btn--selected {
-  border-color: #c9a84c;
-  background: #161208;
+  border-color: #c87d8a;
+  background: #c87d8a08;
 }
 
 .option-btn--correct {
-  border-color: #4a8c5c !important;
-  background: #0a1a0f !important;
-  color: #4a8c5c !important;
+  border-color: #7bba9a !important;
+  background: #7bba9a0a !important;
+  color: #5ea882 !important;
 }
 
 .option-btn--wrong {
-  border-color: #8b1a1a !important;
-  background: #1a0808 !important;
-  color: #8b1a1a !important;
+  border-color: #d47070 !important;
+  background: #d4707008 !important;
+  color: #d47070 !important;
 }
 
 .option-letter {
   font-weight: 700;
-  color: #c9a84c;
+  color: #c87d8a;
   min-width: 1rem;
   flex-shrink: 0;
 }
@@ -253,10 +253,10 @@
 /* 文字输入框 */
 .text-answer {
   width: 100%;
-  background: #111;
-  border: 1px solid #2a2a2a;
-  border-radius: 3px;
-  color: #e8dcc8;
+  background: #ffffff;
+  border: 1px solid #e8ddd4;
+  border-radius: 8px;
+  color: #4a3f3f;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.88rem;
   line-height: 1.7;
@@ -267,7 +267,7 @@
 }
 
 .text-answer:focus {
-  border-color: #c9a84c60;
+  border-color: #c87d8a60;
 }
 
 .text-answer:disabled {
@@ -276,10 +276,10 @@
 
 /* 提交按钮 */
 .btn-submit {
-  background: #c9a84c;
+  background: #c87d8a;
   border: none;
-  border-radius: 3px;
-  color: #0d0d0d;
+  border-radius: 8px;
+  color: #ffffff;
   font-family: 'Noto Serif SC', serif;
   font-size: 0.95rem;
   font-weight: 700;
@@ -295,7 +295,7 @@
 }
 
 .btn-submit:not(:disabled):hover {
-  background: #d4b45a;
+  background: #d48e9a;
 }
 
 /* 参考答案区 */
@@ -303,9 +303,9 @@
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
-  background: #0d0d0d;
-  border: 1px solid #1e1e1e;
-  border-radius: 3px;
+  background: #faf6f1;
+  border: 1px solid #e8ddd4;
+  border-radius: 10px;
   padding: 1rem;
 }
 
@@ -317,17 +317,17 @@
 
 .answer-label {
   font-size: 0.68rem;
-  color: #4a8c5c;
+  color: #7bba9a;
   font-family: 'Noto Sans SC', sans-serif;
   letter-spacing: 0.1em;
-  border-left: 2px solid #4a8c5c;
+  border-left: 2px solid #7bba9a;
   padding-left: 0.4rem;
 }
 
 .reference-answer {
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.88rem;
-  color: #c8b898;
+  color: #5a5050;
   line-height: 1.75;
 }
 
@@ -335,7 +335,7 @@
 .reasoning-toggle {
   background: transparent;
   border: none;
-  color: #4a6e8c;
+  color: #a89cc8;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.78rem;
   cursor: pointer;
@@ -356,7 +356,7 @@
 .reasoning-step {
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.8rem;
-  color: #6a6a6a;
+  color: #8a7f7f;
   line-height: 1.6;
   padding-left: 1.2rem;
   position: relative;
@@ -367,7 +367,7 @@
   counter-increment: list-item;
   position: absolute;
   left: 0;
-  color: #4a4a4a;
+  color: #b0a8a0;
 }
 
 .reasoning-path { counter-reset: list-item; }
@@ -377,13 +377,13 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  border-top: 1px solid #1e1e1e;
+  border-top: 1px solid #e8ddd4;
   padding-top: 0.7rem;
 }
 
 .self-eval-label {
   font-size: 0.7rem;
-  color: #4a4a4a;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
   letter-spacing: 0.05em;
 }
@@ -397,7 +397,7 @@
   flex: 1;
   background: transparent;
   border: 1px solid color-mix(in srgb, var(--eval-color) 40%, transparent);
-  border-radius: 3px;
+  border-radius: 8px;
   color: var(--eval-color);
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.82rem;
@@ -407,20 +407,20 @@
 }
 
 .self-eval-btn:hover {
-  background: color-mix(in srgb, var(--eval-color) 15%, transparent);
+  background: color-mix(in srgb, var(--eval-color) 10%, transparent);
 }
 
 .self-eval-result {
   font-size: 0.78rem;
-  color: #4a4a4a;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
-  border-top: 1px solid #1e1e1e;
+  border-top: 1px solid #e8ddd4;
   padding-top: 0.5rem;
 }
 
 /* 分析参考折叠 */
 .analysis-reference {
-  border-top: 1px solid #1a1a1a;
+  border-top: 1px solid #e8ddd4;
   padding: 0.7rem 1rem;
   max-width: 620px;
   width: 100%;
@@ -429,7 +429,7 @@
 
 .analysis-reference summary {
   font-size: 0.78rem;
-  color: #4a4a4a;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
   cursor: pointer;
   user-select: none;
@@ -439,7 +439,7 @@
 .analysis-ref-summary {
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.82rem;
-  color: #6a6a6a;
+  color: #8a7f7f;
   line-height: 1.7;
   margin-top: 0.6rem;
 }

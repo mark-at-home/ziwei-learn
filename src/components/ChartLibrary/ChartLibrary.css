@@ -8,13 +8,13 @@
   align-items: center;
   gap: 0.8rem;
   padding: 0.8rem 1rem;
-  border-bottom: 1px solid #1a1a1a;
+  border-bottom: 1px solid #e8ddd4;
 }
 
 .library-title {
   font-family: 'Noto Serif SC', serif;
   font-size: 1rem;
-  color: #c9a84c;
+  color: #c87d8a;
   font-weight: 400;
   letter-spacing: 0.1em;
   flex: 1;
@@ -22,21 +22,21 @@
 
 .library-count {
   font-size: 0.72rem;
-  color: #3a3a3a;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
 }
 
 .back-btn {
   background: transparent;
   border: none;
-  color: #8a7a60;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.82rem;
   cursor: pointer;
   padding: 0.2rem 0;
   transition: color 0.15s;
 }
-.back-btn:hover { color: #c9a84c; }
+.back-btn:hover { color: #c87d8a; }
 
 .library-content {
   max-width: 640px;
@@ -50,7 +50,7 @@
 .library-empty {
   text-align: center;
   padding: 4rem 0;
-  color: #3a3a3a;
+  color: #b0a8a0;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.9rem;
 }
@@ -58,24 +58,25 @@
 .library-empty-sub {
   margin-top: 0.4rem;
   font-size: 0.75rem;
-  color: #2a2a2a;
+  color: #d4c5b9;
 }
 
 .library-card {
-  background: #111;
-  border: 1px solid #1e1e1e;
-  border-radius: 4px;
+  background: #ffffff;
+  border: 1px solid #e8ddd4;
+  border-radius: 10px;
   padding: 0.9rem 1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-shadow: 0 1px 4px rgba(180,160,140,0.06);
 }
 
 .library-card:hover {
-  border-color: #c9a84c60;
-  background: #151208;
+  border-color: #c87d8a60;
+  box-shadow: 0 2px 8px rgba(200,125,138,0.1);
 }
 
 .library-card-main {
@@ -94,31 +95,31 @@
 .library-card-nickname {
   font-family: 'Noto Serif SC', serif;
   font-size: 0.95rem;
-  color: #c9a84c;
+  color: #c87d8a;
 }
 
 .library-card-label {
   font-family: 'Noto Serif SC', serif;
   font-size: 0.85rem;
-  color: #8a7a60;
+  color: #8a7f7f;
 }
 
 .library-card-nickname + .library-card-label {
   font-size: 0.72rem;
-  color: #5a5a5a;
+  color: #b0a8a0;
 }
 
 .library-rename-btn {
   background: transparent;
   border: none;
-  color: #3a3a3a;
+  color: #b0a8a0;
   font-size: 0.72rem;
   cursor: pointer;
   padding: 0.1rem 0.2rem;
   transition: color 0.15s;
 }
 
-.library-rename-btn:hover { color: #c9a84c; }
+.library-rename-btn:hover { color: #c87d8a; }
 
 /* 重命名表单 */
 .rename-form {
@@ -128,10 +129,10 @@
 }
 
 .rename-input {
-  background: #0d0d0d;
-  border: 1px solid #c9a84c60;
-  border-radius: 3px;
-  color: #e8dcc8;
+  background: #faf6f1;
+  border: 1px solid #c87d8a60;
+  border-radius: 6px;
+  color: #4a3f3f;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.82rem;
   padding: 0.25rem 0.5rem;
@@ -140,10 +141,10 @@
 }
 
 .rename-ok {
-  background: #c9a84c;
+  background: #c87d8a;
   border: none;
-  border-radius: 3px;
-  color: #0d0d0d;
+  border-radius: 6px;
+  color: #ffffff;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.7rem;
   font-weight: 700;
@@ -153,9 +154,9 @@
 
 .rename-cancel {
   background: transparent;
-  border: 1px solid #2a2a2a;
-  border-radius: 3px;
-  color: #5a5a5a;
+  border: 1px solid #e8ddd4;
+  border-radius: 6px;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.7rem;
   padding: 0.2rem 0.5rem;
@@ -167,15 +168,15 @@
   align-items: center;
   gap: 0.3rem;
   font-size: 0.72rem;
-  color: #4a4a4a;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
 }
 
-.dot { color: #2a2a2a; }
+.dot { color: #d4c5b9; }
 
 .library-card-progress {
   font-size: 0.72rem;
-  color: #4a8c5c;
+  color: #7bba9a;
   font-family: 'Noto Sans SC', sans-serif;
 }
 
@@ -188,21 +189,21 @@
 
 .library-badge {
   font-size: 0.65rem;
-  color: #4a8c5c;
-  border: 1px solid #4a8c5c50;
+  color: #7bba9a;
+  border: 1px solid #7bba9a40;
   padding: 0.1rem 0.4rem;
-  border-radius: 2px;
+  border-radius: 6px;
   font-family: 'Noto Sans SC', sans-serif;
 }
 
 .library-delete-btn {
   background: transparent;
   border: none;
-  color: #2a2a2a;
+  color: #d4c5b9;
   font-size: 0.78rem;
   cursor: pointer;
   padding: 0.2rem 0.3rem;
   transition: color 0.15s;
 }
 
-.library-delete-btn:hover { color: #8b1a1a; }
+.library-delete-btn:hover { color: #d47070; }

@@ -12,7 +12,7 @@
   height: calc(100vh - 2.5rem);
   overflow-y: auto;
   overflow-x: hidden;
-  border-right: 1px solid #1a1a1a;
+  border-right: 1px solid #e8ddd4;
   padding-bottom: 1rem;
 }
 
@@ -22,7 +22,7 @@
   flex-shrink: 0;
   cursor: col-resize;
   background: transparent;
-  border-right: 1px solid #1a1a1a;
+  border-right: 1px solid #e8ddd4;
   transition: background 0.15s;
   position: sticky;
   top: 2.5rem;
@@ -30,7 +30,7 @@
 }
 
 .split-resize-handle:hover {
-  background: #c9a84c30;
+  background: #c87d8a20;
 }
 
 /* ── 主内容区 ───────────────────────────── */
@@ -45,10 +45,10 @@
 /* 移动端折叠按钮（桌面端隐藏） */
 .chart-toggle-btn {
   display: none;
-  background: #111;
+  background: #ffffff;
   border: none;
-  border-bottom: 1px solid #1a1a1a;
-  color: #5a5a5a;
+  border-bottom: 1px solid #e8ddd4;
+  color: #8a7f7f;
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.75rem;
   padding: 0.4rem 1rem;
@@ -69,7 +69,7 @@
     max-height: none;
     position: static;
     border-right: none;
-    border-bottom: 1px solid #1a1a1a;
+    border-bottom: 1px solid #e8ddd4;
     overflow-y: auto;
   }
 
@@ -85,4 +85,3 @@
     display: block;
   }
 }
-
