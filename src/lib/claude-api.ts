@@ -2,7 +2,7 @@ import type { ChartAnalysis, QuizQuestion, Dimension } from '../types';
 import { chartToPromptText } from './chart-to-text';
 import type { Astrolabe } from './iztro-wrapper';
 import {
-  ANALYSIS_SYSTEM, buildAnalysisPrompt,
+  ANALYSIS_SYSTEM, buildAnalysisSystem, buildAnalysisPrompt,
   QUIZ_SYSTEM, buildQuizPrompt,
   buildChatSystem,
 } from './prompts';
@@ -124,9 +124,10 @@ function parseJSON<T>(raw: string, fallback: T): T {
 // ─── 导出提示词 ──────────────────────────────────────────────
 
 export function getAnalysisPrompt(chart: Astrolabe, selectedDimensions: Dimension[]): { system: string; user: string } {
-  const chartText  = chartToPromptText(chart);
-  const userPrompt = buildAnalysisPrompt(chartText, selectedDimensions);
-  return { system: ANALYSIS_SYSTEM, user: userPrompt };
+  const chartText    = chartToPromptText(chart);
+  const userPrompt   = buildAnalysisPrompt(chartText, selectedDimensions);
+  const systemPrompt = selectedDimensions.length > 0 ? buildAnalysisSystem(selectedDimensions) : ANALYSIS_SYSTEM;
+  return { system: systemPrompt, user: userPrompt };
 }
 
 // ─── 命理分析 ─────────────────────────────────────────────────
@@ -136,9 +137,10 @@ export async function generateAnalysis(
   selectedDimensions: Dimension[],
   model: LLMModel = 'claude',
 ): Promise<ChartAnalysis> {
-  const chartText  = chartToPromptText(chart);
-  const userPrompt = buildAnalysisPrompt(chartText, selectedDimensions);
-  const raw        = await callLLM(ANALYSIS_SYSTEM, userPrompt, model, 8192);
+  const chartText    = chartToPromptText(chart);
+  const userPrompt   = buildAnalysisPrompt(chartText, selectedDimensions);
+  const systemPrompt = selectedDimensions.length > 0 ? buildAnalysisSystem(selectedDimensions) : ANALYSIS_SYSTEM;
+  const raw          = await callLLM(systemPrompt, userPrompt, model, 8192);
 
   const fallback: ChartAnalysis = {
     summary: '分析生成失败，请重试。',

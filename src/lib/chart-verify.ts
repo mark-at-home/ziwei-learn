@@ -48,8 +48,9 @@ export function verifyAnalysis(chart: Astrolabe, analysis: ChartAnalysis): Verif
   const warnings: VerifyWarning[] = [];
 
   for (const pa of analysis.palaceAnalysis) {
-    // 检查该宫位是否存在
-    if (!PALACE_ORDER.includes(pa.palace)) {
+    // 检查该宫位是否存在（AI 可能输出 "官禄宫" 而 PALACE_ORDER 用 "官禄"，需兼容）
+    const normalized = pa.palace.replace(/宫$/, '');
+    if (!PALACE_ORDER.includes(pa.palace) && !PALACE_ORDER.includes(normalized)) {
       warnings.push({ type: 'star-palace', message: `分析提到了不存在的宫位"${pa.palace}"` });
       continue;
     }
@@ -61,7 +62,9 @@ export function verifyAnalysis(chart: Astrolabe, analysis: ChartAnalysis): Verif
         // 星名可能包含辅星或别名，跳过
         continue;
       }
-      if (actual !== pa.palace) {
+      // 兼容 "官禄" vs "官禄宫" 的差异
+      const actualNorm = actual.replace(/宫$/, '');
+      if (actual !== pa.palace && actualNorm !== normalized && actual !== normalized && actualNorm !== pa.palace) {
         warnings.push({
           type: 'star-palace',
           message: `AI 称"${starName}"在${pa.palace}，但实际在${actual}`,

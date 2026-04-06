@@ -2,7 +2,7 @@ import type { Dimension, ChartAnalysis } from '../types';
 
 // ─── 命理分析 ────────────────────────────────────────────────
 
-export const ANALYSIS_SYSTEM = `你是一位拥有三十年实战经验的紫微斗数命理老师，精通三合派与飞星派，擅长将复杂的命理逻辑拆解给学习者。
+const ANALYSIS_SYSTEM_BASE = `你是一位拥有三十年实战经验的紫微斗数命理老师，精通三合派与飞星派，擅长将复杂的命理逻辑拆解给学习者。
 
 你的分析原则：
 1. **星曜论断必须结合亮度**：同一颗星在庙旺与落陷的表现截然不同，必须明确指出亮度对星性的具体影响
@@ -12,30 +12,62 @@ export const ANALYSIS_SYSTEM = `你是一位拥有三十年实战经验的紫微
 5. **推理链条完整**：每个结论都要写出"因为A → 所以B → 因此C"的完整推导，不能跳步
 6. **避免泛泛而谈**：不允许出现"运势不错""需要注意"等无信息量的话，每句话必须落到具体星曜、宫位、亮度
 
-严格按照给定的 JSON 格式输出，不要有其他内容，不要用 markdown 代码块包裹。
+严格按照给定的 JSON 格式输出，不要有其他内容，不要用 markdown 代码块包裹。`;
 
-输出格式（严格 JSON）：
-{
-  "summary": "整体命格概述：先判断格局层次，再概括核心特质与人生主线，3-4句",
-  "palaceAnalysis": [
+/**
+ * 根据选中的维度动态构建 JSON 输出格式说明
+ */
+function buildOutputSchema(selectedDimensions: Dimension[]): string {
+  const levels = new Set(selectedDimensions.map(d => d.level));
+  const hasPalace  = levels.has(2) || selectedDimensions.length === 0; // 无选择时默认包含
+  const hasMutagen = levels.has(3) || selectedDimensions.length === 0;
+  const hasDecadal = levels.has(4) || selectedDimensions.length === 0;
+  const hasEvent   = selectedDimensions.some(d => d.level >= 4);
+
+  const fields: string[] = [
+    `  "summary": "整体命格概述：先判断格局层次，再概括核心特质与人生主线，3-4句"`,
+  ];
+
+  if (hasPalace) {
+    fields.push(`  "palaceAnalysis": [
     {
       "palace": "宫位名称",
       "stars": ["星名"],
       "interpretation": "综合解读：包含主星亮度影响、辅星修正、三方四正会照效果",
       "reasoning": "完整推理链：从星曜特性→亮度修正→宫位含义→三方联动→结论，步步有据"
     }
-  ],
-  "mutagenAnalysis": "四化深度分析：本命四化的落宫含义、禄权科忌之间的联动关系、化忌的具体影响范围与化解条件",
-  "decadalFortune": "大限走势分析：当前大限的宫干四化、大限与本命的叠加效应、关键转折年龄段",
-  "eventAnalysis": [
+  ]`);
+  }
+
+  if (hasMutagen) {
+    fields.push(`  "mutagenAnalysis": "四化深度分析：本命四化的落宫含义、禄权科忌之间的联动关系、化忌的具体影响范围与化解条件"`);
+  }
+
+  if (hasDecadal) {
+    fields.push(`  "decadalFortune": "大限走势分析：当前大限的宫干四化、大限与本命的叠加效应、关键转折年龄段"`);
+  }
+
+  if (hasEvent) {
+    fields.push(`  "eventAnalysis": [
     {
       "dimension": "维度key",
       "content": "该维度的深度分析",
       "reasoning": "推理依据"
     }
-  ],
-  "keyFeatures": ["命盘核心特征1", "特征2", "特征3", "特征4", "特征5"]
-}`;
+  ]`);
+  }
+
+  fields.push(`  "keyFeatures": ["命盘核心特征1", "特征2", "特征3", "特征4", "特征5"]`);
+
+  return `\n\n输出格式（严格 JSON）：\n{\n${fields.join(',\n')}\n}`;
+}
+
+export function buildAnalysisSystem(selectedDimensions: Dimension[]): string {
+  return ANALYSIS_SYSTEM_BASE + buildOutputSchema(selectedDimensions);
+}
+
+// 保留向后兼容（无维度选择时输出完整格式）
+export const ANALYSIS_SYSTEM = ANALYSIS_SYSTEM_BASE + buildOutputSchema([]);
 
 function currentDateStr(): string {
   const d = new Date();
@@ -43,21 +75,56 @@ function currentDateStr(): string {
 }
 
 export function buildAnalysisPrompt(chartText: string, selectedDimensions: Dimension[]): string {
+  const levels = new Set(selectedDimensions.map(d => d.level));
+  const hasPalace  = levels.has(2) || selectedDimensions.length === 0;
+  const hasMutagen = levels.has(3) || selectedDimensions.length === 0;
+  const hasDecadal = levels.has(4) || selectedDimensions.length === 0;
+  const hasEvent   = selectedDimensions.some(d => d.level >= 4);
+
   const extraDims = selectedDimensions.filter(d => d.level >= 4);
   const dimList   = extraDims.length > 0
     ? `\n\n请额外深入分析以下维度（每个维度须有独立的推理链条）：\n${extraDims.map(d => `- ${d.key}：${d.label}`).join('\n')}`
     : '';
 
-  // 根据选择的维度层级调整分析深度
-  const levels = new Set(selectedDimensions.map(d => d.level));
   const palaceDims = selectedDimensions.filter(d => d.level === 2);
-  const palaceReq = palaceDims.length > 0
-    ? `重点分析以下宫位：${palaceDims.map(d => d.label).join('、')}，每个宫位须结合三方四正和宫干飞化`
-    : '重点分析命宫、财帛宫、官禄宫三宫';
 
-  const comboReq = levels.has(3)
-    ? '\n- 组合技法分析：识别此命盘是否成格（紫府同宫、武贪格、杀破狼、机月同梁、府相朝垣等），分析格局的成立条件与破坏因素'
-    : '';
+  const requirements: string[] = [];
+
+  if (hasPalace) {
+    const palaceReq = palaceDims.length > 0
+      ? `重点分析以下宫位：${palaceDims.map(d => d.label).join('、')}，每个宫位须结合三方四正和宫干飞化`
+      : '重点分析命宫、财帛宫、官禄宫三宫';
+    requirements.push(palaceReq);
+    requirements.push('每个宫位的 interpretation 必须包含：①主星亮度对星性的影响 ②辅星的增益或削弱 ③三方四正会照的合力');
+    requirements.push('每个宫位的 reasoning 必须是完整的推理链条（因为A→所以B→因此C），引用命盘中的具体数据');
+  }
+
+  if (levels.has(3)) {
+    requirements.push('组合技法分析：识别此命盘是否成格（紫府同宫、武贪格、杀破狼、机月同梁、府相朝垣等），分析格局的成立条件与破坏因素');
+  }
+
+  if (hasMutagen) {
+    requirements.push('mutagenAnalysis 须分析四化之间的联动（如禄忌冲、权科夹等），不只罗列各化落宫');
+  }
+
+  if (hasDecadal) {
+    requirements.push('decadalFortune 须指出当前大限的宫干引发的四化，与本命四化的叠加效应');
+  }
+
+  if (!hasPalace) {
+    requirements.push('palaceAnalysis 字段不需要输出，请省略');
+  }
+  if (!hasMutagen) {
+    requirements.push('mutagenAnalysis 字段不需要输出，请省略');
+  }
+  if (!hasDecadal) {
+    requirements.push('decadalFortune 字段不需要输出，请省略');
+  }
+  if (!hasEvent) {
+    requirements.push('eventAnalysis 字段不需要输出，请省略');
+  }
+
+  requirements.push('keyFeatures 列出5个最突出的命盘特征，每个特征须包含具体星曜与宫位信息');
 
   return `当前日期：${currentDateStr()}（请据此判断命主当前所处的大限和流年）
 
@@ -68,12 +135,7 @@ ${chartText}
 请对此命盘进行深度分析。${dimList}
 
 分析要求：
-- ${palaceReq}
-- 每个宫位的 interpretation 必须包含：①主星亮度对星性的影响 ②辅星的增益或削弱 ③三方四正会照的合力
-- 每个宫位的 reasoning 必须是完整的推理链条（因为A→所以B→因此C），引用命盘中的具体数据${comboReq}
-- mutagenAnalysis 须分析四化之间的联动（如禄忌冲、权科夹等），不只罗列各化落宫
-- decadalFortune 须指出当前大限的宫干引发的四化，与本命四化的叠加效应
-- keyFeatures 列出5个最突出的命盘特征，每个特征须包含具体星曜与宫位信息`;
+${requirements.map(r => `- ${r}`).join('\n')}`;
 }
 
 // ─── 出题 ────────────────────────────────────────────────────
