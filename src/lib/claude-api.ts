@@ -148,7 +148,17 @@ export async function generateAnalysis(
     decadalFortune: '', eventAnalysis: [], keyFeatures: [],
   };
 
-  return parseJSON<ChartAnalysis>(raw, fallback);
+  const parsed = parseJSON<ChartAnalysis>(raw, fallback);
+
+  // LLM 可能省略维度裁剪掉的字段，补全默认值防止 UI 崩溃
+  return {
+    summary:          parsed.summary ?? '',
+    palaceAnalysis:   parsed.palaceAnalysis ?? [],
+    mutagenAnalysis:  parsed.mutagenAnalysis ?? '',
+    decadalFortune:   parsed.decadalFortune ?? '',
+    eventAnalysis:    parsed.eventAnalysis ?? [],
+    keyFeatures:      parsed.keyFeatures ?? [],
+  };
 }
 
 // ─── 出题 ─────────────────────────────────────────────────────
