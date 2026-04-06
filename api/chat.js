@@ -62,9 +62,13 @@ async function callGemini(system, messages, maxTokens, modelId, thinking) {
   const { GoogleGenerativeAI } = await import('@google/generative-ai');
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+  // 检测系统提示词是否要求 JSON 输出
+  const wantsJSON = system && (system.includes('JSON') || system.includes('json'));
+
   const generationConfig = {
     maxOutputTokens: maxTokens,
     ...(thinking ? { thinkingConfig: { thinkingBudget: 8192 } } : {}),
+    ...(wantsJSON && !thinking ? { responseMimeType: 'application/json' } : {}),
   };
 
   const geminiModel = genAI.getGenerativeModel({
