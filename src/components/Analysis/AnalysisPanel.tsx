@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import type { ChartAnalysis } from '../../types';
 import { DIMENSIONS } from '../../types';
+import type { ChatMessage } from '../../lib/claude-api';
+import ChatPanel from '../Chat/ChatPanel';
 import './AnalysisPanel.css';
 
 interface AnalysisPanelProps {
   analysis: ChartAnalysis;
   promptText?: { system: string; user: string };
+  onChat?: (messages: ChatMessage[]) => Promise<string>;
   onStartQuiz: () => void;
   onBack: () => void;
 }
@@ -14,8 +17,9 @@ function dimLabel(key: string): string {
   return DIMENSIONS.find(d => d.key === key)?.label ?? key;
 }
 
-export default function AnalysisPanel({ analysis, promptText, onStartQuiz, onBack }: AnalysisPanelProps) {
+export default function AnalysisPanel({ analysis, promptText, onChat, onStartQuiz, onBack }: AnalysisPanelProps) {
   const [showPrompt, setShowPrompt] = useState(false);
+  const [showChat, setShowChat]     = useState(false);
   const [copied, setCopied]         = useState(false);
 
   function handleCopyPrompt() {
@@ -32,14 +36,24 @@ export default function AnalysisPanel({ analysis, promptText, onStartQuiz, onBac
       <div className="analysis-header">
         <button className="back-btn" onClick={onBack}>← 返回命盘</button>
         <h2 className="analysis-title">命理分析</h2>
-        {promptText && (
-          <button
-            className="prompt-export-btn"
-            onClick={() => setShowPrompt(v => !v)}
-          >
-            {showPrompt ? '收起提示词' : '查看提示词'}
-          </button>
-        )}
+        <div className="analysis-header-actions">
+          {promptText && (
+            <button
+              className="prompt-export-btn"
+              onClick={() => setShowPrompt(v => !v)}
+            >
+              {showPrompt ? '收起提示词' : '查看提示词'}
+            </button>
+          )}
+          {onChat && (
+            <button
+              className={`chat-toggle-btn-header ${showChat ? 'chat-toggle-btn-header--active' : ''}`}
+              onClick={() => setShowChat(v => !v)}
+            >
+              {showChat ? '收起问答' : '问命师'}
+            </button>
+          )}
+        </div>
       </div>
 
       {/* 提示词导出面板 */}
@@ -129,6 +143,11 @@ export default function AnalysisPanel({ analysis, promptText, onStartQuiz, onBac
           </section>
         )}
       </div>
+
+      {/* 自由问答面板 */}
+      {showChat && onChat && (
+        <ChatPanel onSend={onChat} onClose={() => setShowChat(false)} />
+      )}
 
       <div className="analysis-footer">
         <button className="btn-secondary" onClick={onBack}>返回命盘</button>

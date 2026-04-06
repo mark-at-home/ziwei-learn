@@ -1,4 +1,4 @@
-import type { Dimension } from '../types';
+import type { Dimension, ChartAnalysis } from '../types';
 
 // ─── 命理分析 ────────────────────────────────────────────────
 
@@ -120,4 +120,31 @@ ${chartText}
 - 客观题的 referenceAnswer 须说明"正确选项为什么对"和"其余选项为什么错"
 - 半开放题和综合题的 referenceAnswer 须包含完整的分析框架，不少于100字
 - reasoningPath 每步都要引用命盘数据，不允许出现泛泛而谈的推理步骤`;
+}
+
+// ─── 自由问答 ────────────────────────────────────────────────
+
+export function buildChatSystem(chartText: string, analysis: ChartAnalysis): string {
+  const palaceSummary = analysis.palaceAnalysis
+    .map(p => `${p.palace}：${p.stars.join('、')} — ${p.interpretation}`)
+    .join('\n');
+
+  return `你是一位精通紫微斗数的命理老师，正在与学习者就一张具体命盘进行对话。
+
+以下是当前命盘数据：
+${chartText}
+
+以下是已完成的命理分析摘要：
+概述：${analysis.summary}
+${palaceSummary ? `宫位分析：\n${palaceSummary}` : ''}
+${analysis.mutagenAnalysis ? `四化分析：${analysis.mutagenAnalysis}` : ''}
+${analysis.decadalFortune ? `大限走势：${analysis.decadalFortune}` : ''}
+核心特征：${analysis.keyFeatures.join('、')}
+
+对话原则：
+1. 所有回答必须基于上述命盘数据，引用具体星曜、宫位、亮度
+2. 如果学习者的问题涉及命盘中没有的信息，明确说明
+3. 以教学口吻回答，解释推理过程，帮助学习者理解"为什么"
+4. 回答用自然段落，不要输出 JSON
+5. 语言简洁有力，避免泛泛而谈`;
 }

@@ -11,7 +11,8 @@ import type { Astrolabe } from './lib/iztro-wrapper';
 import { getChartId, getChartLabel, generateChart, TIME_NAMES } from './lib/iztro-wrapper';
 import type { Gender } from './lib/iztro-wrapper';
 import { chartToPromptText } from './lib/chart-to-text';
-import { generateAnalysis, generateQuiz, getAnalysisPrompt } from './lib/claude-api';
+import { generateAnalysis, generateQuiz, getAnalysisPrompt, chatWithChart } from './lib/claude-api';
+import type { ChatMessage } from './lib/claude-api';
 import type { LLMModel } from './lib/claude-api';
 import { saveSession, saveChartRecord, loadChartRecord } from './lib/storage';
 import type { ChartAnalysis, Dimension, QuizQuestion, QuizSession as QuizSessionType } from './types';
@@ -215,6 +216,7 @@ export default function App() {
           <AnalysisPanel
             analysis={analysis}
             promptText={promptText ?? undefined}
+            onChat={(msgs: ChatMessage[]) => chatWithChart(chart, analysis, msgs, model)}
             onStartQuiz={selectedDimensions.length > 0 ? handleStartQuiz : () => {}}
             onBack={() => { setView(selectedDimensions.length > 0 ? 'dimension-picker' : 'chart'); setError(''); }}
           />

@@ -4,6 +4,7 @@ import type { Astrolabe } from './iztro-wrapper';
 import {
   ANALYSIS_SYSTEM, buildAnalysisPrompt,
   QUIZ_SYSTEM, buildQuizPrompt,
+  buildChatSystem,
 } from './prompts';
 
 export type LLMModel = 'claude' | 'claude-4-6' | 'gemini' | 'gemini-pro' | 'gemini-thinking' | 'gemini-3-flash' | 'gemini-3-pro';
@@ -11,9 +12,23 @@ export type LLMModel = 'claude' | 'claude-4-6' | 'gemini' | 'gemini-pro' | 'gemi
 // 本地开发时走 Vite proxy（见 vite.config.ts），线上走 Vercel Serverless Function
 const PROXY_URL = '/api/chat';
 
+export interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
 async function callLLM(
   system: string,
   userMessage: string,
+  model: LLMModel,
+  maxTokens = 4096,
+): Promise<string> {
+  return callLLMMulti(system, [{ role: 'user', content: userMessage }], model, maxTokens);
+}
+
+async function callLLMMulti(
+  system: string,
+  messages: ChatMessage[],
   model: LLMModel,
   maxTokens = 4096,
 ): Promise<string> {
@@ -23,7 +38,7 @@ async function callLLM(
     body: JSON.stringify({
       model,
       system,
-      messages: [{ role: 'user', content: userMessage }],
+      messages,
       max_tokens: maxTokens,
     }),
   });
@@ -105,4 +120,17 @@ export async function generateQuiz(
   const raw        = await callLLM(QUIZ_SYSTEM, userPrompt, model, 6000);
 
   return parseJSON<QuizQuestion[]>(raw, []);
+}
+
+// ─── 自由问答 ────────────────────────────────────────────────
+
+export async function chatWithChart(
+  chart: Astrolabe,
+  analysis: ChartAnalysis,
+  messages: ChatMessage[],
+  model: LLMModel = 'gemini',
+): Promise<string> {
+  const chartText = chartToPromptText(chart);
+  const system    = buildChatSystem(chartText, analysis);
+  return callLLMMulti(system, messages, model, 4096);
 }
