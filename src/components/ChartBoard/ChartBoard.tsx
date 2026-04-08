@@ -182,44 +182,46 @@ export default function ChartBoard({ chart, baziChart, embedded = false, onBack,
       )}
 
       {/* 命盘格（仅紫微 tab） */}
-      {boardTab === 'ziwei' && <div className={gridClass}>
-        {chart.palaces.map((palace: import('iztro/lib/astro/FunctionalPalace').IFunctionalPalace) => {
-          const [row, col] = GRID_POS[palace.index];
-          return (
-            <Palace
-              key={palace.index}
-              palace={palace}
-              viewMode={viewMode}
-              isSelected={selectedIndex === palace.index}
-              isTrinity={selectedIndex !== null && selectedIndex !== palace.index && trinitySet.has(palace.index)}
-              isDecadalActive={palace.index === decadalIndex}
-              isYearlyActive={palace.index === yearlyIndex}
-              yearlyStars={yearlyStarsMap[palace.index] ?? []}
-              flyingMutagen={flyingMutagenMap.get(palace.index)}
-              style={{ gridRow: row + 1, gridColumn: col + 1 }}
-              onClick={() => setSelectedIndex(selectedIndex === palace.index ? null : palace.index)}
-            />
-          );
-        })}
+      {boardTab === 'ziwei' && (
+        <div className={gridClass}>
+          {chart.palaces.map((palace: import('iztro/lib/astro/FunctionalPalace').IFunctionalPalace) => {
+            const [row, col] = GRID_POS[palace.index];
+            return (
+              <Palace
+                key={palace.index}
+                palace={palace}
+                viewMode={viewMode}
+                isSelected={selectedIndex === palace.index}
+                isTrinity={selectedIndex !== null && selectedIndex !== palace.index && trinitySet.has(palace.index)}
+                isDecadalActive={palace.index === decadalIndex}
+                isYearlyActive={palace.index === yearlyIndex}
+                yearlyStars={yearlyStarsMap[palace.index] ?? []}
+                flyingMutagen={flyingMutagenMap.get(palace.index)}
+                style={{ gridRow: row + 1, gridColumn: col + 1 }}
+                onClick={() => setSelectedIndex(selectedIndex === palace.index ? null : palace.index)}
+              />
+            );
+          })}
 
-        {/* 中宫 */}
-        <div className="center-info">
-          <div className="center-label">命主</div>
-          <div className="center-value">{chart.soul}</div>
-          <div className="center-label">身主</div>
-          <div className="center-value">{chart.body}</div>
-          <div className="center-label">五行局</div>
-          <div className="center-value">{chart.fiveElementsClass}</div>
-          <div className="center-label">四柱</div>
-          <div className="center-value" style={{ fontSize: '0.7rem', letterSpacing: '0.03em' }}>{chart.chineseDate}</div>
-          {!embedded && (
-            <>
-              <div className="center-label">农历</div>
-              <div className="center-value lunar">{chart.lunarDate}</div>
-            </>
-          )}
+          {/* 中宫 */}
+          <div className="center-info">
+            <div className="center-label">命主</div>
+            <div className="center-value">{chart.soul}</div>
+            <div className="center-label">身主</div>
+            <div className="center-value">{chart.body}</div>
+            <div className="center-label">五行局</div>
+            <div className="center-value">{chart.fiveElementsClass}</div>
+            <div className="center-label">四柱</div>
+            <div className="center-value" style={{ fontSize: '0.7rem', letterSpacing: '0.03em' }}>{chart.chineseDate}</div>
+            {!embedded && (
+              <>
+                <div className="center-label">农历</div>
+                <div className="center-value lunar">{chart.lunarDate}</div>
+              </>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* 宫位详情（非嵌入模式用弹层，嵌入模式用内嵌展示） */}
       {boardTab === 'ziwei' && selectedPalace && !embedded && (

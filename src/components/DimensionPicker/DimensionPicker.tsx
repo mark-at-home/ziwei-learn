@@ -17,11 +17,7 @@ const BAZI_L1_L3  = BAZI_SPECIFIC_DIMENSIONS;
 const SHARED_L4_L5 = SHARED_DIMENSIONS.filter(d => d.level >= 4);
 
 export default function DimensionPicker({ onConfirm, onViewOnly, onBack }: DimensionPickerProps) {
-  const [systems, setSystems]   = useState<Set<SystemSelection>>(new Set(['ziwei']));
   const [selected, setSelected] = useState<Set<string>>(new Set());
-
-  const hasZiwei = systems.has('ziwei') || systems.has('both');
-  const hasBazi  = systems.has('bazi')  || systems.has('both');
   // simple: track as pair of booleans
   const [useZiwei, setUseZiwei] = useState(true);
   const [useBazi,  setUseBazi]  = useState(false);

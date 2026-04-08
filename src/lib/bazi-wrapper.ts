@@ -87,7 +87,7 @@ function getDaYunTenGod(dayGan: string, yunGan: string): string {
 }
 
 function buildPillar(
-  ganZhi: string,
+  _ganZhi: string,
   gan: string,
   zhi: string,
   hideGan: string[],

@@ -14,7 +14,7 @@ import type { Gender } from './lib/iztro-wrapper';
 import { chartToPromptText } from './lib/chart-to-text';
 import {
   generateAnalysis, generateQuiz, getAnalysisPrompt, chatWithChart,
-  generateBaZiAnalysis, getBaziAnalysisPrompt, generateCompare,
+  generateBaZiAnalysis, generateCompare,
 } from './lib/claude-api';
 import type { ChatMessage } from './lib/claude-api';
 import type { LLMModel } from './lib/claude-api';
@@ -41,7 +41,7 @@ export default function App() {
   const [baziChart, setBaziChart]         = useState<BaZiChart | null>(null);
   const [analysis, setAnalysis]           = useState<ChartAnalysis | null>(null);
   const [baziAnalysis, setBaziAnalysis]   = useState<BaZiAnalysis | null>(null);
-  const [activeSystems, setActiveSystems] = useState<SystemSelection>('ziwei');
+  const [, setActiveSystems] = useState<SystemSelection>('ziwei');
   const [questions, setQuestions]         = useState<QuizQuestion[]>([]);
   const [selectedDimensions, setSelected] = useState<Dimension[]>([]);
   const [loadingMsg, setLoadingMsg]       = useState('');

@@ -1,5 +1,5 @@
 import type { Dimension } from '../types';
-import type { BaZiAnalysis, CompareAnalysis } from '../types/bazi';
+import type { BaZiAnalysis } from '../types/bazi';
 import type { ChartAnalysis } from '../types';
 
 function currentDateStr(): string {
