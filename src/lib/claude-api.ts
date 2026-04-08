@@ -1,11 +1,18 @@
 import type { ChartAnalysis, QuizQuestion, Dimension } from '../types';
+import type { BaZiAnalysis, CompareAnalysis } from '../types/bazi';
 import { chartToPromptText } from './chart-to-text';
+import { baziToPromptText } from './bazi-to-text';
 import type { Astrolabe } from './iztro-wrapper';
+import type { BaZiChart } from '../types/bazi';
 import {
   ANALYSIS_SYSTEM, buildAnalysisSystem, buildAnalysisPrompt,
   QUIZ_SYSTEM, buildQuizPrompt,
   buildChatSystem,
 } from './prompts';
+import {
+  buildBaziSystem, buildBaziAnalysisPrompt,
+  COMPARE_SYSTEM, buildComparePrompt,
+} from './bazi-prompts';
 
 export type LLMModel = 'claude' | 'claude-4-6' | 'gemini' | 'gemini-pro' | 'gemini-thinking' | 'gemini-3-flash' | 'gemini-3-pro';
 
@@ -174,6 +181,74 @@ export async function generateQuiz(
   const raw        = await callLLM(QUIZ_SYSTEM, userPrompt, model, 6000);
 
   return parseJSON<QuizQuestion[]>(raw, []);
+}
+
+// ─── 八字分析 ─────────────────────────────────────────────────
+
+export function getBaziAnalysisPrompt(
+  baziChart: BaZiChart,
+  selectedDimensions: Dimension[],
+): { system: string; user: string } {
+  const chartText    = baziToPromptText(baziChart);
+  const systemPrompt = selectedDimensions.length > 0 ? buildBaziSystem(selectedDimensions) : buildBaziSystem([]);
+  const userPrompt   = buildBaziAnalysisPrompt(chartText, selectedDimensions);
+  return { system: systemPrompt, user: userPrompt };
+}
+
+export async function generateBaZiAnalysis(
+  baziChart: BaZiChart,
+  selectedDimensions: Dimension[],
+  model: LLMModel = 'claude',
+): Promise<BaZiAnalysis> {
+  const chartText    = baziToPromptText(baziChart);
+  const systemPrompt = selectedDimensions.length > 0 ? buildBaziSystem(selectedDimensions) : buildBaziSystem([]);
+  const userPrompt   = buildBaziAnalysisPrompt(chartText, selectedDimensions);
+  const raw          = await callLLM(systemPrompt, userPrompt, model, 8192);
+
+  const fallback: BaZiAnalysis = {
+    summary: '八字分析生成失败，请重试。',
+    dayMasterAnalysis: '', pillarsAnalysis: [],
+    tenGodsAnalysis: '', majorRunAnalysis: '',
+    eventAnalysis: [], keyFeatures: [],
+  };
+
+  const parsed = parseJSON<BaZiAnalysis>(raw, fallback);
+  return {
+    summary:           parsed.summary ?? '',
+    dayMasterAnalysis: parsed.dayMasterAnalysis ?? '',
+    pillarsAnalysis:   parsed.pillarsAnalysis ?? [],
+    tenGodsAnalysis:   parsed.tenGodsAnalysis ?? '',
+    majorRunAnalysis:  parsed.majorRunAnalysis ?? '',
+    eventAnalysis:     parsed.eventAnalysis ?? [],
+    keyFeatures:       parsed.keyFeatures ?? [],
+  };
+}
+
+// ─── 紫微 vs 八字 对比 ────────────────────────────────────────
+
+export async function generateCompare(
+  ziweiChart: Astrolabe,
+  baziChart: BaZiChart,
+  ziweiAnalysis: ChartAnalysis,
+  baziAnalysis: BaZiAnalysis,
+  model: LLMModel = 'claude',
+): Promise<CompareAnalysis> {
+  const ziweiText = chartToPromptText(ziweiChart);
+  const baziText  = baziToPromptText(baziChart);
+  const userPrompt = buildComparePrompt(ziweiText, baziText, ziweiAnalysis, baziAnalysis);
+  const raw = await callLLM(COMPARE_SYSTEM, userPrompt, model, 6000);
+
+  const fallback: CompareAnalysis = {
+    convergence: '', divergence: '', eventSynthesis: [], conclusion: '',
+  };
+
+  const parsed = parseJSON<CompareAnalysis>(raw, fallback);
+  return {
+    convergence:     parsed.convergence ?? '',
+    divergence:      parsed.divergence ?? '',
+    eventSynthesis:  parsed.eventSynthesis ?? [],
+    conclusion:      parsed.conclusion ?? '',
+  };
 }
 
 // ─── 自由问答 ────────────────────────────────────────────────

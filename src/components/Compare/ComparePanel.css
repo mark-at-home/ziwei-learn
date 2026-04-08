@@ -1,0 +1,153 @@
+.compare-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.2rem;
+  background: #ffffff;
+  border: 1px solid #e8ddd4;
+  border-radius: 12px;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.compare-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.compare-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #4a3f3f;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.compare-close-btn {
+  background: transparent;
+  border: none;
+  color: #b0a8a0;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0.2rem 0.4rem;
+}
+
+.compare-close-btn:hover {
+  color: #8a7f7f;
+}
+
+.compare-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.compare-tag {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 0.15rem 0.6rem;
+  border-radius: 4px;
+  background: #f0ebe5;
+  color: #8a7f7f;
+  width: fit-content;
+}
+
+.compare-tag--convergence {
+  background: #e8f4ee;
+  color: #5a9a7a;
+}
+
+.compare-tag--divergence {
+  background: #fdf0f0;
+  color: #c87070;
+}
+
+.compare-tag--conclusion {
+  background: #f0eaf8;
+  color: #8070c4;
+}
+
+.compare-text {
+  font-size: 0.82rem;
+  color: #4a3f3f;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ── 事件互证 ── */
+.compare-events {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.compare-event-card {
+  border: 1px solid #e8ddd4;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.compare-event-topic {
+  padding: 0.4rem 0.8rem;
+  background: #f5f0eb;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #6a5f5f;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #e8ddd4;
+}
+
+.compare-event-row {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid #f0ebe5;
+}
+
+.compare-event-system {
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  background: #e8f0f8;
+  color: #4a80b4;
+  margin-top: 0.1rem;
+}
+
+.compare-event-system--bazi {
+  background: #f8e8e8;
+  color: #b44a5a;
+}
+
+.compare-event-text {
+  font-size: 0.78rem;
+  color: #5a5050;
+  line-height: 1.65;
+  margin: 0;
+  flex: 1;
+}
+
+.compare-event-synthesis {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  padding: 0.5rem 0.8rem;
+  background: #fdf8f4;
+}
+
+.compare-synthesis-label {
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  background: #f0eaf8;
+  color: #8070c4;
+  margin-top: 0.1rem;
+}

@@ -276,6 +276,31 @@
   color: #c87d8a;
 }
 
+/* 系统 Tab */
+.analysis-tab-row {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #e8ddd4;
+  margin: 0.5rem 0;
+}
+
+.analysis-tab-btn {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.4rem 1rem;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.82rem;
+  color: #b0a8a0;
+  cursor: pointer;
+  margin-bottom: -1px;
+}
+
+.analysis-tab-btn--active {
+  color: #c87d8a;
+  border-bottom-color: #c87d8a;
+}
+
 /* 底部按钮 */
 .analysis-footer {
   display: flex;

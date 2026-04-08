@@ -1,31 +1,45 @@
 import { useState, useMemo } from 'react';
 import type { ChartAnalysis } from '../../types';
 import { DIMENSIONS } from '../../types';
+import type { BaZiAnalysis, CompareAnalysis } from '../../types/bazi';
 import type { ChatMessage } from '../../lib/claude-api';
 import type { Astrolabe } from '../../lib/iztro-wrapper';
 import { verifyAnalysis } from '../../lib/chart-verify';
+import BaZiAnalysisPanel from './BaZiAnalysisPanel';
+import ComparePanel from '../Compare/ComparePanel';
 import ChatPanel from '../Chat/ChatPanel';
 import './AnalysisPanel.css';
 
 interface AnalysisPanelProps {
   analysis: ChartAnalysis;
+  baziAnalysis?: BaZiAnalysis;
   chart?: Astrolabe;
   chartId?: string;
   promptText?: { system: string; user: string };
   onChat?: (messages: ChatMessage[]) => Promise<string>;
   onStartQuiz: () => void;
   onBack: () => void;
+  onGenerateCompare?: () => Promise<CompareAnalysis>;
 }
+
+type AnalysisTab = 'ziwei' | 'bazi';
 
 function dimLabel(key: string): string {
   return DIMENSIONS.find(d => d.key === key)?.label ?? key;
 }
 
-export default function AnalysisPanel({ analysis, chart, chartId, promptText, onChat, onStartQuiz, onBack }: AnalysisPanelProps) {
-  const [showPrompt, setShowPrompt] = useState(false);
-  const [showChat, setShowChat]     = useState(false);
-  const [showVerify, setShowVerify] = useState(false);
-  const [copied, setCopied]         = useState(false);
+export default function AnalysisPanel({
+  analysis, baziAnalysis, chart, chartId, promptText, onChat,
+  onStartQuiz, onBack, onGenerateCompare,
+}: AnalysisPanelProps) {
+  const [showPrompt, setShowPrompt]   = useState(false);
+  const [showChat, setShowChat]       = useState(false);
+  const [showVerify, setShowVerify]   = useState(false);
+  const [copied, setCopied]           = useState(false);
+  const [activeTab, setActiveTab]     = useState<AnalysisTab>('ziwei');
+  const [compare, setCompare]         = useState<CompareAnalysis | null>(null);
+  const [showCompare, setShowCompare] = useState(false);
+  const [loadingCompare, setLoadingCompare] = useState(false);
 
   const verifyResult = useMemo(() => {
     if (!chart) return null;
@@ -41,6 +55,21 @@ export default function AnalysisPanel({ analysis, chart, chartId, promptText, on
     });
   }
 
+  async function handleCompare() {
+    if (!onGenerateCompare) return;
+    if (compare) { setShowCompare(v => !v); return; }
+    setLoadingCompare(true);
+    try {
+      const result = await onGenerateCompare();
+      setCompare(result);
+      setShowCompare(true);
+    } finally {
+      setLoadingCompare(false);
+    }
+  }
+
+  const hasBoth = !!baziAnalysis;
+
   return (
     <div className="analysis-page">
       <div className="analysis-header">
@@ -48,10 +77,7 @@ export default function AnalysisPanel({ analysis, chart, chartId, promptText, on
         <h2 className="analysis-title">命理分析</h2>
         <div className="analysis-header-actions">
           {promptText && (
-            <button
-              className="prompt-export-btn"
-              onClick={() => setShowPrompt(v => !v)}
-            >
+            <button className="prompt-export-btn" onClick={() => setShowPrompt(v => !v)}>
               {showPrompt ? '收起提示词' : '查看提示词'}
             </button>
           )}
@@ -62,6 +88,15 @@ export default function AnalysisPanel({ analysis, chart, chartId, promptText, on
               style={verifyResult.length > 0 ? { borderColor: '#d4707060', color: '#d47070' } : undefined}
             >
               {showVerify ? '收起验证' : `数据验证${verifyResult.length > 0 ? ` (${verifyResult.length})` : ''}`}
+            </button>
+          )}
+          {hasBoth && onGenerateCompare && (
+            <button
+              className={`prompt-export-btn${showCompare ? ' prompt-export-btn--active' : ''}`}
+              onClick={handleCompare}
+              disabled={loadingCompare}
+            >
+              {loadingCompare ? '生成对比中…' : showCompare ? '收起对比' : '紫微 × 八字'}
             </button>
           )}
           {onChat && (
@@ -75,7 +110,7 @@ export default function AnalysisPanel({ analysis, chart, chartId, promptText, on
         </div>
       </div>
 
-      {/* 提示词导出面板 */}
+      {/* 提示词面板 */}
       {showPrompt && promptText && (
         <div className="prompt-panel">
           <div className="prompt-panel-header">
@@ -123,73 +158,100 @@ export default function AnalysisPanel({ analysis, chart, chartId, promptText, on
         </div>
       )}
 
-      <div className="analysis-content">
-        {/* 总述 */}
-        <section className="analysis-section">
-          <div className="section-tag">概述</div>
-          <p className="analysis-summary">{analysis.summary}</p>
-        </section>
+      {/* 对比面板 */}
+      {showCompare && compare && (
+        <ComparePanel compare={compare} onClose={() => setShowCompare(false)} />
+      )}
 
-        {/* 宫位分析 */}
-        {analysis.palaceAnalysis.length > 0 && (
+      {/* 系统 tab（有八字时显示） */}
+      {hasBoth && (
+        <div className="analysis-tab-row">
+          <button
+            className={`analysis-tab-btn${activeTab === 'ziwei' ? ' analysis-tab-btn--active' : ''}`}
+            onClick={() => setActiveTab('ziwei')}
+          >紫微斗数</button>
+          <button
+            className={`analysis-tab-btn${activeTab === 'bazi' ? ' analysis-tab-btn--active' : ''}`}
+            onClick={() => setActiveTab('bazi')}
+          >八字</button>
+        </div>
+      )}
+
+      {/* 八字分析 */}
+      {activeTab === 'bazi' && baziAnalysis && (
+        <BaZiAnalysisPanel analysis={baziAnalysis} />
+      )}
+
+      {/* 紫微分析 */}
+      {activeTab === 'ziwei' && (
+        <div className="analysis-content">
+          {/* 总述 */}
           <section className="analysis-section">
-            <div className="section-tag">宫位解读</div>
-            {analysis.palaceAnalysis.map((pa, i) => (
-              <div key={i} className="palace-analysis-card">
-                <div className="palace-analysis-header">
-                  <span className="palace-analysis-name">{pa.palace}</span>
-                  <span className="palace-analysis-stars">{pa.stars.join('、')}</span>
+            <div className="section-tag">概述</div>
+            <p className="analysis-summary">{analysis.summary}</p>
+          </section>
+
+          {/* 宫位分析 */}
+          {analysis.palaceAnalysis.length > 0 && (
+            <section className="analysis-section">
+              <div className="section-tag">宫位解读</div>
+              {analysis.palaceAnalysis.map((pa, i) => (
+                <div key={i} className="palace-analysis-card">
+                  <div className="palace-analysis-header">
+                    <span className="palace-analysis-name">{pa.palace}</span>
+                    <span className="palace-analysis-stars">{pa.stars.join('、')}</span>
+                  </div>
+                  <p className="palace-analysis-text">{pa.interpretation}</p>
+                  <div className="reasoning-block">
+                    <span className="reasoning-label">推理依据</span>
+                    <p className="reasoning-text">{pa.reasoning}</p>
+                  </div>
                 </div>
-                <p className="palace-analysis-text">{pa.interpretation}</p>
-                <div className="reasoning-block">
-                  <span className="reasoning-label">推理依据</span>
-                  <p className="reasoning-text">{pa.reasoning}</p>
-                </div>
-              </div>
-            ))}
-          </section>
-        )}
-
-        {/* 四化分析 */}
-        {analysis.mutagenAnalysis && (
-          <section className="analysis-section">
-            <div className="section-tag">四化飞星</div>
-            <p className="analysis-text">{analysis.mutagenAnalysis}</p>
-          </section>
-        )}
-
-        {/* 大限走势 */}
-        {analysis.decadalFortune && (
-          <section className="analysis-section">
-            <div className="section-tag">大限走势</div>
-            <p className="analysis-text">{analysis.decadalFortune}</p>
-          </section>
-        )}
-
-        {/* 维度分析 */}
-        {analysis.eventAnalysis.map((ea, i) => (
-          <section key={i} className="analysis-section">
-            <div className="section-tag event-tag">{dimLabel(ea.dimension)}</div>
-            <p className="analysis-text">{ea.content}</p>
-            <div className="reasoning-block">
-              <span className="reasoning-label">推理依据</span>
-              <p className="reasoning-text">{ea.reasoning}</p>
-            </div>
-          </section>
-        ))}
-
-        {/* 核心特征 */}
-        {analysis.keyFeatures.length > 0 && (
-          <section className="analysis-section">
-            <div className="section-tag">命盘核心特征</div>
-            <ul className="key-features">
-              {analysis.keyFeatures.map((f, i) => (
-                <li key={i} className="key-feature-item">{f}</li>
               ))}
-            </ul>
-          </section>
-        )}
-      </div>
+            </section>
+          )}
+
+          {/* 四化分析 */}
+          {analysis.mutagenAnalysis && (
+            <section className="analysis-section">
+              <div className="section-tag">四化飞星</div>
+              <p className="analysis-text">{analysis.mutagenAnalysis}</p>
+            </section>
+          )}
+
+          {/* 大限走势 */}
+          {analysis.decadalFortune && (
+            <section className="analysis-section">
+              <div className="section-tag">大限走势</div>
+              <p className="analysis-text">{analysis.decadalFortune}</p>
+            </section>
+          )}
+
+          {/* 维度分析 */}
+          {analysis.eventAnalysis.map((ea, i) => (
+            <section key={i} className="analysis-section">
+              <div className="section-tag event-tag">{dimLabel(ea.dimension)}</div>
+              <p className="analysis-text">{ea.content}</p>
+              <div className="reasoning-block">
+                <span className="reasoning-label">推理依据</span>
+                <p className="reasoning-text">{ea.reasoning}</p>
+              </div>
+            </section>
+          ))}
+
+          {/* 核心特征 */}
+          {analysis.keyFeatures.length > 0 && (
+            <section className="analysis-section">
+              <div className="section-tag">命盘核心特征</div>
+              <ul className="key-features">
+                {analysis.keyFeatures.map((f, i) => (
+                  <li key={i} className="key-feature-item">{f}</li>
+                ))}
+              </ul>
+            </section>
+          )}
+        </div>
+      )}
 
       {/* 自由问答面板 */}
       {showChat && onChat && chartId && (

@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import type { Astrolabe } from '../../lib/iztro-wrapper';
+import type { BaZiChart } from '../../types/bazi';
 import ChartBoard from '../ChartBoard/ChartBoard';
 import './SplitLayout.css';
 
@@ -9,10 +10,11 @@ const DEFAULT_WIDTH = 380;
 
 interface SplitLayoutProps {
   chart: Astrolabe;
+  baziChart?: BaZiChart;
   children: React.ReactNode;
 }
 
-export default function SplitLayout({ chart, children }: SplitLayoutProps) {
+export default function SplitLayout({ chart, baziChart, children }: SplitLayoutProps) {
   const [chartVisible, setChartVisible] = useState(true);
   const [chartWidth, setChartWidth]     = useState(DEFAULT_WIDTH);
   const dragging = useRef(false);
@@ -50,7 +52,7 @@ export default function SplitLayout({ chart, children }: SplitLayoutProps) {
         className={`split-chart ${chartVisible ? '' : 'split-chart--hidden'}`}
         style={chartVisible ? { width: chartWidth } : undefined}
       >
-        <ChartBoard chart={chart} embedded />
+        <ChartBoard chart={chart} baziChart={baziChart} embedded />
       </aside>
 
       {/* 拖动手柄（桌面端） */}

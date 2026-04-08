@@ -1,7 +1,9 @@
 import { useState, useMemo } from 'react';
 import type { Astrolabe } from '../../lib/iztro-wrapper';
+import type { BaZiChart } from '../../types/bazi';
 import Palace from './Palace';
 import PalaceDetail from './PalaceDetail';
+import BaZiBoard from '../BaZi/BaZiBoard';
 import './ChartBoard.css';
 
 // 地支 index → [row, col] in 4×4 grid (寅=0…丑=11)
@@ -73,15 +75,17 @@ function computeFlyingMutagen(chart: Astrolabe, selectedIndex: number): Map<numb
 
 interface ChartBoardProps {
   chart: Astrolabe;
+  baziChart?: BaZiChart;
   // 嵌入模式（用于分析/答题页侧边栏）
   embedded?: boolean;
   onBack?: () => void;
   onProceed?: () => void;
 }
 
-export default function ChartBoard({ chart, embedded = false, onBack, onProceed }: ChartBoardProps) {
+export default function ChartBoard({ chart, baziChart, embedded = false, onBack, onProceed }: ChartBoardProps) {
   const currentYear = new Date().getFullYear();
 
+  const [boardTab, setBoardTab]             = useState<'ziwei' | 'bazi'>('ziwei');
   const [viewMode, setViewMode]             = useState<ViewMode>('natal');
   const [selectedIndex, setSelectedIndex]   = useState<number | null>(null);
 
@@ -143,8 +147,25 @@ export default function ChartBoard({ chart, embedded = false, onBack, onProceed 
         </div>
       </div>
 
-      {/* 大运流年信息条 */}
-      {(viewMode === 'decadal' || viewMode === 'yearly') && (
+      {/* 系统 tab（仅有八字时显示） */}
+      {baziChart && (
+        <div className="board-tab-row">
+          <button
+            className={`board-tab-btn${boardTab === 'ziwei' ? ' board-tab-btn--active' : ''}`}
+            onClick={() => setBoardTab('ziwei')}
+          >紫微斗数</button>
+          <button
+            className={`board-tab-btn${boardTab === 'bazi' ? ' board-tab-btn--active' : ''}`}
+            onClick={() => setBoardTab('bazi')}
+          >八字</button>
+        </div>
+      )}
+
+      {/* 八字视图 */}
+      {baziChart && boardTab === 'bazi' && <BaZiBoard chart={baziChart} />}
+
+      {/* 以下紫微内容仅在 ziwei tab 时显示 */}
+      {boardTab === 'ziwei' && (viewMode === 'decadal' || viewMode === 'yearly') && (
         <div className="horoscope-bar">
           {viewMode === 'decadal' && decadalIndex >= 0 && (
             <span className="horoscope-tag horoscope-tag--decadal">
@@ -160,8 +181,8 @@ export default function ChartBoard({ chart, embedded = false, onBack, onProceed 
         </div>
       )}
 
-      {/* 命盘格 */}
-      <div className={gridClass}>
+      {/* 命盘格（仅紫微 tab） */}
+      {boardTab === 'ziwei' && <div className={gridClass}>
         {chart.palaces.map((palace: import('iztro/lib/astro/FunctionalPalace').IFunctionalPalace) => {
           const [row, col] = GRID_POS[palace.index];
           return (
@@ -201,7 +222,7 @@ export default function ChartBoard({ chart, embedded = false, onBack, onProceed 
       </div>
 
       {/* 宫位详情（非嵌入模式用弹层，嵌入模式用内嵌展示） */}
-      {selectedPalace && !embedded && (
+      {boardTab === 'ziwei' && selectedPalace && !embedded && (
         <PalaceDetail
           palace={selectedPalace}
           trinityNames={trinityNames}
@@ -210,7 +231,7 @@ export default function ChartBoard({ chart, embedded = false, onBack, onProceed 
       )}
 
       {/* 嵌入模式：宫位详情内嵌在下方 */}
-      {selectedPalace && embedded && (
+      {boardTab === 'ziwei' && selectedPalace && embedded && (
         <div className="embedded-detail">
           <div className="embedded-detail-title">
             {selectedPalace.name}（{selectedPalace.heavenlyStem}{selectedPalace.earthlyBranch}）

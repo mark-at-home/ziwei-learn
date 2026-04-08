@@ -2,6 +2,7 @@ import { useState } from 'react';
 import InputForm from './components/InputForm/InputForm';
 import ChartBoard from './components/ChartBoard/ChartBoard';
 import DimensionPicker from './components/DimensionPicker/DimensionPicker';
+import type { SystemSelection } from './components/DimensionPicker/DimensionPicker';
 import AnalysisPanel from './components/Analysis/AnalysisPanel';
 import QuizSession from './components/Quiz/QuizSession';
 import ProgressDashboard from './components/Progress/ProgressDashboard';
@@ -11,11 +12,16 @@ import type { Astrolabe } from './lib/iztro-wrapper';
 import { getChartId, getChartLabel, generateChart, TIME_NAMES } from './lib/iztro-wrapper';
 import type { Gender } from './lib/iztro-wrapper';
 import { chartToPromptText } from './lib/chart-to-text';
-import { generateAnalysis, generateQuiz, getAnalysisPrompt, chatWithChart } from './lib/claude-api';
+import {
+  generateAnalysis, generateQuiz, getAnalysisPrompt, chatWithChart,
+  generateBaZiAnalysis, getBaziAnalysisPrompt, generateCompare,
+} from './lib/claude-api';
 import type { ChatMessage } from './lib/claude-api';
 import type { LLMModel } from './lib/claude-api';
 import { saveSession, saveChartRecord, loadChartRecord } from './lib/storage';
 import type { ChartAnalysis, Dimension, QuizQuestion, QuizSession as QuizSessionType } from './types';
+import type { BaZiChart, BaZiAnalysis } from './types/bazi';
+import { generateBaZiChart, timeIndexToHour } from './lib/bazi-wrapper';
 
 type AppView =
   | 'input'
@@ -32,7 +38,10 @@ type AppView =
 export default function App() {
   const [view, setView]                   = useState<AppView>('input');
   const [chart, setChart]                 = useState<Astrolabe | null>(null);
+  const [baziChart, setBaziChart]         = useState<BaZiChart | null>(null);
   const [analysis, setAnalysis]           = useState<ChartAnalysis | null>(null);
+  const [baziAnalysis, setBaziAnalysis]   = useState<BaZiAnalysis | null>(null);
+  const [activeSystems, setActiveSystems] = useState<SystemSelection>('ziwei');
   const [questions, setQuestions]         = useState<QuizQuestion[]>([]);
   const [selectedDimensions, setSelected] = useState<Dimension[]>([]);
   const [loadingMsg, setLoadingMsg]       = useState('');
@@ -44,10 +53,22 @@ export default function App() {
   function handleChartGenerated(c: Astrolabe) {
     setChart(c);
     setAnalysis(null);
+    setBaziAnalysis(null);
     setQuestions([]);
     setSelected([]);
     setError('');
     saveChartRecord(c);   // 自动存入命盘库
+    // 同时生成八字命盘
+    try {
+      const stored = c as Astrolabe & { time: string; solarDate: string };
+      const timeStr = stored.time ?? '';
+      const timeIndex = TIME_NAMES.findIndex(t => timeStr.startsWith(t));
+      const gender = (c.gender === '女' || c.gender === 'female') ? 'female' : 'male';
+      const bazi = generateBaZiChart(stored.solarDate, timeIndexToHour(timeIndex >= 0 ? timeIndex : 0), gender);
+      setBaziChart(bazi);
+    } catch {
+      setBaziChart(null);
+    }
     setView('chart');
   }
 
@@ -64,24 +85,43 @@ export default function App() {
     const freshChart = generateChart(record.solarDate, timeIndex >= 0 ? timeIndex : 0, gender);
     setChart(freshChart);
     setAnalysis(null);
+    setBaziAnalysis(null);
     setQuestions([]);
     setSelected([]);
     setError('');
+    try {
+      const bazi = generateBaZiChart(record.solarDate, timeIndexToHour(timeIndex >= 0 ? timeIndex : 0), gender);
+      setBaziChart(bazi);
+    } catch {
+      setBaziChart(null);
+    }
     setView('chart');
   }
 
   function handleProceed() { setView('dimension-picker'); }
 
   // ── 确认维度，生成分析 ────────────────────────────────────────
-  async function handleDimensionsConfirmed(dims: Dimension[]) {
+  async function handleDimensionsConfirmed(dims: Dimension[], systems: SystemSelection) {
     if (!chart) return;
     setSelected(dims);
+    setActiveSystems(systems);
     setPromptText(getAnalysisPrompt(chart, dims));
     setView('loading-analysis');
-    setLoadingMsg('正在生成命理分析…');
+
+    const needZiwei = systems === 'ziwei' || systems === 'both';
+    const needBazi  = (systems === 'bazi'  || systems === 'both') && !!baziChart;
+
+    setLoadingMsg(needZiwei && needBazi ? '正在生成紫微 + 八字分析…' : needBazi ? '正在生成八字分析…' : '正在生成命理分析…');
+
     try {
-      const result = await generateAnalysis(chart, dims, model);
-      setAnalysis(result);
+      const [ziweiResult, baziResult] = await Promise.all([
+        needZiwei ? generateAnalysis(chart, dims, model) : Promise.resolve(null),
+        needBazi  ? generateBaZiAnalysis(baziChart!, dims, model) : Promise.resolve(null),
+      ]);
+      if (ziweiResult) setAnalysis(ziweiResult);
+      if (baziResult)  setBaziAnalysis(baziResult);
+      // if only bazi was run, keep existing ziwei analysis (or set empty fallback)
+      if (!needZiwei && !analysis) setAnalysis({ summary: '', palaceAnalysis: [], mutagenAnalysis: '', decadalFortune: '', eventAnalysis: [], keyFeatures: [] });
       setView('analysis');
     } catch (e) {
       setError(e instanceof Error ? e.message : '分析生成失败，请确认代理服务已启动');
@@ -89,14 +129,25 @@ export default function App() {
     }
   }
 
-  async function handleViewOnly() {
+  async function handleViewOnly(systems: SystemSelection) {
     if (!chart) return;
+    setActiveSystems(systems);
     setPromptText(getAnalysisPrompt(chart, []));
     setView('loading-analysis');
-    setLoadingMsg('正在生成命理分析…');
+
+    const needZiwei = systems === 'ziwei' || systems === 'both';
+    const needBazi  = (systems === 'bazi'  || systems === 'both') && !!baziChart;
+
+    setLoadingMsg(needZiwei && needBazi ? '正在生成紫微 + 八字分析…' : needBazi ? '正在生成八字分析…' : '正在生成命理分析…');
+
     try {
-      const result = await generateAnalysis(chart, [], model);
-      setAnalysis(result);
+      const [ziweiResult, baziResult] = await Promise.all([
+        needZiwei ? generateAnalysis(chart, [], model) : Promise.resolve(null),
+        needBazi  ? generateBaZiAnalysis(baziChart!, [], model) : Promise.resolve(null),
+      ]);
+      if (ziweiResult) setAnalysis(ziweiResult);
+      if (baziResult)  setBaziAnalysis(baziResult);
+      if (!needZiwei && !analysis) setAnalysis({ summary: '', palaceAnalysis: [], mutagenAnalysis: '', decadalFortune: '', eventAnalysis: [], keyFeatures: [] });
       setView('analysis');
     } catch (e) {
       setError(e instanceof Error ? e.message : '分析生成失败');
@@ -170,7 +221,12 @@ export default function App() {
       <>
         {globalBar}
         {error && <ErrorBanner msg={error} onClose={() => setError('')} />}
-        <ChartBoard chart={chart} onBack={() => setView('input')} onProceed={handleProceed} />
+        <ChartBoard
+          chart={chart}
+          baziChart={baziChart ?? undefined}
+          onBack={() => setView('input')}
+          onProceed={handleProceed}
+        />
       </>
     );
   }
@@ -212,16 +268,22 @@ export default function App() {
     return (
       <>
         {globalBar}
-        <SplitLayout chart={chart}>
+        <SplitLayout chart={chart} baziChart={baziChart ?? undefined}>
           {error && <ErrorBanner msg={error} onClose={() => setError('')} />}
           <AnalysisPanel
             analysis={analysis}
+            baziAnalysis={baziAnalysis ?? undefined}
             chart={chart}
             chartId={getChartId(chart)}
             promptText={promptText ?? undefined}
             onChat={(msgs: ChatMessage[]) => chatWithChart(chart, analysis, msgs, model)}
             onStartQuiz={selectedDimensions.length > 0 ? handleStartQuiz : () => {}}
             onBack={() => { setView(selectedDimensions.length > 0 ? 'dimension-picker' : 'chart'); setError(''); }}
+            onGenerateCompare={
+              baziAnalysis && baziChart
+                ? () => generateCompare(chart, baziChart, analysis, baziAnalysis, model)
+                : undefined
+            }
           />
         </SplitLayout>
       </>

@@ -64,6 +64,31 @@
   color: #c87d8a;
 }
 
+/* ── 系统 Tab ───────────────────────────────── */
+.board-tab-row {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #e8ddd4;
+  margin-bottom: 0.5rem;
+}
+
+.board-tab-btn {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.4rem 1rem;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.8rem;
+  color: #b0a8a0;
+  cursor: pointer;
+  margin-bottom: -1px;
+}
+
+.board-tab-btn--active {
+  color: #c87d8a;
+  border-bottom-color: #c87d8a;
+}
+
 /* ── 命盘 4×4 网格 ─────────────────────────── */
 .chartboard-grid {
   display: grid;
