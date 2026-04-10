@@ -79,6 +79,26 @@
   margin: 0 auto;
 }
 
+.prompt-tab-row {
+  display: flex;
+  gap: 0;
+}
+.prompt-tab-btn {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.2rem 0.7rem;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.75rem;
+  color: #b0a8a0;
+  cursor: pointer;
+  margin-bottom: -1px;
+}
+.prompt-tab-btn--active {
+  color: #c87d8a;
+  border-bottom-color: #c87d8a;
+}
+
 .prompt-panel-header {
   display: flex;
   align-items: center;

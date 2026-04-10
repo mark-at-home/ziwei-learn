@@ -3,72 +3,53 @@ const { Solar } = require('lunar-javascript') as { Solar: LunarJSSolar };
 
 import type { BaZiChart, BaZiMajorRun, BaZiPillar } from '../types/bazi';
 
-// ── 最小类型声明（仅用到的部分）──────────────────────────────
+// ── 最小类型声明 ────────────────────────────────────────────────
 interface LunarJSSolar {
   fromYmdHms(y: number, m: number, d: number, h: number, mi: number, s: number): SolarObj;
 }
-
-interface SolarObj {
-  getLunar(): LunarObj;
-}
-
+interface SolarObj { getLunar(): LunarObj; }
 interface LunarObj {
   getEightChar(): EightCharObj;
+  getBaZiShiShenYearZhi(): string[];
+  getBaZiShiShenMonthZhi(): string[];
+  getBaZiShiShenDayZhi(): string[];
+  getBaZiShiShenTimeZhi(): string[];
 }
-
 interface DaYunObj {
   getGanZhi(): string;
   getStartAge(): number;
   getEndAge(): number;
   getIndex(): number;
 }
-
 interface YunObj {
   getStartYear(): number;
   isForward(): boolean;
   getDaYun(): DaYunObj[];
 }
-
 interface EightCharObj {
   setSect(n: number): void;
-  getYear(): string;
-  getYearGan(): string;
-  getYearZhi(): string;
-  getYearHideGan(): string[];
-  getYearWuXing(): string;
-  getYearNaYin(): string;
-  getYearShiShenGan(): string;
-  getMonth(): string;
-  getMonthGan(): string;
-  getMonthZhi(): string;
-  getMonthHideGan(): string[];
-  getMonthWuXing(): string;
-  getMonthNaYin(): string;
-  getMonthShiShenGan(): string;
-  getDay(): string;
-  getDayGan(): string;
-  getDayZhi(): string;
-  getDayHideGan(): string[];
-  getDayWuXing(): string;
-  getDayNaYin(): string;
-  getDayShiShenGan(): string;
-  getTime(): string;
-  getTimeGan(): string;
-  getTimeZhi(): string;
-  getTimeHideGan(): string[];
-  getTimeWuXing(): string;
-  getTimeNaYin(): string;
-  getTimeShiShenGan(): string;
+  getYear(): string; getYearGan(): string; getYearZhi(): string;
+  getYearHideGan(): string[]; getYearNaYin(): string; getYearShiShenGan(): string;
+  getYearDiShi(): string;
+  getMonth(): string; getMonthGan(): string; getMonthZhi(): string;
+  getMonthHideGan(): string[]; getMonthNaYin(): string; getMonthShiShenGan(): string;
+  getMonthDiShi(): string;
+  getDay(): string; getDayGan(): string; getDayZhi(): string;
+  getDayHideGan(): string[]; getDayNaYin(): string; getDayShiShenGan(): string;
+  getDayDiShi(): string;
+  getTime(): string; getTimeGan(): string; getTimeZhi(): string;
+  getTimeHideGan(): string[]; getTimeNaYin(): string; getTimeShiShenGan(): string;
+  getTimeDiShi(): string;
   getYun(gender: number, sect: number): YunObj;
 }
 
-// ── 日主五行映射 ───────────────────────────────────────────────
+// ── 日主五行 ──────────────────────────────────────────────────
 const GAN_ELEMENT: Record<string, string> = {
   甲: '木', 乙: '木', 丙: '火', 丁: '火', 戊: '土',
   己: '土', 庚: '金', 辛: '金', 壬: '水', 癸: '水',
 };
 
-// ── 大运十神（根据日主与大运干的关系）────────────────────────
+// ── 大运十神 ──────────────────────────────────────────────────
 const TEN_GOD_MAP: Record<string, Record<string, string>> = {
   甲: { 甲:'比肩', 乙:'劫财', 丙:'食神', 丁:'伤官', 戊:'偏财', 己:'正财', 庚:'七杀', 辛:'正官', 壬:'偏印', 癸:'正印' },
   乙: { 乙:'比肩', 甲:'劫财', 丁:'食神', 丙:'伤官', 己:'偏财', 戊:'正财', 辛:'七杀', 庚:'正官', 癸:'偏印', 壬:'正印' },
@@ -82,26 +63,89 @@ const TEN_GOD_MAP: Record<string, Record<string, string>> = {
   癸: { 癸:'比肩', 壬:'劫财', 乙:'食神', 甲:'伤官', 丁:'偏财', 丙:'正财', 己:'七杀', 戊:'正官', 辛:'偏印', 庚:'正印' },
 };
 
+// ── 神煞计算表 ────────────────────────────────────────────────
+// 天乙贵人：依日主天干
+const TIANYI_MAP: Record<string, string[]> = {
+  甲: ['丑','未'], 戊: ['丑','未'], 庚: ['丑','未'],
+  乙: ['子','申'], 己: ['子','申'],
+  丙: ['亥','酉'], 丁: ['亥','酉'],
+  壬: ['卯','巳'], 癸: ['卯','巳'],
+  辛: ['午','寅'],
+};
+// 文昌贵人：依日主天干
+const WENCHANG_MAP: Record<string, string> = {
+  甲:'巳', 乙:'午', 丙:'申', 丁:'酉', 戊:'申', 己:'酉', 庚:'亥', 辛:'子', 壬:'寅', 癸:'卯',
+};
+// 桃花：依年/日地支三合局
+const TAOHUA_MAP: Record<string, string> = {
+  申:'酉', 子:'酉', 辰:'酉',
+  寅:'卯', 午:'卯', 戌:'卯',
+  亥:'子', 卯:'子', 未:'子',
+  巳:'午', 酉:'午', 丑:'午',
+};
+// 驿马：依年/日地支
+const YIMA_MAP: Record<string, string> = {
+  申:'寅', 子:'寅', 辰:'寅',
+  寅:'申', 午:'申', 戌:'申',
+  亥:'巳', 卯:'巳', 未:'巳',
+  巳:'亥', 酉:'亥', 丑:'亥',
+};
+// 将星：依年/日地支
+const JIANGXING_MAP: Record<string, string> = {
+  申:'子', 子:'子', 辰:'子',
+  寅:'午', 午:'午', 戌:'午',
+  亥:'卯', 卯:'卯', 未:'卯',
+  巳:'酉', 酉:'酉', 丑:'酉',
+};
+// 华盖：依年/日地支
+const HUAGAI_MAP: Record<string, string> = {
+  申:'辰', 子:'辰', 辰:'辰',
+  寅:'戌', 午:'戌', 戌:'戌',
+  亥:'未', 卯:'未', 未:'未',
+  巳:'丑', 酉:'丑', 丑:'丑',
+};
+// 羊刃：依日主天干
+const YANGREN_MAP: Record<string, string> = {
+  甲:'卯', 乙:'寅', 丙:'午', 丁:'巳', 戊:'午', 己:'巳', 庚:'酉', 辛:'申', 壬:'子', 癸:'亥',
+};
+
+/** 计算每柱的神煞 */
+function computeShenSha(dayGan: string, dayZhi: string, yearZhi: string, branchForThisPillar: string): string[] {
+  const result: string[] = [];
+  const tianyiBranches = TIANYI_MAP[dayGan] ?? [];
+  if (tianyiBranches.includes(branchForThisPillar)) result.push('天乙贵人');
+  if (WENCHANG_MAP[dayGan] === branchForThisPillar) result.push('文昌贵人');
+  if (YANGREN_MAP[dayGan] === branchForThisPillar) result.push('羊刃');
+  // 桃花、驿马、将星、华盖 依年支和日支推算，落在哪柱就标在哪柱
+  const refBranches = [yearZhi, dayZhi];
+  for (const ref of refBranches) {
+    if (TAOHUA_MAP[ref]    === branchForThisPillar) { if (!result.includes('桃花'))   result.push('桃花'); }
+    if (YIMA_MAP[ref]      === branchForThisPillar) { if (!result.includes('驿马'))   result.push('驿马'); }
+    if (JIANGXING_MAP[ref] === branchForThisPillar) { if (!result.includes('将星'))   result.push('将星'); }
+    if (HUAGAI_MAP[ref]    === branchForThisPillar) { if (!result.includes('华盖'))   result.push('华盖'); }
+  }
+  return result;
+}
+
 function getDaYunTenGod(dayGan: string, yunGan: string): string {
   return TEN_GOD_MAP[dayGan]?.[yunGan] ?? '';
 }
 
 function buildPillar(
-  _ganZhi: string,
-  gan: string,
-  zhi: string,
-  hideGan: string[],
-  nayin: string,
-  tenGod: string,
+  gan: string, zhi: string,
+  hideGan: string[], hiddenTenGods: string[],
+  nayin: string, tenGod: string, diShi: string,
+  dayGan: string, dayZhi: string, yearZhi: string,
 ): BaZiPillar {
-  return { stem: gan, branch: zhi, tenGod, nayin, hiddenStems: hideGan };
+  return {
+    stem: gan, branch: zhi, tenGod, nayin,
+    hiddenStems: hideGan, hiddenTenGods, diShi,
+    shenSha: computeShenSha(dayGan, dayZhi, yearZhi, zhi),
+  };
 }
 
 /**
  * 根据公历生日（含时辰小时）生成八字命盘
- * @param solarDate  'YYYY-MM-DD'
- * @param hour       0–23
- * @param gender     'male' | 'female'
  */
 export function generateBaZiChart(
   solarDate: string,
@@ -112,15 +156,23 @@ export function generateBaZiChart(
   const solar = Solar.fromYmdHms(y, m, d, hour, 0, 0);
   const lunar = solar.getLunar();
   const ec = lunar.getEightChar();
-  ec.setSect(2); // 使用新派节气划分月柱
+  ec.setSect(2);
 
-  const dayGan = ec.getDayGan();
+  const dayGan  = ec.getDayGan();
+  const dayZhi  = ec.getDayZhi();
+  const yearZhi = ec.getYearZhi();
   const genderCode = gender === 'male' ? 1 : 0;
 
-  const yearPillar  = buildPillar(ec.getYear(),  ec.getYearGan(),  ec.getYearZhi(),  ec.getYearHideGan(),  ec.getYearNaYin(),  ec.getYearShiShenGan());
-  const monthPillar = buildPillar(ec.getMonth(), ec.getMonthGan(), ec.getMonthZhi(), ec.getMonthHideGan(), ec.getMonthNaYin(), ec.getMonthShiShenGan());
-  const dayPillar   = buildPillar(ec.getDay(),   ec.getDayGan(),   ec.getDayZhi(),   ec.getDayHideGan(),   ec.getDayNaYin(),   '日主');
-  const hourPillar  = buildPillar(ec.getTime(),  ec.getTimeGan(),  ec.getTimeZhi(),  ec.getTimeHideGan(),  ec.getTimeNaYin(),  ec.getTimeShiShenGan());
+  // 副星（藏干十神）来自 lunar 对象
+  const hiddenYearTG  = lunar.getBaZiShiShenYearZhi();
+  const hiddenMonthTG = lunar.getBaZiShiShenMonthZhi();
+  const hiddenDayTG   = lunar.getBaZiShiShenDayZhi();
+  const hiddenTimeTG  = lunar.getBaZiShiShenTimeZhi();
+
+  const yearPillar  = buildPillar(ec.getYearGan(),  ec.getYearZhi(),  ec.getYearHideGan(),  hiddenYearTG,  ec.getYearNaYin(),  ec.getYearShiShenGan(), ec.getYearDiShi(),  dayGan, dayZhi, yearZhi);
+  const monthPillar = buildPillar(ec.getMonthGan(), ec.getMonthZhi(), ec.getMonthHideGan(), hiddenMonthTG, ec.getMonthNaYin(), ec.getMonthShiShenGan(), ec.getMonthDiShi(), dayGan, dayZhi, yearZhi);
+  const dayPillar   = buildPillar(ec.getDayGan(),   ec.getDayZhi(),   ec.getDayHideGan(),   hiddenDayTG,   ec.getDayNaYin(),   '日主',                  ec.getDayDiShi(),   dayGan, dayZhi, yearZhi);
+  const hourPillar  = buildPillar(ec.getTimeGan(),  ec.getTimeZhi(),  ec.getTimeHideGan(),  hiddenTimeTG,  ec.getTimeNaYin(),  ec.getTimeShiShenGan(),  ec.getTimeDiShi(),  dayGan, dayZhi, yearZhi);
 
   // 大运
   const yunObj = ec.getYun(genderCode, 2);
@@ -145,28 +197,21 @@ export function generateBaZiChart(
     });
 
   return {
-    solarDate,
-    gender,
-    yearPillar,
-    monthPillar,
-    dayPillar,
-    hourPillar,
+    solarDate, gender,
+    yearPillar, monthPillar, dayPillar, hourPillar,
     dayMaster: dayGan,
     dayMasterElement: GAN_ELEMENT[dayGan] ?? '',
-    // strength / pattern / favorable 由 LLM 分析，此处留空
     strength: '中和',
-    favorableElements: [],
-    unfavorableElements: [],
+    favorableElements: [], unfavorableElements: [],
     pattern: '',
     majorRuns,
   };
 }
 
 /**
- * 从 iztro 时辰 index（0=子…11=亥）转换为小时数（取中间时刻）
+ * 从 iztro 时辰 index（0=子…11=亥）转换为小时数
  */
 export function timeIndexToHour(index: number): number {
-  // 子=0:00, 丑=2:00, 寅=4:00 ... 亥=22:00
   const hours = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 0];
   return hours[index] ?? 0;
 }

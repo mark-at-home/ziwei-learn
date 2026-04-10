@@ -159,11 +159,21 @@ export const COMPARE_SYSTEM = `你是一位同时精通紫微斗数和八字子�
   "conclusion": "整体综合建议：基于两套系统互证，对命主最重要的3条命理结论"
 }`;
 
+// 维度 key → 对比时用的中文主题
+const DIM_TOPIC_MAP: Record<string, string> = {
+  career_decision: '事业决策', wealth_planning: '财富规划',
+  relationship:    '感情婚姻', health_wellness: '健康养生',
+  key_events:      '关键事件', auspicious:      '趋吉避凶',
+  decadal:         '大限走势', yearly:          '流年分析',
+  monthly:         '小限流月',
+};
+
 export function buildComparePrompt(
   ziweiText: string,
   baziText: string,
   ziweiAnalysis: ChartAnalysis,
   baziAnalysis: BaZiAnalysis,
+  selectedDimensions: Dimension[],
 ): string {
   const ziweiSummary = [
     `概述：${ziweiAnalysis.summary}`,
@@ -177,29 +187,46 @@ export function buildComparePrompt(
     `核心特征：${baziAnalysis.keyFeatures.join('、')}`,
   ].filter(Boolean).join('\n');
 
-  // 找到两套分析中都有的事件维度
-  const ziweiEvents = ziweiAnalysis.eventAnalysis.map(e => e.dimension);
-  const baziEvents  = baziAnalysis.eventAnalysis.map(e => e.dimension);
-  const commonEvents = [...new Set([...ziweiEvents, ...baziEvents])];
+  // 优先用用户选中的共享维度（L4/L5）作为 eventSynthesis 主题
+  const sharedSelectedDims = selectedDimensions.filter(d => d.level >= 4);
+  const sharedTopics = sharedSelectedDims.map(d => DIM_TOPIC_MAP[d.key] ?? d.label);
 
-  const eventTopics = commonEvents.length > 0
-    ? `\n\n请重点对以下维度进行互证分析：${commonEvents.join('、')}`
+  // 如果没有选择维度，退回到两套分析中有 eventAnalysis 的维度
+  const fallbackEvents = [
+    ...ziweiAnalysis.eventAnalysis.map(e => DIM_TOPIC_MAP[e.dimension] ?? e.dimension),
+    ...baziAnalysis.eventAnalysis.map(e => DIM_TOPIC_MAP[e.dimension] ?? e.dimension),
+  ];
+  const eventTopics = sharedTopics.length > 0
+    ? sharedTopics
+    : [...new Set(fallbackEvents)];
+
+  const focusInstruction = eventTopics.length > 0
+    ? `\n\n【重点互证维度】用户选择了以下维度，eventSynthesis 必须逐一覆盖这些主题，每个主题分别从紫微和八字角度论证，再给出综合结论：\n${eventTopics.map((t, i) => `${i + 1}. ${t}`).join('\n')}`
     : '';
 
+  // 如果用户选了大限/流年，在紫微分析摘要中补充
+  const extraZiwei = [
+    ziweiAnalysis.decadalFortune ? `大限走势：${ziweiAnalysis.decadalFortune}` : '',
+  ].filter(Boolean).join('\n');
+
+  const extraBazi = [
+    baziAnalysis.majorRunAnalysis ? `当前大运：${baziAnalysis.majorRunAnalysis}` : '',
+  ].filter(Boolean).join('\n');
+
   return `以下是同一命主的两套命理分析结果。
+${focusInstruction}
 
 === 紫微斗数 ===
 ${ziweiText}
 
 紫微分析摘要：
-${ziweiSummary}
+${ziweiSummary}${extraZiwei ? '\n' + extraZiwei : ''}
 
 === 八字 ===
 ${baziText}
 
 八字分析摘要：
-${baziSummary}
-${eventTopics}
+${baziSummary}${extraBazi ? '\n' + extraBazi : ''}
 
 请从两套系统的视角进行深度互证对比分析。`;
 }

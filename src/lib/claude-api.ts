@@ -231,11 +231,12 @@ export async function generateCompare(
   baziChart: BaZiChart,
   ziweiAnalysis: ChartAnalysis,
   baziAnalysis: BaZiAnalysis,
+  selectedDimensions: Dimension[],
   model: LLMModel = 'claude',
-): Promise<CompareAnalysis> {
-  const ziweiText = chartToPromptText(ziweiChart);
-  const baziText  = baziToPromptText(baziChart);
-  const userPrompt = buildComparePrompt(ziweiText, baziText, ziweiAnalysis, baziAnalysis);
+): Promise<{ result: CompareAnalysis; promptText: string }> {
+  const ziweiText  = chartToPromptText(ziweiChart);
+  const baziText   = baziToPromptText(baziChart);
+  const userPrompt = buildComparePrompt(ziweiText, baziText, ziweiAnalysis, baziAnalysis, selectedDimensions);
   const raw = await callLLM(COMPARE_SYSTEM, userPrompt, model, 6000);
 
   const fallback: CompareAnalysis = {
@@ -244,10 +245,13 @@ export async function generateCompare(
 
   const parsed = parseJSON<CompareAnalysis>(raw, fallback);
   return {
-    convergence:     parsed.convergence ?? '',
-    divergence:      parsed.divergence ?? '',
-    eventSynthesis:  parsed.eventSynthesis ?? [],
-    conclusion:      parsed.conclusion ?? '',
+    result: {
+      convergence:    parsed.convergence ?? '',
+      divergence:     parsed.divergence ?? '',
+      eventSynthesis: parsed.eventSynthesis ?? [],
+      conclusion:     parsed.conclusion ?? '',
+    },
+    promptText: userPrompt,
   };
 }
 

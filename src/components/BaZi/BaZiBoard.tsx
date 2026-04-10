@@ -6,6 +6,7 @@ interface BaZiBoardProps {
 }
 
 const PILLAR_LABELS = ['年柱', '月柱', '日柱', '时柱'] as const;
+
 const TEN_GOD_COLORS: Record<string, string> = {
   '比肩': '#8a7f7f', '劫财': '#c87d8a',
   '食神': '#7bba9a', '伤官': '#5a9a7a',
@@ -14,10 +15,9 @@ const TEN_GOD_COLORS: Record<string, string> = {
   '偏印': '#70a8d4', '正印': '#4a88c4',
   '日主': '#c87d8a',
 };
+function tgColor(tg: string) { return TEN_GOD_COLORS[tg] ?? '#8a7f7f'; }
 
-function tenGodColor(tenGod: string): string {
-  return TEN_GOD_COLORS[tenGod] ?? '#8a7f7f';
-}
+const SHENSHA_GOOD = new Set(['天乙贵人', '文昌贵人', '将星', '天德贵人', '月德贵人']);
 
 export default function BaZiBoard({ chart }: BaZiBoardProps) {
   const pillars = [chart.yearPillar, chart.monthPillar, chart.dayPillar, chart.hourPillar];
@@ -25,30 +25,106 @@ export default function BaZiBoard({ chart }: BaZiBoardProps) {
 
   return (
     <div className="bazi-board">
-      {/* 四柱 */}
-      <div className="bazi-pillars">
-        {pillars.map((p, i) => (
-          <div key={i} className="bazi-pillar">
-            <div className="bazi-pillar-label">{PILLAR_LABELS[i]}</div>
-            <div className="bazi-pillar-stem">{p.stem}</div>
-            <div className="bazi-pillar-branch">{p.branch}</div>
-            <div
-              className="bazi-pillar-tengod"
-              style={{ color: tenGodColor(p.tenGod) }}
-            >
+
+      {/* ── 四柱主表 ── */}
+      <div className="bazi-table">
+        {/* 柱标题行 */}
+        <div className="bazi-row bazi-row--header">
+          <div className="bazi-row-label" />
+          {PILLAR_LABELS.map(l => (
+            <div key={l} className="bazi-cell bazi-cell--head">{l}</div>
+          ))}
+        </div>
+
+        {/* 主星（天干十神）*/}
+        <div className="bazi-row">
+          <div className="bazi-row-label">主星</div>
+          {pillars.map((p, i) => (
+            <div key={i} className="bazi-cell" style={{ color: tgColor(p.tenGod) }}>
               {p.tenGod}
             </div>
-            <div className="bazi-pillar-nayin">{p.nayin}</div>
-            <div className="bazi-pillar-hidden">
+          ))}
+        </div>
+
+        {/* 天干 */}
+        <div className="bazi-row bazi-row--stem">
+          <div className="bazi-row-label">天干</div>
+          {pillars.map((p, i) => (
+            <div key={i} className="bazi-cell bazi-cell--stem">{p.stem}</div>
+          ))}
+        </div>
+
+        {/* 地支 */}
+        <div className="bazi-row bazi-row--branch">
+          <div className="bazi-row-label">地支</div>
+          {pillars.map((p, i) => (
+            <div key={i} className="bazi-cell bazi-cell--branch">{p.branch}</div>
+          ))}
+        </div>
+
+        {/* 藏干 */}
+        <div className="bazi-row">
+          <div className="bazi-row-label">藏干</div>
+          {pillars.map((p, i) => (
+            <div key={i} className="bazi-cell bazi-cell--hidden">
               {p.hiddenStems.map((s, j) => (
-                <span key={j} className="bazi-hidden-stem">{s}</span>
+                <span key={j} className="bazi-hidden-char">{s}</span>
               ))}
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
+        {/* 副星（藏干十神）*/}
+        <div className="bazi-row">
+          <div className="bazi-row-label">副星</div>
+          {pillars.map((p, i) => (
+            <div key={i} className="bazi-cell bazi-cell--sub">
+              {p.hiddenTenGods.map((tg, j) => (
+                <span key={j} className="bazi-sub-god" style={{ color: tgColor(tg) }}>{tg}</span>
+              ))}
+            </div>
+          ))}
+        </div>
+
+        {/* 纳音 */}
+        <div className="bazi-row">
+          <div className="bazi-row-label">纳音</div>
+          {pillars.map((p, i) => (
+            <div key={i} className="bazi-cell bazi-cell--nayin">{p.nayin}</div>
+          ))}
+        </div>
+
+        {/* 长生十二神 */}
+        <div className="bazi-row">
+          <div className="bazi-row-label">十二神</div>
+          {pillars.map((p, i) => (
+            <div key={i} className="bazi-cell bazi-cell--dishi">{p.diShi}</div>
+          ))}
+        </div>
+
+        {/* 神煞 */}
+        <div className="bazi-row bazi-row--shensha">
+          <div className="bazi-row-label">神煞</div>
+          {pillars.map((p, i) => (
+            <div key={i} className="bazi-cell bazi-cell--shensha">
+              {p.shenSha.length > 0
+                ? p.shenSha.map((s, j) => (
+                    <span
+                      key={j}
+                      className="bazi-shensha-tag"
+                      style={{ color: SHENSHA_GOOD.has(s) ? '#7bba9a' : '#d47070' }}
+                    >
+                      {s}
+                    </span>
+                  ))
+                : <span className="bazi-empty">—</span>
+              }
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* 日主信息 */}
+      {/* ── 日主信息 ── */}
       <div className="bazi-info-row">
         <div className="bazi-info-item">
           <span className="bazi-info-label">日主</span>
@@ -80,7 +156,7 @@ export default function BaZiBoard({ chart }: BaZiBoardProps) {
         )}
       </div>
 
-      {/* 大运 */}
+      {/* ── 大运 ── */}
       <div className="bazi-dayun-section">
         <div className="bazi-section-title">大运</div>
         <div className="bazi-dayun-list">
@@ -90,12 +166,7 @@ export default function BaZiBoard({ chart }: BaZiBoardProps) {
               className={`bazi-dayun-item${r.isCurrent ? ' bazi-dayun-item--current' : ''}`}
             >
               <div className="bazi-dayun-gz">{r.stem}{r.branch}</div>
-              <div
-                className="bazi-dayun-tengod"
-                style={{ color: tenGodColor(r.tenGod) }}
-              >
-                {r.tenGod}
-              </div>
+              <div className="bazi-dayun-tengod" style={{ color: tgColor(r.tenGod) }}>{r.tenGod}</div>
               <div className="bazi-dayun-age">{r.startAge}–{r.endAge}</div>
             </div>
           ))}

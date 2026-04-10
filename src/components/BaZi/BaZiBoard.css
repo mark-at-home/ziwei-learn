@@ -1,79 +1,124 @@
 .bazi-board {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
+  gap: 0.9rem;
+  padding: 0.8rem;
   font-family: 'Noto Sans SC', sans-serif;
 }
 
-/* ── 四柱 ── */
-.bazi-pillars {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.5rem;
-}
-
-.bazi-pillar {
+/* ── 四柱主表 ── */
+.bazi-table {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.75rem 0.5rem;
-  background: #f9f5f0;
   border: 1px solid #e8ddd4;
   border-radius: 8px;
-  text-align: center;
+  overflow: hidden;
 }
 
-.bazi-pillar-label {
-  font-size: 0.7rem;
+.bazi-row {
+  display: grid;
+  grid-template-columns: 3.2rem repeat(4, 1fr);
+  border-bottom: 1px solid #f0ebe5;
+}
+.bazi-row:last-child { border-bottom: none; }
+
+.bazi-row--header { background: #f5f0eb; }
+.bazi-row--stem   { background: #fdf8f5; }
+.bazi-row--branch { background: #fdf8f5; }
+.bazi-row--shensha { background: #fdf9f9; }
+
+.bazi-row-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
   color: #b0a8a0;
-  letter-spacing: 0.08em;
+  padding: 0.3rem 0.2rem;
+  border-right: 1px solid #e8ddd4;
+  writing-mode: horizontal-tb;
+  letter-spacing: 0.04em;
+  background: #f9f5f0;
 }
 
-.bazi-pillar-stem {
+.bazi-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem 0.2rem;
+  font-size: 0.75rem;
+  color: #4a3f3f;
+  text-align: center;
+  border-right: 1px solid #f0ebe5;
+  min-height: 1.8rem;
+}
+.bazi-cell:last-child { border-right: none; }
+
+.bazi-cell--head {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #8a7f7f;
+  letter-spacing: 0.04em;
+}
+
+.bazi-cell--stem {
   font-family: 'Noto Serif SC', serif;
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #4a3f3f;
-  line-height: 1;
+  padding: 0.4rem 0.2rem;
 }
 
-.bazi-pillar-branch {
+.bazi-cell--branch {
   font-family: 'Noto Serif SC', serif;
   font-size: 1.3rem;
-  color: #6a5f5f;
-  line-height: 1;
+  color: #5a5050;
+  padding: 0.35rem 0.2rem;
 }
 
-.bazi-pillar-tengod {
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  padding: 0.1rem 0.4rem;
-  border-radius: 4px;
-  background: #f0ebe5;
+.bazi-cell--hidden,
+.bazi-cell--sub {
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.25rem 0.15rem;
 }
 
-.bazi-pillar-nayin {
+.bazi-hidden-char {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.75rem;
+  color: #8a7f7f;
+}
+
+.bazi-sub-god {
+  font-size: 0.65rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.bazi-cell--nayin {
   font-size: 0.65rem;
   color: #a09090;
 }
 
-.bazi-pillar-hidden {
-  display: flex;
-  gap: 0.2rem;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 0.1rem;
+.bazi-cell--dishi {
+  font-size: 0.7rem;
+  color: #7a6f6f;
 }
 
-.bazi-hidden-stem {
+.bazi-cell--shensha {
+  flex-direction: column;
+  gap: 0.12rem;
+  padding: 0.25rem 0.15rem;
+}
+
+.bazi-shensha-tag {
   font-size: 0.62rem;
-  color: #b0a8a0;
-  background: #ede8e3;
-  padding: 0.05rem 0.3rem;
-  border-radius: 3px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.bazi-empty {
+  font-size: 0.65rem;
+  color: #c8c0b8;
 }
 
 /* ── 日主信息 ── */
@@ -81,28 +126,25 @@
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-  padding: 0.6rem 0.8rem;
+  padding: 0.5rem 0.7rem;
   background: #f9f5f0;
   border-radius: 8px;
   border: 1px solid #e8ddd4;
 }
-
 .bazi-info-item {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
-
 .bazi-info-label {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: #b0a8a0;
   padding: 0.1rem 0.3rem;
   background: #ede8e3;
   border-radius: 3px;
 }
-
 .bazi-info-value {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: #4a3f3f;
   font-weight: 500;
 }
@@ -113,59 +155,49 @@
   flex-direction: column;
   gap: 0.5rem;
 }
-
 .bazi-section-title {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: #b0a8a0;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
 }
-
 .bazi-dayun-list {
   display: flex;
-  gap: 0.4rem;
+  gap: 0.35rem;
   flex-wrap: wrap;
 }
-
 .bazi-dayun-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.15rem;
-  padding: 0.4rem 0.5rem;
+  gap: 0.12rem;
+  padding: 0.35rem 0.45rem;
   background: #f9f5f0;
   border: 1px solid #e8ddd4;
   border-radius: 6px;
-  min-width: 3rem;
+  min-width: 2.8rem;
   text-align: center;
 }
-
 .bazi-dayun-item--current {
   border-color: #c87d8a;
   background: #fdf5f6;
 }
-
 .bazi-dayun-gz {
   font-family: 'Noto Serif SC', serif;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 600;
   color: #4a3f3f;
 }
-
 .bazi-dayun-tengod {
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 500;
 }
-
 .bazi-dayun-age {
-  font-size: 0.6rem;
+  font-size: 0.58rem;
   color: #b0a8a0;
 }
-
 .bazi-current-run {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: #8a7f7f;
-  font-family: 'Noto Sans SC', sans-serif;
   padding: 0.3rem 0.6rem;
   background: #fdf5f6;
   border-radius: 6px;

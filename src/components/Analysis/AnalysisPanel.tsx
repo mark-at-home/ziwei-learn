@@ -16,29 +16,33 @@ interface AnalysisPanelProps {
   chart?: Astrolabe;
   chartId?: string;
   promptText?: { system: string; user: string };
+  baziPromptText?: { system: string; user: string };
   onChat?: (messages: ChatMessage[]) => Promise<string>;
   onStartQuiz: () => void;
   onBack: () => void;
-  onGenerateCompare?: () => Promise<CompareAnalysis>;
+  onGenerateCompare?: () => Promise<{ result: CompareAnalysis; promptText: string }>;
 }
 
 type AnalysisTab = 'ziwei' | 'bazi';
+type PromptTab   = 'ziwei' | 'bazi' | 'compare';
 
 function dimLabel(key: string): string {
   return DIMENSIONS.find(d => d.key === key)?.label ?? key;
 }
 
 export default function AnalysisPanel({
-  analysis, baziAnalysis, chart, chartId, promptText, onChat,
+  analysis, baziAnalysis, chart, chartId, promptText, baziPromptText, onChat,
   onStartQuiz, onBack, onGenerateCompare,
 }: AnalysisPanelProps) {
-  const [showPrompt, setShowPrompt]   = useState(false);
-  const [showChat, setShowChat]       = useState(false);
-  const [showVerify, setShowVerify]   = useState(false);
-  const [copied, setCopied]           = useState(false);
-  const [activeTab, setActiveTab]     = useState<AnalysisTab>('ziwei');
-  const [compare, setCompare]         = useState<CompareAnalysis | null>(null);
-  const [showCompare, setShowCompare] = useState(false);
+  const [showPrompt, setShowPrompt]       = useState(false);
+  const [promptTab, setPromptTab]         = useState<PromptTab>('ziwei');
+  const [showChat, setShowChat]           = useState(false);
+  const [showVerify, setShowVerify]       = useState(false);
+  const [copied, setCopied]               = useState(false);
+  const [activeTab, setActiveTab]         = useState<AnalysisTab>('ziwei');
+  const [compare, setCompare]               = useState<CompareAnalysis | null>(null);
+  const [comparePromptText, setComparePromptText] = useState<string>('');
+  const [showCompare, setShowCompare]       = useState(false);
   const [loadingCompare, setLoadingCompare] = useState(false);
 
   const verifyResult = useMemo(() => {
@@ -46,9 +50,19 @@ export default function AnalysisPanel({
     return verifyAnalysis(chart, analysis);
   }, [chart, analysis]);
 
+  const hasAnyPrompt = !!(promptText || baziPromptText);
+
+  function currentPromptData(): { system: string; user: string } | null {
+    if (promptTab === 'ziwei') return promptText ?? null;
+    if (promptTab === 'bazi')  return baziPromptText ?? null;
+    if (promptTab === 'compare' && comparePromptText) return { system: '（见下方用户提示词）', user: comparePromptText };
+    return null;
+  }
+
   function handleCopyPrompt() {
-    if (!promptText) return;
-    const text = `【系统提示词】\n${promptText.system}\n\n【用户提示词】\n${promptText.user}`;
+    const pt = currentPromptData();
+    if (!pt) return;
+    const text = `【系统提示词】\n${pt.system}\n\n【用户提示词】\n${pt.user}`;
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -60,8 +74,9 @@ export default function AnalysisPanel({
     if (compare) { setShowCompare(v => !v); return; }
     setLoadingCompare(true);
     try {
-      const result = await onGenerateCompare();
+      const { result, promptText: pt } = await onGenerateCompare();
       setCompare(result);
+      setComparePromptText(pt);
       setShowCompare(true);
     } finally {
       setLoadingCompare(false);
@@ -76,7 +91,7 @@ export default function AnalysisPanel({
         <button className="back-btn" onClick={onBack}>← 返回命盘</button>
         <h2 className="analysis-title">命理分析</h2>
         <div className="analysis-header-actions">
-          {promptText && (
+          {hasAnyPrompt && (
             <button className="prompt-export-btn" onClick={() => setShowPrompt(v => !v)}>
               {showPrompt ? '收起提示词' : '查看提示词'}
             </button>
@@ -110,25 +125,52 @@ export default function AnalysisPanel({
         </div>
       </div>
 
-      {/* 提示词面板 */}
-      {showPrompt && promptText && (
-        <div className="prompt-panel">
-          <div className="prompt-panel-header">
-            <span className="prompt-panel-title">AI 提示词</span>
-            <button className="prompt-copy-btn" onClick={handleCopyPrompt}>
-              {copied ? '已复制' : '复制全部'}
-            </button>
+      {/* 提示词面板（多 tab）*/}
+      {showPrompt && hasAnyPrompt && (() => {
+        const pt = currentPromptData();
+        return (
+          <div className="prompt-panel">
+            <div className="prompt-panel-header">
+              {/* Tab 切换 */}
+              <div className="prompt-tab-row">
+                {promptText && (
+                  <button
+                    className={`prompt-tab-btn${promptTab === 'ziwei' ? ' prompt-tab-btn--active' : ''}`}
+                    onClick={() => setPromptTab('ziwei')}
+                  >紫微</button>
+                )}
+                {baziPromptText && (
+                  <button
+                    className={`prompt-tab-btn${promptTab === 'bazi' ? ' prompt-tab-btn--active' : ''}`}
+                    onClick={() => setPromptTab('bazi')}
+                  >八字</button>
+                )}
+                {compare && (
+                  <button
+                    className={`prompt-tab-btn${promptTab === 'compare' ? ' prompt-tab-btn--active' : ''}`}
+                    onClick={() => setPromptTab('compare')}
+                  >对比</button>
+                )}
+              </div>
+              <button className="prompt-copy-btn" onClick={handleCopyPrompt}>
+                {copied ? '已复制' : '复制'}
+              </button>
+            </div>
+            {pt && (
+              <>
+                <div className="prompt-section">
+                  <div className="prompt-label">系统提示词</div>
+                  <pre className="prompt-text">{pt.system}</pre>
+                </div>
+                <div className="prompt-section">
+                  <div className="prompt-label">用户提示词</div>
+                  <pre className="prompt-text">{pt.user}</pre>
+                </div>
+              </>
+            )}
           </div>
-          <div className="prompt-section">
-            <div className="prompt-label">系统提示词</div>
-            <pre className="prompt-text">{promptText.system}</pre>
-          </div>
-          <div className="prompt-section">
-            <div className="prompt-label">用户提示词</div>
-            <pre className="prompt-text">{promptText.user}</pre>
-          </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* 数据验证面板 */}
       {showVerify && verifyResult && (

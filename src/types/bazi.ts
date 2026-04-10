@@ -1,11 +1,14 @@
 // ─── 八字命盘 ────────────────────────────────────────────────
 
 export interface BaZiPillar {
-  stem: string;        // 天干
-  branch: string;      // 地支
-  tenGod: string;      // 十神
-  nayin: string;       // 纳音
-  hiddenStems: string[]; // 藏干
+  stem: string;              // 天干
+  branch: string;            // 地支
+  tenGod: string;            // 主星（天干十神）
+  nayin: string;             // 纳音
+  hiddenStems: string[];     // 藏干（地支藏干）
+  hiddenTenGods: string[];   // 副星（藏干的十神）
+  diShi: string;             // 长生十二神
+  shenSha: string[];         // 神煞（该柱命中的神煞名称）
 }
 
 export interface BaZiMajorRun {

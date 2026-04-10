@@ -14,7 +14,7 @@ import type { Gender } from './lib/iztro-wrapper';
 import { chartToPromptText } from './lib/chart-to-text';
 import {
   generateAnalysis, generateQuiz, getAnalysisPrompt, chatWithChart,
-  generateBaZiAnalysis, generateCompare,
+  generateBaZiAnalysis, getBaziAnalysisPrompt, generateCompare,
 } from './lib/claude-api';
 import type { ChatMessage } from './lib/claude-api';
 import type { LLMModel } from './lib/claude-api';
@@ -47,7 +47,8 @@ export default function App() {
   const [loadingMsg, setLoadingMsg]       = useState('');
   const [error, setError]                 = useState('');
   const [model, setModel]                 = useState<LLMModel>('gemini');
-  const [promptText, setPromptText]       = useState<{ system: string; user: string } | null>(null);
+  const [promptText, setPromptText]             = useState<{ system: string; user: string } | null>(null);
+  const [baziPromptText, setBaziPromptText]     = useState<{ system: string; user: string } | null>(null);
 
   // ── 排盘完成 ─────────────────────────────────────────────────
   function handleChartGenerated(c: Astrolabe) {
@@ -113,6 +114,8 @@ export default function App() {
 
     setLoadingMsg(needZiwei && needBazi ? '正在生成紫微 + 八字分析…' : needBazi ? '正在生成八字分析…' : '正在生成命理分析…');
 
+    if (needBazi && baziChart) setBaziPromptText(getBaziAnalysisPrompt(baziChart, dims));
+
     try {
       const [ziweiResult, baziResult] = await Promise.all([
         needZiwei ? generateAnalysis(chart, dims, model) : Promise.resolve(null),
@@ -120,7 +123,6 @@ export default function App() {
       ]);
       if (ziweiResult) setAnalysis(ziweiResult);
       if (baziResult)  setBaziAnalysis(baziResult);
-      // if only bazi was run, keep existing ziwei analysis (or set empty fallback)
       if (!needZiwei && !analysis) setAnalysis({ summary: '', palaceAnalysis: [], mutagenAnalysis: '', decadalFortune: '', eventAnalysis: [], keyFeatures: [] });
       setView('analysis');
     } catch (e) {
@@ -139,6 +141,8 @@ export default function App() {
     const needBazi  = (systems === 'bazi'  || systems === 'both') && !!baziChart;
 
     setLoadingMsg(needZiwei && needBazi ? '正在生成紫微 + 八字分析…' : needBazi ? '正在生成八字分析…' : '正在生成命理分析…');
+
+    if (needBazi && baziChart) setBaziPromptText(getBaziAnalysisPrompt(baziChart, []));
 
     try {
       const [ziweiResult, baziResult] = await Promise.all([
@@ -276,12 +280,13 @@ export default function App() {
             chart={chart}
             chartId={getChartId(chart)}
             promptText={promptText ?? undefined}
+            baziPromptText={baziPromptText ?? undefined}
             onChat={(msgs: ChatMessage[]) => chatWithChart(chart, analysis, msgs, model)}
             onStartQuiz={selectedDimensions.length > 0 ? handleStartQuiz : () => {}}
             onBack={() => { setView(selectedDimensions.length > 0 ? 'dimension-picker' : 'chart'); setError(''); }}
             onGenerateCompare={
               baziAnalysis && baziChart
-                ? () => generateCompare(chart, baziChart, analysis, baziAnalysis, model)
+                ? () => generateCompare(chart, baziChart, analysis, baziAnalysis, selectedDimensions, model)
                 : undefined
             }
           />
