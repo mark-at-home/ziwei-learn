@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { loadChartLibrary, deleteChartRecord, getSessionsByChart, updateChartNickname } from '../../lib/storage';
+import { loadChartLibrary, deleteChartRecord, updateChartNickname } from '../../lib/storage';
 import type { ChartRecord } from '../../lib/storage';
 import './ChartLibrary.css';
 
@@ -57,9 +57,6 @@ export default function ChartLibrary({ onSelect, onBack }: ChartLibraryProps) {
           </div>
         ) : (
           library.map(record => {
-            const sessions = getSessionsByChart(record.chartId);
-            const totalAnswered = sessions.reduce((n, s) => n + s.answers.length, 0);
-            const dimsDone = [...new Set(sessions.flatMap(s => s.answers.map(a => a.dimension)))];
             const isEditing = editingId === record.chartId;
 
             return (
@@ -102,16 +99,8 @@ export default function ChartLibrary({ onSelect, onBack }: ChartLibraryProps) {
                       </div>
                     </>
                   )}
-                  {totalAnswered > 0 && (
-                    <div className="library-card-progress">
-                      已答 {totalAnswered} 题 · {dimsDone.length} 个维度
-                    </div>
-                  )}
                 </div>
                 <div className="library-card-actions">
-                  {totalAnswered > 0 && (
-                    <span className="library-badge">已学习</span>
-                  )}
                   <button
                     className="library-delete-btn"
                     onClick={e => handleDelete(record.chartId, e)}

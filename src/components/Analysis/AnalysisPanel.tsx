@@ -18,7 +18,6 @@ interface AnalysisPanelProps {
   promptText?: { system: string; user: string };
   baziPromptText?: { system: string; user: string };
   onChat?: (messages: ChatMessage[]) => Promise<string>;
-  onStartQuiz: () => void;
   onBack: () => void;
   onGenerateCompare?: () => Promise<{ result: CompareAnalysis; promptText: string }>;
 }
@@ -32,7 +31,7 @@ function dimLabel(key: string): string {
 
 export default function AnalysisPanel({
   analysis, baziAnalysis, chart, chartId, promptText, baziPromptText, onChat,
-  onStartQuiz, onBack, onGenerateCompare,
+  onBack, onGenerateCompare,
 }: AnalysisPanelProps) {
   const [showPrompt, setShowPrompt]       = useState(false);
   const [promptTab, setPromptTab]         = useState<PromptTab>('ziwei');
@@ -301,8 +300,7 @@ export default function AnalysisPanel({
       )}
 
       <div className="analysis-footer">
-        <button className="btn-secondary" onClick={onBack}>返回命盘</button>
-        <button className="btn-primary" onClick={onStartQuiz}>开始答题 →</button>
+        <button className="btn-primary" onClick={onBack}>返回命盘</button>
       </div>
     </div>
   );

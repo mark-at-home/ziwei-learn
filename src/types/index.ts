@@ -86,7 +86,7 @@ export const SHARED_DIMENSIONS: Dimension[] = [
   { key: 'auspicious',        label: '趋吉避凶',     level: 5 },
 ];
 
-/** 向后兼容：完整的紫微维度列表（旧代码用） */
+/** 完整维度列表（紫微 + 共享） */
 export const DIMENSIONS: Dimension[] = [
   ...ZIWEI_DIMENSIONS,
   { key: 'decadal',           label: '大限走势',     level: 4 },
@@ -99,23 +99,6 @@ export const DIMENSIONS: Dimension[] = [
   { key: 'key_events',        label: '关键事件',     level: 5 },
   { key: 'auspicious',        label: '趋吉避凶',     level: 5 },
 ];
-
-// ─── 题目 ───────────────────────────────────────────────────
-
-export type QuestionType = 'objective' | 'semi-open' | 'comprehensive';
-
-export interface QuizQuestion {
-  id: string;
-  type: QuestionType;
-  topic: string;
-  dimension: string;
-  dimensionLevel: DimensionLevel;
-  question: string;
-  options?: string[];
-  referenceAnswer: string;
-  reasoningPath: string[];
-  difficulty: 1 | 2 | 3;
-}
 
 // ─── 命理分析 ────────────────────────────────────────────────
 
@@ -139,37 +122,4 @@ export interface ChartAnalysis {
   decadalFortune: string;
   eventAnalysis: EventAnalysis[];
   keyFeatures: string[];
-}
-
-// ─── 答题记录 ────────────────────────────────────────────────
-
-export type SelfEval = 'accurate' | 'partial' | 'off';
-
-export interface AnswerRecord {
-  questionId: string;
-  dimension: string;
-  dimensionLevel: DimensionLevel;
-  userAnswer: string;
-  selfEval: SelfEval;
-}
-
-export interface QuizSession {
-  id: string;
-  chartId: string;
-  date: string;
-  chartSnapshot: string;  // chartToPromptText() 输出
-  chartLabel: string;     // 如 "1985-03-15 未时 男命"
-  answers: AnswerRecord[];
-}
-
-// ─── 进度统计 ────────────────────────────────────────────────
-
-export interface DimensionStats {
-  dimension: string;
-  label: string;
-  dimensionLevel: DimensionLevel;
-  total: number;
-  accurate: number;
-  rate: number;
-  isWeak: boolean;
 }

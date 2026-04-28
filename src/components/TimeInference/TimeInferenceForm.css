@@ -1,0 +1,109 @@
+.ti-form-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  padding-top: calc(2.5rem + 1.5rem);
+}
+
+.ti-form {
+  width: 100%;
+  max-width: 760px;
+  background: #ffffff;
+  border: 1px solid #e8ddd4;
+  border-radius: 10px;
+  padding: 1.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  box-shadow: 0 2px 12px rgba(180,160,140,0.1);
+}
+
+.ti-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ti-section-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.05rem;
+  color: #c87d8a;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  margin: 0;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid #e8ddd4;
+}
+
+.ti-section-hint {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.78rem;
+  color: #b0a8a0;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.ti-life-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ti-life-table tr {
+  border-bottom: 1px solid #f5ede2;
+}
+
+.ti-life-table tr:last-child {
+  border-bottom: none;
+}
+
+.ti-life-label {
+  width: 110px;
+  padding: 0.5rem 0.6rem 0.5rem 0;
+  vertical-align: top;
+}
+
+.ti-life-label > div:first-child {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.85rem;
+  color: #4a3f3f;
+  font-weight: 500;
+}
+
+.ti-life-palace {
+  font-size: 0.7rem;
+  color: #c87d8a;
+  margin-top: 0.15rem;
+}
+
+.ti-life-input-cell {
+  padding: 0.4rem 0;
+}
+
+.ti-life-input {
+  width: 100%;
+  background: #faf6f1;
+  border: 1px solid #e8ddd4;
+  border-radius: 6px;
+  color: #4a3f3f;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.85rem;
+  padding: 0.45rem 0.6rem;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s;
+  line-height: 1.5;
+}
+
+.ti-life-input:focus {
+  border-color: #c87d8a60;
+}
+
+@media (max-width: 600px) {
+  .ti-form { padding: 1.2rem 0.9rem; }
+  .ti-life-label { width: 84px; }
+  .ti-life-label > div:first-child { font-size: 0.78rem; }
+  .ti-life-palace { font-size: 0.65rem; }
+  .ti-life-input { font-size: 0.78rem; }
+}

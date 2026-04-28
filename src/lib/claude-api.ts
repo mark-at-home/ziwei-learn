@@ -1,4 +1,4 @@
-import type { ChartAnalysis, QuizQuestion, Dimension } from '../types';
+import type { ChartAnalysis, Dimension } from '../types';
 import type { BaZiAnalysis, CompareAnalysis } from '../types/bazi';
 import { chartToPromptText } from './chart-to-text';
 import { baziToPromptText } from './bazi-to-text';
@@ -6,7 +6,6 @@ import type { Astrolabe } from './iztro-wrapper';
 import type { BaZiChart } from '../types/bazi';
 import {
   ANALYSIS_SYSTEM, buildAnalysisSystem, buildAnalysisPrompt,
-  QUIZ_SYSTEM, buildQuizPrompt,
   buildChatSystem,
 } from './prompts';
 import {
@@ -166,21 +165,6 @@ export async function generateAnalysis(
     eventAnalysis:    parsed.eventAnalysis ?? [],
     keyFeatures:      parsed.keyFeatures ?? [],
   };
-}
-
-// ─── 出题 ─────────────────────────────────────────────────────
-
-export async function generateQuiz(
-  chart: Astrolabe,
-  analysis: ChartAnalysis,
-  selectedDimensions: Dimension[],
-  model: LLMModel = 'claude',
-): Promise<QuizQuestion[]> {
-  const chartText  = chartToPromptText(chart);
-  const userPrompt = buildQuizPrompt(chartText, analysis.keyFeatures, selectedDimensions);
-  const raw        = await callLLM(QUIZ_SYSTEM, userPrompt, model, 6000);
-
-  return parseJSON<QuizQuestion[]>(raw, []);
 }
 
 // ─── 八字分析 ─────────────────────────────────────────────────

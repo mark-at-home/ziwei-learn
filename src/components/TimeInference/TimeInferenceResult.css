@@ -1,0 +1,296 @@
+.ti-result {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.ti-result-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1rem 0.6rem;
+  border-bottom: 1px solid #e8ddd4;
+  padding-top: calc(2.5rem + 0.8rem);
+}
+
+.ti-result-body {
+  flex: 1;
+  padding: 1.2rem 1rem;
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.ti-result-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.85rem;
+  color: #4a3f3f;
+}
+
+.ti-confidence {
+  font-size: 0.75rem;
+  border: 1px solid;
+  border-radius: 6px;
+  padding: 0.2rem 0.6rem;
+  letter-spacing: 0.05em;
+}
+
+.ti-label {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.7rem;
+  color: #c87d8a;
+  letter-spacing: 0.15em;
+  border-left: 2px solid #c87d8a;
+  padding-left: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.ti-overall-reasoning {
+  background: #faf6f1;
+  border: 1px solid #e8ddd4;
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+}
+
+.ti-overall-reasoning p {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.85rem;
+  color: #5a5050;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.ti-candidates {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.ti-card {
+  background: #ffffff;
+  border: 1px solid #e8ddd4;
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  box-shadow: 0 1px 6px rgba(180,160,140,0.08);
+}
+
+.ti-card--emphasized {
+  border-color: #c87d8a;
+  background: #fff7f5;
+}
+
+.ti-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ti-card-rank {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.85rem;
+  color: #c87d8a;
+  margin-right: 0.6rem;
+  font-weight: 700;
+}
+
+.ti-card-time {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.1rem;
+  color: #4a3f3f;
+  letter-spacing: 0.05em;
+}
+
+.ti-card-range {
+  font-size: 0.75rem;
+  color: #b0a8a0;
+  margin-left: 0.5rem;
+}
+
+.ti-score {
+  display: flex;
+  align-items: baseline;
+}
+
+.ti-score-num {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.6rem;
+  color: #c87d8a;
+  font-weight: 700;
+}
+
+.ti-score-unit {
+  font-size: 0.7rem;
+  color: #b0a8a0;
+  margin-left: 0.2rem;
+}
+
+.ti-card-reasoning {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.85rem;
+  color: #5a5050;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.ti-aspects {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.ti-aspect-label {
+  font-size: 0.7rem;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.ti-aspect-label.match    { color: #7bba9a; }
+.ti-aspect-label.conflict { color: #d47070; }
+
+.ti-tag {
+  font-size: 0.7rem;
+  border-radius: 12px;
+  padding: 0.1rem 0.55rem;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.ti-tag--match {
+  background: #7bba9a18;
+  color: #5ea882;
+  border: 1px solid #7bba9a40;
+}
+
+.ti-tag--conflict {
+  background: #d4707018;
+  color: #b05858;
+  border: 1px solid #d4707040;
+}
+
+.ti-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.3rem;
+}
+
+.ti-pick-btn {
+  background: #c87d8a;
+  border: none;
+  border-radius: 6px;
+  color: #ffffff;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.78rem;
+  padding: 0.35rem 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.ti-pick-btn:hover { background: #d48e9a; }
+
+.ti-pick-btn-small {
+  background: transparent;
+  border: 1px solid #c87d8a;
+  border-radius: 5px;
+  color: #c87d8a;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.72rem;
+  padding: 0.2rem 0.55rem;
+  cursor: pointer;
+}
+
+.ti-pick-btn-small:hover { background: #c87d8a; color: #fff; }
+
+.ti-toggle-rest {
+  background: transparent;
+  border: 1px dashed #c87d8a60;
+  border-radius: 8px;
+  color: #c87d8a;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.78rem;
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  width: 100%;
+}
+
+.ti-rest-table {
+  width: 100%;
+  margin-top: 0.6rem;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid #e8ddd4;
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.78rem;
+}
+
+.ti-rest-table th, .ti-rest-table td {
+  padding: 0.5rem 0.6rem;
+  text-align: left;
+  border-bottom: 1px solid #f5ede2;
+  color: #5a5050;
+}
+
+.ti-rest-table th {
+  background: #faf6f1;
+  color: #8a7f7f;
+  font-weight: 500;
+  font-size: 0.72rem;
+}
+
+.ti-rest-table tr:last-child td { border-bottom: none; }
+
+.ti-questions {
+  background: #faf6f1;
+  border: 1px dashed #d47070;
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.ti-question-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.ti-question {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.ti-question-text {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.85rem;
+  color: #4a3f3f;
+}
+
+.ti-question-hint {
+  font-size: 0.72rem;
+  color: #b0a8a0;
+}
+
+.ti-question-input {
+  background: #ffffff;
+  border: 1px solid #e8ddd4;
+  border-radius: 6px;
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.82rem;
+  padding: 0.4rem 0.6rem;
+  resize: vertical;
+  outline: none;
+  color: #4a3f3f;
+}
+
+.ti-question-input:focus { border-color: #c87d8a60; }

@@ -138,59 +138,6 @@ ${chartText}
 ${requirements.map(r => `- ${r}`).join('\n')}`;
 }
 
-// ─── 出题 ────────────────────────────────────────────────────
-
-export const QUIZ_SYSTEM = `你是一位紫微斗数命理考官，拥有深厚的教学经验，负责根据具体命盘出高质量考题。
-
-出题原则：
-1. **强绑定命盘**：每题必须引用命盘中的具体星曜、宫位、亮度、四化数据，换一张命盘答案必须不同
-2. **推理路径完整**：每题至少3步推理，每步都要引用具体数据，不能有"众所周知""一般来说"等跳步
-3. **错误选项有迷惑性**：客观题的干扰项必须是"似是而非"的，不能明显错误
-4. **题目有梯度**：客观题考基础识别，半开放题考分析能力，综合题考多宫联动推理
-5. 严格按照给定 JSON 格式输出，无 markdown 代码块
-
-输出格式（JSON 数组）：
-[
-  {
-    "id": "q1",
-    "type": "objective",
-    "topic": "考察点简述",
-    "dimension": "维度key",
-    "dimensionLevel": 1,
-    "question": "题目内容",
-    "options": ["选项A", "选项B", "选项C", "选项D"],
-    "referenceAnswer": "标准答案（须完整说明为什么选这个、为什么排除其他选项）",
-    "reasoningPath": ["推理步骤1：引用命盘数据", "推理步骤2：分析含义", "推理步骤3：得出结论"],
-    "difficulty": 1
-  }
-]
-客观题必须有 options（4个）；半开放/综合题不需要 options。`;
-
-export function buildQuizPrompt(
-  chartText: string,
-  keyFeatures: string[],
-  selectedDimensions: Dimension[],
-): string {
-  const dimDescs = selectedDimensions.map(d => `${d.key}（${d.label}，L${d.level}）`).join('、');
-  const features = keyFeatures.join('；');
-
-  return `命盘数据：
-${chartText}
-
-命盘核心特征：${features}
-
-请针对以下维度出题：${dimDescs}
-
-出题要求：
-- 每个维度出 2-3 道题
-- 题型分配：客观判断（type: objective，考基础识别）、半开放分析（semi-open，考分析推理）、综合推断（comprehensive，考多宫联动）
-- 总题数 6-10 道
-- 每道题必须引用命盘中的具体数据（星名、宫位、亮度、四化等）
-- 客观题的 referenceAnswer 须说明"正确选项为什么对"和"其余选项为什么错"
-- 半开放题和综合题的 referenceAnswer 须包含完整的分析框架，不少于100字
-- reasoningPath 每步都要引用命盘数据，不允许出现泛泛而谈的推理步骤`;
-}
-
 // ─── 自由问答 ────────────────────────────────────────────────
 
 export function buildChatSystem(chartText: string, analysis: ChartAnalysis): string {
