@@ -8,6 +8,7 @@ import {
   ANALYSIS_SYSTEM, buildAnalysisSystem, buildAnalysisPrompt,
   buildChatSystem,
 } from './prompts';
+import { parseLLMJSON } from './json-utils';
 import {
   buildBaziSystem, buildBaziAnalysisPrompt,
   COMPARE_SYSTEM, buildComparePrompt,
@@ -58,74 +59,7 @@ async function callLLMMulti(
   return data.content as string;
 }
 
-/** 将 JSON 字符串内部的原始换行符转义为 \n，避免 JSON.parse 失败 */
-function sanitizeJSONString(raw: string): string {
-  let out = '';
-  let inString = false;
-  let escaped = false;
-  for (let i = 0; i < raw.length; i++) {
-    const c = raw[i];
-    if (escaped) { out += c; escaped = false; continue; }
-    if (c === '\\') { out += c; escaped = true; continue; }
-    if (c === '"') { inString = !inString; out += c; continue; }
-    if (inString && (c === '\n' || c === '\r')) { out += '\\n'; continue; }
-    out += c;
-  }
-  return out;
-}
-
-/** 尝试修复被截断的 JSON（逐步补全尾部括号） */
-function repairTruncatedJSON(raw: string): string {
-  // 如果已经是合法 JSON 就直接返回
-  try { JSON.parse(raw); return raw; } catch { /* continue */ }
-
-  // 去掉末尾不完整的键值对
-  let s = raw
-    .replace(/,\s*"[^"]*$/, '')        // 末尾半截 key
-    .replace(/,\s*"[^"]*":\s*$/, '')   // key 后面没 value
-    .replace(/,\s*"[^"]*":\s*"[^"]*$/, '"') // 字符串 value 被截断 → 补引号
-    .replace(/,\s*$/, '');              // 末尾逗号
-
-  // 统计未闭合的括号
-  const stack: string[] = [];
-  let inStr = false, esc = false;
-  for (const c of s) {
-    if (esc) { esc = false; continue; }
-    if (c === '\\') { esc = true; continue; }
-    if (c === '"') { inStr = !inStr; continue; }
-    if (inStr) continue;
-    if (c === '{' || c === '[') stack.push(c);
-    if (c === '}' || c === ']') stack.pop();
-  }
-
-  // 补全未闭合的括号
-  while (stack.length > 0) {
-    const open = stack.pop()!;
-    s += open === '{' ? '}' : ']';
-  }
-
-  return s;
-}
-
-function parseJSON<T>(raw: string, fallback: T): T {
-  try {
-    const stripped = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim();
-    const cleaned  = sanitizeJSONString(stripped);
-    return JSON.parse(cleaned) as T;
-  } catch {
-    // 第二次尝试：修复截断的 JSON
-    try {
-      const stripped = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '').trim();
-      const cleaned  = sanitizeJSONString(stripped);
-      const repaired = repairTruncatedJSON(cleaned);
-      console.warn('JSON 截断已修复，原始长度:', raw.length);
-      return JSON.parse(repaired) as T;
-    } catch {
-      console.error('JSON 解析失败（含修复尝试）：', raw.slice(0, 300));
-      return fallback;
-    }
-  }
-}
+const parseJSON = parseLLMJSON;
 
 // ─── 导出提示词 ──────────────────────────────────────────────
 
