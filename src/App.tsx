@@ -6,7 +6,8 @@ import type { SystemSelection } from './components/DimensionPicker/DimensionPick
 import AnalysisPanel from './components/Analysis/AnalysisPanel';
 import SplitLayout from './components/SplitLayout/SplitLayout';
 import ChartLibrary from './components/ChartLibrary/ChartLibrary';
-import TimeInferenceForm from './components/TimeInference/TimeInferenceForm';
+import TimeInferenceForm, { emptyTimeInferenceFormState } from './components/TimeInference/TimeInferenceForm';
+import type { TimeInferenceFormState } from './components/TimeInference/TimeInferenceForm';
 import TimeInferenceResultPanel from './components/TimeInference/TimeInferenceResult';
 import type { Astrolabe } from './lib/iztro-wrapper';
 import { generateChart, TIME_NAMES } from './lib/iztro-wrapper';
@@ -54,6 +55,7 @@ export default function App() {
   const [tiGender, setTiGender]       = useState<Gender>('male');
   const [tiLifeInfo, setTiLifeInfo]   = useState<LifeInfo>({});
   const [tiResult, setTiResult]       = useState<TimeInferenceResult | null>(null);
+  const [tiForm, setTiForm]           = useState<TimeInferenceFormState>(emptyTimeInferenceFormState());
 
   // ── 排盘完成 ─────────────────────────────────────────────────
   function handleChartGenerated(c: Astrolabe) {
@@ -255,6 +257,8 @@ export default function App() {
         {globalBar}
         {error && <ErrorBanner msg={error} onClose={() => setError('')} />}
         <TimeInferenceForm
+          value={tiForm}
+          onChange={setTiForm}
           onSubmit={handleTimeInferenceSubmit}
           onBack={() => setView('home')}
         />

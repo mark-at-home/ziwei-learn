@@ -4,12 +4,30 @@ import type { LifeInfo } from '../../types/time-inference';
 import { lunarToSolar } from '../../lib/lunar-convert';
 import './TimeInferenceForm.css';
 
+export type CalendarType = 'solar' | 'lunar';
+
+export interface TimeInferenceFormState {
+  calendarType: CalendarType;
+  year:   string;
+  month:  string;
+  day:    string;
+  isLeap: boolean;
+  gender: Gender | '';
+  lifeInfo: LifeInfo;
+}
+
+export const emptyTimeInferenceFormState = (): TimeInferenceFormState => ({
+  calendarType: 'solar',
+  year: '', month: '', day: '', isLeap: false,
+  gender: '', lifeInfo: {},
+});
+
 interface TimeInferenceFormProps {
+  value: TimeInferenceFormState;
+  onChange: (state: TimeInferenceFormState) => void;
   onSubmit: (solarDate: string, gender: Gender, lifeInfo: LifeInfo) => void;
   onBack: () => void;
 }
-
-type CalendarType = 'solar' | 'lunar';
 
 const LUNAR_MONTHS = ['正月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '冬月', '腊月'];
 const LUNAR_DAYS = [
@@ -32,18 +50,22 @@ const LIFE_FIELDS: { key: keyof LifeInfo; label: string; palace: string; placeho
   { key: 'other',       label: '其他重要',  palace: '—',        placeholder: '其他想补充的信息' },
 ];
 
-export default function TimeInferenceForm({ onSubmit, onBack }: TimeInferenceFormProps) {
-  const [calendarType, setCalendarType] = useState<CalendarType>('solar');
-  const [year,  setYear]  = useState('');
-  const [month, setMonth] = useState('');
-  const [day,   setDay]   = useState('');
-  const [isLeap, setIsLeap] = useState(false);
-  const [gender, setGender] = useState<Gender | ''>('');
-  const [lifeInfo, setLifeInfo] = useState<LifeInfo>({});
+export default function TimeInferenceForm({ value, onChange, onSubmit, onBack }: TimeInferenceFormProps) {
+  const { calendarType, year, month, day, isLeap, gender, lifeInfo } = value;
   const [error, setError] = useState('');
 
-  function setLife<K extends keyof LifeInfo>(key: K, value: string) {
-    setLifeInfo(prev => ({ ...prev, [key]: value }));
+  function patch(p: Partial<TimeInferenceFormState>) {
+    onChange({ ...value, ...p });
+  }
+  const setCalendarType = (v: CalendarType) => patch({ calendarType: v });
+  const setYear   = (v: string) => patch({ year: v });
+  const setMonth  = (v: string) => patch({ month: v });
+  const setDay    = (v: string) => patch({ day: v });
+  const setIsLeap = (v: boolean) => patch({ isLeap: v });
+  const setGender = (v: Gender) => patch({ gender: v });
+
+  function setLife<K extends keyof LifeInfo>(key: K, val: string) {
+    patch({ lifeInfo: { ...lifeInfo, [key]: val } });
   }
 
   function handleSubmit(e: React.FormEvent) {
