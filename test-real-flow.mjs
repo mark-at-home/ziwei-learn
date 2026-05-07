@@ -6,13 +6,12 @@
 const BASE_URL = 'https://ziwei-learn.vercel.app/api/chat';
 
 const MODELS = [
-  { id: 'gemini',          label: 'Gemini 2.5 Flash'     },
-  { id: 'gemini-pro',      label: 'Gemini 2.5 Pro'       },
-  { id: 'gemini-3-flash',  label: 'Gemini 3 Flash'       },
-  { id: 'claude',          label: 'Claude Sonnet 4.5'    },
-  { id: 'claude-4-6',      label: 'Claude Sonnet 4.6'    },
-  { id: 'gemini-thinking', label: 'Gemini 2.5 Thinking'  },
-  { id: 'gemini-3-pro',    label: 'Gemini 3.1 Pro'       },
+  { id: 'claude',          label: 'Claude Sonnet 4.5' },
+  { id: 'claude-4-6',      label: 'Claude Sonnet 4.6' },
+  { id: 'claude-4-7',      label: 'Claude Sonnet 4.7' },
+  { id: 'claude-opus-4-7', label: 'Claude Opus 4.7'   },
+  { id: 'gemini-3-flash',  label: 'Gemini 3 Flash'    },
+  { id: 'gemini-3-pro',    label: 'Gemini 3.1 Pro'    },
 ];
 
 // ── 与 prompts.ts 完全一致的 system prompt ──

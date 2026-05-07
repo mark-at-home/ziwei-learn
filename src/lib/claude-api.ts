@@ -14,7 +14,7 @@ import {
   COMPARE_SYSTEM, buildComparePrompt,
 } from './bazi-prompts';
 
-export type LLMModel = 'claude' | 'claude-4-6' | 'gemini' | 'gemini-pro' | 'gemini-thinking' | 'gemini-3-flash' | 'gemini-3-pro';
+export type LLMModel = 'claude' | 'claude-4-6' | 'claude-4-7' | 'claude-opus-4-7' | 'gemini-3-flash' | 'gemini-3-pro';
 
 // 本地开发时走 Vite proxy（见 vite.config.ts），线上走 Vercel Serverless Function
 const PROXY_URL = '/api/chat';
@@ -179,7 +179,7 @@ export async function chatWithChart(
   chart: Astrolabe,
   analysis: ChartAnalysis,
   messages: ChatMessage[],
-  model: LLMModel = 'gemini',
+  model: LLMModel = 'gemini-3-pro',
 ): Promise<string> {
   const chartText = chartToPromptText(chart);
   const system    = buildChatSystem(chartText, analysis);

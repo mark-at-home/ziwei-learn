@@ -46,7 +46,7 @@ export default function App() {
   const [selectedDimensions, setSelected] = useState<Dimension[]>([]);
   const [loadingMsg, setLoadingMsg]       = useState('');
   const [error, setError]                 = useState('');
-  const [model, setModel]                 = useState<LLMModel>('gemini-pro');
+  const [model, setModel]                 = useState<LLMModel>('gemini-3-pro');
   const [promptText, setPromptText]             = useState<{ system: string; user: string } | null>(null);
   const [baziPromptText, setBaziPromptText]     = useState<{ system: string; user: string } | null>(null);
 
@@ -427,13 +427,12 @@ function ErrorBanner({ msg, onClose }: { msg: string; onClose: () => void }) {
 // ── ModelSelector ─────────────────────────────────────────────
 import type { LLMModel as LLMModelType } from './lib/claude-api';
 const MODEL_OPTIONS: { value: LLMModelType; label: string }[] = [
-  { value: 'claude',          label: 'Claude Sonnet 4.5'   },
-  { value: 'claude-4-6',      label: 'Claude Sonnet 4.6'   },
-  { value: 'gemini',          label: 'Gemini 2.5 Flash'    },
-  { value: 'gemini-pro',      label: 'Gemini 2.5 Pro'      },
-  { value: 'gemini-thinking', label: 'Gemini 2.5 Thinking' },
-  { value: 'gemini-3-flash',  label: 'Gemini 3 Flash'      },
-  { value: 'gemini-3-pro',    label: 'Gemini 3.1 Pro'      },
+  { value: 'claude',          label: 'Claude Sonnet 4.5' },
+  { value: 'claude-4-6',      label: 'Claude Sonnet 4.6' },
+  { value: 'claude-4-7',      label: 'Claude Sonnet 4.7' },
+  { value: 'claude-opus-4-7', label: 'Claude Opus 4.7'   },
+  { value: 'gemini-3-flash',  label: 'Gemini 3 Flash'    },
+  { value: 'gemini-3-pro',    label: 'Gemini 3.1 Pro'    },
 ];
 
 function ModelSelector({ value, onChange }: { value: LLMModelType; onChange: (m: LLMModelType) => void }) {

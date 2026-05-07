@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { model = 'gemini', system, messages, max_tokens = 4096 } = req.body;
+  const { model = 'gemini-3-pro', system, messages, max_tokens = 4096 } = req.body;
 
   if (!messages || !Array.isArray(messages)) {
     return res.status(400).json({ error: 'messages 字段缺失或格式错误' });
@@ -23,12 +23,10 @@ export default async function handler(req, res) {
       content = await callClaude(system, messages, max_tokens, 'claude-sonnet-4-5');
     } else if (model === 'claude-4-6') {
       content = await callClaude(system, messages, max_tokens, 'claude-sonnet-4-6');
-    } else if (model === 'gemini') {
-      content = await callGemini(system, messages, max_tokens, 'gemini-2.5-flash', false);
-    } else if (model === 'gemini-pro') {
-      content = await callGemini(system, messages, max_tokens, 'gemini-2.5-pro', false);
-    } else if (model === 'gemini-thinking') {
-      content = await callGemini(system, messages, max_tokens, 'gemini-2.5-flash', true);
+    } else if (model === 'claude-4-7' || model === 'claude-sonnet-4-7') {
+      content = await callClaude(system, messages, max_tokens, 'claude-sonnet-4-7');
+    } else if (model === 'claude-opus-4-7') {
+      content = await callClaude(system, messages, max_tokens, 'claude-opus-4-7');
     } else if (model === 'gemini-3-flash') {
       content = await callGemini(system, messages, max_tokens, 'gemini-3-flash-preview', false);
     } else if (model === 'gemini-3-pro') {
