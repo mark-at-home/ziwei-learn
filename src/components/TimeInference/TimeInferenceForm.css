@@ -37,6 +37,12 @@
   border-bottom: 1px solid #e8ddd4;
 }
 
+.ti-section-title--sub {
+  font-size: 0.92rem;
+  color: #8a7f7f;
+  border-bottom-style: dashed;
+}
+
 .ti-section-hint {
   font-family: 'Noto Sans SC', sans-serif;
   font-size: 0.78rem;

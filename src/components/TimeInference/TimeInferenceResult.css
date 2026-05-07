@@ -294,3 +294,67 @@
 }
 
 .ti-question-input:focus { border-color: #c87d8a60; }
+
+.ti-refine-progress {
+  font-size: 0.7rem;
+  color: #b0a8a0;
+  margin-left: 0.5rem;
+  letter-spacing: 0;
+}
+
+.ti-strategies {
+  background: #faf6f1;
+  border: 1px solid #c9a84c80;
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.ti-strategies-summary {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.85rem;
+  color: #5a5050;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.ti-strategies-summary strong {
+  color: #c87d8a;
+  font-weight: 600;
+}
+
+.ti-strategies-list {
+  background: #ffffff;
+  border: 1px solid #e8ddd4;
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+}
+
+.ti-strategy-title {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.82rem;
+  color: #c87d8a;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+.ti-strategies-list ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.ti-strategies-list li {
+  font-family: 'Noto Sans SC', sans-serif;
+  font-size: 0.82rem;
+  color: #5a5050;
+  line-height: 1.6;
+}
+
+.ti-strategies-list li strong {
+  color: #4a3f3f;
+}

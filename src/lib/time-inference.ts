@@ -66,16 +66,18 @@ export function chartToCompactText(chart: Astrolabe, timeIndex: number): string 
 
 function lifeInfoToText(info: LifeInfo): string {
   const sections: string[] = [];
-  if (info.personality) sections.push(`【性格特点】${info.personality}`);
-  if (info.values)      sections.push(`【人生观/价值观】${info.values}`);
-  if (info.parents)     sections.push(`【父母关系】${info.parents}`);
+  // 客观事实优先（按形式重要性排序）
+  if (info.parents)     sections.push(`【父母情况】${info.parents}`);
   if (info.siblings)    sections.push(`【兄弟姐妹】${info.siblings}`);
-  if (info.marriage)    sections.push(`【婚姻感情】${info.marriage}`);
-  if (info.children)    sections.push(`【子女情况】${info.children}`);
-  if (info.career)      sections.push(`【事业经历】${info.career}`);
-  if (info.wealth)      sections.push(`【财富状况】${info.wealth}`);
-  if (info.property)    sections.push(`【家境/田宅】${info.property}`);
-  if (info.health)      sections.push(`【健康疾病】${info.health}`);
+  if (info.marriage)    sections.push(`【婚姻关键事件】${info.marriage}`);
+  if (info.children)    sections.push(`【子女关键事件】${info.children}`);
+  if (info.career)      sections.push(`【事业关键事件】${info.career}`);
+  if (info.wealth)      sections.push(`【财富关键事件】${info.wealth}`);
+  if (info.property)    sections.push(`【居住与家境】${info.property}`);
+  if (info.health)      sections.push(`【重大疾病/意外】${info.health}`);
+  // 主观补充
+  if (info.personality) sections.push(`【性格特点（主观）】${info.personality}`);
+  if (info.values)      sections.push(`【人生追求（主观）】${info.values}`);
   if (info.other)       sections.push(`【其他信息】${info.other}`);
   return sections.join('\n');
 }
@@ -106,9 +108,12 @@ const BATCH_SYSTEM = `你是一位精通紫微斗数的命理大师，擅长根�
 
 # 推理原则
 
-1. 逐宫核对：聚焦在用户提供了信息的对应宫位
-2. 避免常识偏见：不要因某个时辰更常见就给高分
-3. 诚实评估：信息不足时给中等分数，不要猜测高分
+1. **以客观事实为主、主观感受为辅**：用户提供的事实大多带有年龄/年份（"30岁结婚"、"父亲在我15岁时去世"、"32岁购房"等）。这些是反推的核心，主观性格描述仅作为辅助参考。
+2. **年龄事件优先用流年/大限对照**：把事件年龄换算到对应大限/流年宫位（命主出生年龄即生年；逐宫推 10 年大限），核对该宫宫干四化、星曜配置是否能解释该事件。如能解释，强证据；不能解释或矛盾，扣分。
+3. **空缺信息不要脑补**：用户没有提到的事项（例如未提子女）不要假设它没有发生，也不要凭主观印象给分。
+4. **逐宫核对**：聚焦在用户提供了信息的对应宫位（婚姻↔夫妻宫，事业↔官禄宫，疾病↔疾厄宫，家境↔田宅宫，等）。
+5. **避免常识偏见**：不要因某个时辰更常见就给高分。
+6. **诚实评估**：信息不足时给中等分数，不要猜测高分。
 
 # 输出体积控制
 
@@ -164,7 +169,13 @@ const SYNTHESIS_SYSTEM = `你是紫微斗数专家。给定 13 个时辰候选�
 - 若 verdict = "multiple"：针对入围的多个盘（probability ≥ threshold），给出 2-4 个能够区分它们的具体问题
 - 若 verdict = "none"：给出 2-4 个开放性问题，引导用户补充关键人生事实
 
-每个问题须包含：id（q1, q2…）、question（≤ 40 字）、hint（≤ 30 字，说明为何问）、distinguishes（该问题主要用于区分的 timeIndex 列表）
+# 提问优先级（务必遵守）
+
+1. **优先索取客观事实**：年龄+具体事件最有用，例如"是否在 X 岁前后有 Y 类事件？"、"父母现在是否健在，分别在你几岁时去世？"、"第一次买房在几岁？"、"是否有过大手术或重大疾病？发生时年龄？"
+2. **次选具体宫位的客观对照**：例如询问对应大限/流年内的事件，用以区分入围盘在某宫的差异。
+3. **仅在客观事实问无可问时**才询问主观感受（性格、价值观等）。
+
+每个问题须包含：id（q1, q2…）、question（≤ 40 字）、hint（≤ 30 字，说明为何问）、distinguishes（该问题主要用于区分的 timeIndex 列表）。
 
 reasoning 字段控制在 100 字以内，总结当前评估的整体格局。
 

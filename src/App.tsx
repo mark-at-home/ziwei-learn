@@ -56,6 +56,8 @@ export default function App() {
   const [tiLifeInfo, setTiLifeInfo]   = useState<LifeInfo>({});
   const [tiResult, setTiResult]       = useState<TimeInferenceResult | null>(null);
   const [tiForm, setTiForm]           = useState<TimeInferenceFormState>(emptyTimeInferenceFormState());
+  const [tiRefineCount, setTiRefineCount] = useState(0);
+  const TI_MAX_REFINES = 2;
 
   // ── 排盘完成 ─────────────────────────────────────────────────
   function handleChartGenerated(c: Astrolabe) {
@@ -164,6 +166,7 @@ export default function App() {
     setTiSolarDate(solarDate);
     setTiGender(gender);
     setTiLifeInfo(lifeInfo);
+    setTiRefineCount(0);
     setView('time-loading');
     setLoadingMsg('正在生成 13 张候选命盘并比对…');
     setError('');
@@ -179,11 +182,13 @@ export default function App() {
 
   // 用户回答澄清问题后再次推断
   async function handleTimeRefine(answers: Record<string, string>) {
+    if (tiRefineCount >= TI_MAX_REFINES) return; // 已达上限，安全护栏
     const merged: LifeInfo = {
       ...tiLifeInfo,
       other: [tiLifeInfo.other ?? '', ...Object.values(answers).filter(v => v.trim())].filter(Boolean).join('\n'),
     };
     setTiLifeInfo(merged);
+    setTiRefineCount(c => c + 1);
     setView('time-loading');
     setLoadingMsg('结合补充信息重新推断…');
     try {
@@ -290,6 +295,8 @@ export default function App() {
           result={tiResult}
           solarDate={tiSolarDate}
           gender={tiGender}
+          refineCount={tiRefineCount}
+          maxRefines={TI_MAX_REFINES}
           onPickTime={handleTimePicked}
           onRefine={handleTimeRefine}
           onBack={() => setView('time-input')}

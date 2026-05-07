@@ -36,18 +36,25 @@ const LUNAR_DAYS = [
   '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十',
 ];
 
-const LIFE_FIELDS: { key: keyof LifeInfo; label: string; palace: string; placeholder: string }[] = [
-  { key: 'personality', label: '性格特点',  palace: '命宫',     placeholder: '如：内向思考、爱钻研，做事谨慎' },
-  { key: 'values',      label: '人生追求',  palace: '福德宫',   placeholder: '如：追求精神满足，重视家庭和睦' },
-  { key: 'parents',     label: '父母关系',  palace: '父母宫',   placeholder: '如：母亲性格强势，父母感情和睦' },
-  { key: 'siblings',    label: '兄弟姐妹',  palace: '兄弟宫',   placeholder: '如：有一兄一妹，关系一般' },
-  { key: 'marriage',    label: '婚姻感情',  palace: '夫妻宫',   placeholder: '如：30岁结婚，配偶事业心强' },
-  { key: 'children',    label: '子女情况',  palace: '子女宫',   placeholder: '如：有一女，性格活泼' },
-  { key: 'career',      label: '事业经历',  palace: '官禄宫',   placeholder: '如：从事金融行业，35岁创业' },
-  { key: 'wealth',      label: '财富状况',  palace: '财帛宫',   placeholder: '如：收入稳定但不算高，少有横财' },
-  { key: 'property',    label: '家境田宅',  palace: '田宅宫',   placeholder: '如：35岁买房，家境一般' },
-  { key: 'health',      label: '健康疾病',  palace: '疾厄宫',   placeholder: '如：常年胃病，曾有意外受伤' },
-  { key: 'other',       label: '其他重要',  palace: '—',        placeholder: '其他想补充的信息' },
+type LifeField = { key: keyof LifeInfo; label: string; palace: string; placeholder: string };
+
+// 客观事实 — 反推时辰最重要的依据，请尽量带年龄/年份
+const LIFE_FIELDS_OBJECTIVE: LifeField[] = [
+  { key: 'parents',  label: '父母情况',     palace: '父母宫', placeholder: '如：父亲健在，母亲在我15岁时因病去世；父亲教师、母亲医生' },
+  { key: 'siblings', label: '兄弟姐妹',     palace: '兄弟宫', placeholder: '如：我排行老二，有大哥（长我3岁），无姐妹' },
+  { key: 'marriage', label: '婚姻关键事件', palace: '夫妻宫', placeholder: '如：28岁结婚，配偶比我大2岁、从事金融；32岁曾分居半年' },
+  { key: 'children', label: '子女关键事件', palace: '子女宫', placeholder: '如：30岁生女，无其他子女；曾于28岁流产' },
+  { key: 'career',   label: '事业关键事件', palace: '官禄宫', placeholder: '如：23岁入职互联网，30岁升管理岗，35岁创业，37岁公司停业' },
+  { key: 'wealth',   label: '财富关键事件', palace: '财帛宫', placeholder: '如：26岁还清助学贷款，32岁购房首付，34岁股市大亏' },
+  { key: 'property', label: '居住与家境',   palace: '田宅宫', placeholder: '如：童年家境一般，父母在国企；25岁后离家独居；32岁在北京购房' },
+  { key: 'health',   label: '重大疾病/意外', palace: '疾厄宫', placeholder: '如：12岁车祸骨折；27岁胃溃疡手术；偏头痛常发' },
+];
+
+// 主观补充 — 选填，作为辅助参考
+const LIFE_FIELDS_SUBJECTIVE: LifeField[] = [
+  { key: 'personality', label: '性格特点',  palace: '命宫',   placeholder: '选填：他人/自己对你性格的概括' },
+  { key: 'values',      label: '人生追求',  palace: '福德宫', placeholder: '选填：你最看重什么、最在意什么' },
+  { key: 'other',       label: '其他重要',  palace: '—',     placeholder: '选填：其他想补充的信息' },
 ];
 
 export default function TimeInferenceForm({ value, onChange, onSubmit, onBack }: TimeInferenceFormProps) {
@@ -163,14 +170,44 @@ export default function TimeInferenceForm({ value, onChange, onSubmit, onBack }:
           </div>
         </div>
 
-        {/* ── 人生关键信息 ── */}
+        {/* ── 客观事实（重点） ── */}
         <div className="ti-section">
-          <h3 className="ti-section-title">人生关键信息</h3>
-          <p className="ti-section-hint">填得越具体推断越准。至少填写 2 项。每行末尾标注的宫位是该信息主要对应的紫微宫位。</p>
+          <h3 className="ti-section-title">客观事实（推断主要依据）</h3>
+          <p className="ti-section-hint">
+            请尽量包含<strong>年龄/年份</strong>等具体信息，越客观、越带时间点越能反推时辰。例如"30岁结婚"、"父亲在我15岁时去世"、"32岁购房"。至少填写 2 项。
+          </p>
 
           <table className="ti-life-table">
             <tbody>
-              {LIFE_FIELDS.map(f => (
+              {LIFE_FIELDS_OBJECTIVE.map(f => (
+                <tr key={f.key}>
+                  <td className="ti-life-label">
+                    <div>{f.label}</div>
+                    <div className="ti-life-palace">{f.palace}</div>
+                  </td>
+                  <td className="ti-life-input-cell">
+                    <textarea
+                      className="ti-life-input"
+                      rows={2}
+                      placeholder={f.placeholder}
+                      value={lifeInfo[f.key] ?? ''}
+                      onChange={e => setLife(f.key, e.target.value)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* ── 主观补充（选填） ── */}
+        <div className="ti-section">
+          <h3 className="ti-section-title ti-section-title--sub">主观补充（选填，辅助参考）</h3>
+          <p className="ti-section-hint">主观感受可能不太可靠，留作后续追问的备选材料即可。</p>
+
+          <table className="ti-life-table">
+            <tbody>
+              {LIFE_FIELDS_SUBJECTIVE.map(f => (
                 <tr key={f.key}>
                   <td className="ti-life-label">
                     <div>{f.label}</div>
