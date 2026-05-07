@@ -46,7 +46,7 @@ export default function App() {
   const [selectedDimensions, setSelected] = useState<Dimension[]>([]);
   const [loadingMsg, setLoadingMsg]       = useState('');
   const [error, setError]                 = useState('');
-  const [model, setModel]                 = useState<LLMModel>('gemini-3-pro');
+  const [model, setModel]                 = useState<LLMModel>('claude-4-6');
   const [promptText, setPromptText]             = useState<{ system: string; user: string } | null>(null);
   const [baziPromptText, setBaziPromptText]     = useState<{ system: string; user: string } | null>(null);
 
@@ -131,33 +131,6 @@ export default function App() {
     } catch (e) {
       setError(e instanceof Error ? e.message : '分析生成失败，请确认代理服务已启动');
       setView('dimension-picker');
-    }
-  }
-
-  async function handleViewOnly(systems: SystemSelection) {
-    if (!chart) return;
-    setPromptText(getAnalysisPrompt(chart, []));
-    setView('loading-analysis');
-
-    const needZiwei = systems === 'ziwei' || systems === 'both';
-    const needBazi  = (systems === 'bazi'  || systems === 'both') && !!baziChart;
-
-    setLoadingMsg(needZiwei && needBazi ? '正在生成紫微 + 八字分析…' : needBazi ? '正在生成八字分析…' : '正在生成命理分析…');
-
-    if (needBazi && baziChart) setBaziPromptText(getBaziAnalysisPrompt(baziChart, []));
-
-    try {
-      const [ziweiResult, baziResult] = await Promise.all([
-        needZiwei ? generateAnalysis(chart, [], model) : Promise.resolve(null),
-        needBazi  ? generateBaZiAnalysis(baziChart!, [], model) : Promise.resolve(null),
-      ]);
-      if (ziweiResult) setAnalysis(ziweiResult);
-      if (baziResult)  setBaziAnalysis(baziResult);
-      if (!needZiwei && !analysis) setAnalysis({ summary: '', palaceAnalysis: [], mutagenAnalysis: '', decadalFortune: '', eventAnalysis: [], keyFeatures: [] });
-      setView('analysis');
-    } catch (e) {
-      setError(e instanceof Error ? e.message : '分析生成失败');
-      setView('chart');
     }
   }
 
@@ -328,7 +301,6 @@ export default function App() {
           {error && <ErrorBanner msg={error} onClose={() => setError('')} />}
           <DimensionPicker
             onConfirm={handleDimensionsConfirmed}
-            onViewOnly={handleViewOnly}
             onBack={() => { setView('chart'); setError(''); }}
           />
         </SplitLayout>

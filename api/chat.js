@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { model = 'gemini-3-pro', system, messages, max_tokens = 4096 } = req.body;
+  const { model = 'claude-4-6', system, messages, max_tokens = 4096 } = req.body;
 
   if (!messages || !Array.isArray(messages)) {
     return res.status(400).json({ error: 'messages 字段缺失或格式错误' });

@@ -75,7 +75,7 @@ export function getAnalysisPrompt(chart: Astrolabe, selectedDimensions: Dimensio
 export async function generateAnalysis(
   chart: Astrolabe,
   selectedDimensions: Dimension[],
-  model: LLMModel = 'claude',
+  model: LLMModel = 'claude-4-6',
 ): Promise<ChartAnalysis> {
   const chartText    = chartToPromptText(chart);
   const userPrompt   = buildAnalysisPrompt(chartText, selectedDimensions);
@@ -116,7 +116,7 @@ export function getBaziAnalysisPrompt(
 export async function generateBaZiAnalysis(
   baziChart: BaZiChart,
   selectedDimensions: Dimension[],
-  model: LLMModel = 'claude',
+  model: LLMModel = 'claude-4-6',
 ): Promise<BaZiAnalysis> {
   const chartText    = baziToPromptText(baziChart);
   const systemPrompt = selectedDimensions.length > 0 ? buildBaziSystem(selectedDimensions) : buildBaziSystem([]);
@@ -150,7 +150,7 @@ export async function generateCompare(
   ziweiAnalysis: ChartAnalysis,
   baziAnalysis: BaZiAnalysis,
   selectedDimensions: Dimension[],
-  model: LLMModel = 'claude',
+  model: LLMModel = 'claude-4-6',
 ): Promise<{ result: CompareAnalysis; promptText: string }> {
   const ziweiText  = chartToPromptText(ziweiChart);
   const baziText   = baziToPromptText(baziChart);
@@ -179,7 +179,7 @@ export async function chatWithChart(
   chart: Astrolabe,
   analysis: ChartAnalysis,
   messages: ChatMessage[],
-  model: LLMModel = 'gemini-3-pro',
+  model: LLMModel = 'claude-4-6',
 ): Promise<string> {
   const chartText = chartToPromptText(chart);
   const system    = buildChatSystem(chartText, analysis);

@@ -315,7 +315,7 @@ export async function inferBirthTime(
   solarDate: string,
   gender: Gender,
   lifeInfo: LifeInfo,
-  model: LLMModel = 'gemini-3-pro',
+  model: LLMModel = 'claude-4-6',
 ): Promise<{ result: TimeInferenceResult; charts: Astrolabe[]; promptText: { system: string; user: string } }> {
   const charts = generateAllTimeCharts(solarDate, gender);
 

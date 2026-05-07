@@ -7,7 +7,6 @@ export type SystemSelection = 'ziwei' | 'bazi' | 'both';
 
 interface DimensionPickerProps {
   onConfirm: (selected: Dimension[], systems: SystemSelection) => void;
-  onViewOnly: (systems: SystemSelection) => void;
   onBack: () => void;
 }
 
@@ -16,7 +15,7 @@ const ZIWEI_L1_L3 = ZIWEI_DIMENSIONS;
 const BAZI_L1_L3  = BAZI_SPECIFIC_DIMENSIONS;
 const SHARED_L4_L5 = SHARED_DIMENSIONS.filter(d => d.level >= 4);
 
-export default function DimensionPicker({ onConfirm, onViewOnly, onBack }: DimensionPickerProps) {
+export default function DimensionPicker({ onConfirm, onBack }: DimensionPickerProps) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   // simple: track as pair of booleans
   const [useZiwei, setUseZiwei] = useState(true);
@@ -184,13 +183,12 @@ export default function DimensionPicker({ onConfirm, onViewOnly, onBack }: Dimen
       </div>
 
       <div className="picker-footer">
-        <button className="btn-text" onClick={() => onViewOnly(effectiveSystems)}>仅查看分析</button>
         <button
           className="btn-primary"
           onClick={handleConfirm}
           disabled={totalSelected === 0}
         >
-          开始学习（{totalSelected}个维度）
+          生成分析（{totalSelected}个维度）
         </button>
       </div>
     </div>
