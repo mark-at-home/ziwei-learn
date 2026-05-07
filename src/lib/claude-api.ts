@@ -14,7 +14,7 @@ import {
   COMPARE_SYSTEM, buildComparePrompt,
 } from './bazi-prompts';
 
-export type LLMModel = 'claude' | 'claude-4-6' | 'claude-4-7' | 'claude-opus-4-7' | 'gemini-3-flash' | 'gemini-3-pro';
+export type LLMModel = 'claude' | 'claude-4-6' | 'claude-opus-4-7' | 'gemini-3-flash' | 'gemini-3-pro';
 
 // 本地开发时走 Vite proxy（见 vite.config.ts），线上走 Vercel Serverless Function
 const PROXY_URL = '/api/chat';

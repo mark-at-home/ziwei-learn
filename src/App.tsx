@@ -429,7 +429,6 @@ import type { LLMModel as LLMModelType } from './lib/claude-api';
 const MODEL_OPTIONS: { value: LLMModelType; label: string }[] = [
   { value: 'claude',          label: 'Claude Sonnet 4.5' },
   { value: 'claude-4-6',      label: 'Claude Sonnet 4.6' },
-  { value: 'claude-4-7',      label: 'Claude Sonnet 4.7' },
   { value: 'claude-opus-4-7', label: 'Claude Opus 4.7'   },
   { value: 'gemini-3-flash',  label: 'Gemini 3 Flash'    },
   { value: 'gemini-3-pro',    label: 'Gemini 3.1 Pro'    },

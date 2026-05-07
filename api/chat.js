@@ -23,8 +23,6 @@ export default async function handler(req, res) {
       content = await callClaude(system, messages, max_tokens, 'claude-sonnet-4-5');
     } else if (model === 'claude-4-6') {
       content = await callClaude(system, messages, max_tokens, 'claude-sonnet-4-6');
-    } else if (model === 'claude-4-7' || model === 'claude-sonnet-4-7') {
-      content = await callClaude(system, messages, max_tokens, 'claude-sonnet-4-7');
     } else if (model === 'claude-opus-4-7') {
       content = await callClaude(system, messages, max_tokens, 'claude-opus-4-7');
     } else if (model === 'gemini-3-flash') {
