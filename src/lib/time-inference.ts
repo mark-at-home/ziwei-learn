@@ -64,6 +64,92 @@ export function chartToCompactText(chart: Astrolabe, timeIndex: number): string 
   return lines.join('\n');
 }
 
+// ─── 事件解析 + 大限/流年宫位预计算 ──────────────────────────────
+// 将用户填写的"X岁发生Y事"事件，预先映射到对应大限/流年宫位 + 四化，
+// 直接喂给 LLM，避免它自己计算运限时出错。
+
+type LifeTopicKey = keyof LifeInfo;
+
+const TOPIC_TO_PALACE: Partial<Record<LifeTopicKey, string>> = {
+  parents:  '父母',
+  siblings: '兄弟',
+  marriage: '夫妻',
+  children: '子女',
+  career:   '官禄',
+  wealth:   '财帛',
+  property: '田宅',
+  health:   '疾厄',
+};
+
+interface ParsedEvent {
+  topic: LifeTopicKey;     // 事件类型
+  palace: string;          // 对应本命宫位
+  age: number;             // 用户提到的年龄（周岁）
+  snippet: string;         // 事件附近的文字片段
+}
+
+function parseLifeEvents(info: LifeInfo): ParsedEvent[] {
+  const events: ParsedEvent[] = [];
+  for (const key of Object.keys(TOPIC_TO_PALACE) as LifeTopicKey[]) {
+    const text = info[key];
+    if (!text) continue;
+    const palace = TOPIC_TO_PALACE[key]!;
+    const re = /(\d{1,3})\s*岁/g;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(text)) !== null) {
+      const age = parseInt(m[1], 10);
+      if (!Number.isFinite(age) || age < 1 || age > 120) continue;
+      const start = Math.max(0, m.index - 12);
+      const end   = Math.min(text.length, m.index + m[0].length + 18);
+      const snippet = text.slice(start, end).replace(/\s+/g, '');
+      events.push({ topic: key, palace, age, snippet });
+    }
+  }
+  return events;
+}
+
+/** age（周岁） → 同年生日次日的公历字符串，确保已过该年生日 */
+function ageToTargetDate(birthSolarDate: string, age: number): string {
+  const [y, m, d] = birthSolarDate.split('-').map(Number);
+  const targetYear = y + age;
+  return `${targetYear}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+}
+
+/** mutagen 数组按 [禄, 权, 科, 忌] 顺序 */
+function mutagenLine(mutagen: string[] | undefined): string {
+  if (!mutagen || mutagen.length === 0) return '无';
+  const labels = ['禄', '权', '科', '忌'];
+  return mutagen.slice(0, 4).map((star, i) => `${labels[i]}${star}`).join('/');
+}
+
+/** 单一事件：在某盘上预计算大限宫 + 流年宫 + 双层四化 */
+function formatEventMapping(chart: Astrolabe, ev: ParsedEvent, birthSolarDate: string): string {
+  const targetDate = ageToTargetDate(birthSolarDate, ev.age);
+  let line = `[${ev.age}岁/${ev.topic}/${ev.snippet}]`;
+  try {
+    const h = chart.horoscope(targetDate);
+    const decadalPalace = h.palace(ev.palace as never, 'decadal');
+    const yearlyPalace  = h.palace(ev.palace as never, 'yearly');
+    const decadalStars = decadalPalace?.majorStars?.map(s => s.name).join('') || '空宫';
+    const yearlyStars  = yearlyPalace?.majorStars?.map(s => s.name).join('')  || '空宫';
+    const decadalNatal = decadalPalace?.name ?? '?';
+    const yearlyNatal  = yearlyPalace?.name  ?? '?';
+    const decadalMut = mutagenLine(h.decadal?.mutagen as unknown as string[]);
+    const yearlyMut  = mutagenLine(h.yearly?.mutagen  as unknown as string[]);
+    line += ` 大限${ev.palace}=「${decadalNatal}」(${decadalStars}) 大限四化:${decadalMut}`;
+    line += ` | 流年${ev.palace}=「${yearlyNatal}」(${yearlyStars}) 流年四化:${yearlyMut}`;
+  } catch (e) {
+    line += ` （运限计算失败：${(e as Error).message}）`;
+  }
+  return line;
+}
+
+function buildEventSection(chart: Astrolabe, events: ParsedEvent[], birthSolarDate: string): string {
+  if (events.length === 0) return '';
+  const lines = events.map(ev => formatEventMapping(chart, ev, birthSolarDate));
+  return `\n事件对照（已预算大限/流年宫位与四化，请据此校验）：\n${lines.join('\n')}`;
+}
+
 function lifeInfoToText(info: LifeInfo): string {
   const sections: string[] = [];
   // 客观事实优先（按形式重要性排序）
@@ -109,7 +195,7 @@ const BATCH_SYSTEM = `你是一位精通紫微斗数的命理大师，擅长根�
 # 推理原则
 
 1. **以客观事实为主、主观感受为辅**：用户提供的事实大多带有年龄/年份（"30岁结婚"、"父亲在我15岁时去世"、"32岁购房"等）。这些是反推的核心，主观性格描述仅作为辅助参考。
-2. **年龄事件优先用流年/大限对照**：把事件年龄换算到对应大限/流年宫位（命主出生年龄即生年；逐宫推 10 年大限），核对该宫宫干四化、星曜配置是否能解释该事件。如能解释，强证据；不能解释或矛盾，扣分。
+2. **年龄事件优先用流年/大限对照**：每个候选盘下方都附有"事件对照"区块，已经预先计算了用户提到的"X岁某事"对应的大限宫/流年宫和四化星曜。**直接基于该区块判断该盘能否解释事件**，不要自行估算大限。重点看：对应宫位主星的禀性是否与事件性质相合？大限/流年四化是否落入相关宫位？吻合加分，矛盾扣分。
 3. **空缺信息不要脑补**：用户没有提到的事项（例如未提子女）不要假设它没有发生，也不要凭主观印象给分。
 4. **逐宫核对**：聚焦在用户提供了信息的对应宫位（婚姻↔夫妻宫，事业↔官禄宫，疾病↔疾厄宫，家境↔田宅宫，等）。
 5. **避免常识偏见**：不要因某个时辰更常见就给高分。
@@ -136,8 +222,14 @@ function buildBatchPrompt(
   solarDate: string,
   gender: Gender,
 ): string {
+  const events = parseLifeEvents(lifeInfo);
+
   const chartTexts = batchIndices
-    .map(i => `=== timeIndex=${i} ${TIME_NAMES[i]}时 ===\n${chartToCompactText(charts[i], i)}`)
+    .map(i => {
+      const base = `=== timeIndex=${i} ${TIME_NAMES[i]}时 ===\n${chartToCompactText(charts[i], i)}`;
+      const eventSec = buildEventSection(charts[i], events, solarDate);
+      return base + eventSec;
+    })
     .join('\n\n');
 
   const lifeText = lifeInfoToText(lifeInfo);
